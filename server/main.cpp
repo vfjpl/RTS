@@ -1,27 +1,58 @@
 #include <SFML/Network.hpp>
 #include <iostream>
+#include <getopt.h>
 
-void help()
+int main(int argc, char** argv)
 {
-    std::cout << "\n";
-}
+    unsigned short port = 7000;
 
-int main()
-{
+    {
+        int c;
+
+        static struct option longopts[] =
+        {
+            {"port",  required_argument,  NULL,  'p'},
+            {"help",  no_argument,        NULL,  'h'},
+        };
+
+        while( (c = getopt_long( argc, argv, "p:h", longopts, NULL )) != -1 )
+        {
+            switch (c)
+            {
+            case 'p':
+                port = std::stoul( optarg, NULL, 0 );
+                break;
+            case 'h':
+                std::cout<<argv[0]<<"\n"
+                        "-p  --port      default 7000\n"
+                        "-h  --help      this message\n";
+                return 0;
+            case '?':
+                return 0;
+            case ':':
+                return 0;
+            }
+        }
+    }
+
     sf::UdpSocket socket;
-    socket.bind( 7000 );
+    socket.bind( port );
 
-    sf::Packet packet;
-    sf::IpAddress sender;
-    unsigned short port;
+    sf::Packet send_packet;
+    sf::Packet receive_packet;
+    sf::IpAddress incomming_ip;
 
-    std::string message;
-
+    sf::Time time;
+    sf::Clock clock;
     while(true)
     {
-        socket.receive( packet, sender, port );
-        packet >> message;
-        std::cout << message << "\n";
+        socket.receive( receive_packet, incomming_ip, port );
+        time = clock.restart();
+
+        send_packet = receive_packet;
+
+        socket.send( send_packet, incomming_ip, port );
+        //send_packet.clear();
     }
 
     return EXIT_SUCCESS;

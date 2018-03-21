@@ -5,6 +5,8 @@
 
 int main(int argc, char** argv)
 {
+    bool quit = false;
+
     unsigned short port = 7000;
 
     {
@@ -44,7 +46,7 @@ int main(int argc, char** argv)
 
     sf::Time time;
     sf::Clock clock;
-    while(true)
+    while(quit)
     {
         socket.receive( receive_packet, incomming_ip, port );
         time = clock.restart();

@@ -5,11 +5,11 @@
 
 class player
 {
-    sf::Uint16 port;
     sf::IpAddress ip;
+    unsigned short port;
 
 public:
-    player( sf::IpAddress ip, sf::Uint16 port );
+    player( sf::IpAddress ip, unsigned short port );
 
 };
 

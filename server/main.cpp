@@ -1,20 +1,20 @@
-#include <SFML/Network.hpp>
 #include <iostream>
 #include <getopt.h>
+
+#include "../common/player.hpp"
 
 int main(int argc, char** argv)
 {
     unsigned short port = 7000;
 
     {
-        int c;
-
         static struct option longopts[] =
         {
             {"port",  required_argument,  NULL,  'p'},
             {"help",  no_argument,        NULL,  'h'},
         };
 
+        int c;
         while( (c = getopt_long( argc, argv, "p:h", longopts, NULL )) != -1 )
         {
             switch (c)

@@ -4,14 +4,13 @@
 
 int main(int argc, char** argv)
 {
-    unsigned short port = 8000;
+    bool quit = false;
 
+    unsigned short port = 8000;
     unsigned short remote_port = 7000;
     sf::IpAddress remote_ip = "localhost";
 
     {
-        int c;
-
         static struct option longopts[] =
         {
             {"port",       required_argument, NULL, 'p'},
@@ -20,6 +19,7 @@ int main(int argc, char** argv)
             {"help",       no_argument,       NULL, 'h'},
         };
 
+        int c;
         while( (c = getopt_long( argc, argv, "p:l:i:h", longopts, NULL )) != -1 )
         {
             switch (c)
@@ -58,7 +58,7 @@ int main(int argc, char** argv)
 
     sf::Thread network_thread( [&]()
         {
-            while(true)
+            while(quit)
             {
                 socket.receive( receive_packet, incomming_ip, port );
             }
@@ -67,7 +67,7 @@ int main(int argc, char** argv)
     sf::Time time;
     sf::Clock clock;
     network_thread.launch();
-    while(true)
+    while(quit)
     {
         std::string message;
         std::cin >> message;

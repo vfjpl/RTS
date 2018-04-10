@@ -143,7 +143,7 @@ int main(int argc, char** argv)
         });
 
 	int map_width = 32, map_height = 32;
-    int number_of_chunks = map_width * map_height;
+	int number_of_chunks = map_width * map_height;
 
 	sf::RenderWindow oknoAplikacji(sf::VideoMode(1920, 1080), "Kelajno", sf::Style::Fullscreen);//to opcja fullscreen
 
@@ -199,40 +199,40 @@ int main(int argc, char** argv)
 		sf::Event zdarzenie;
 		while (oknoAplikacji.pollEvent(zdarzenie))
 		{
-			//tu obs�uga zdarze�
-            switch (zdarzenie.type)
-            {
-            case sf::Event::Closed:
+		//tu obs�uga zdarze�
+            	switch (zdarzenie.type)
+            	{
+            	case sf::Event::Closed:
                     quit = true;
                     oknoAplikacji.close();
                     break;
-            default:
+            	default:
                     break;
-            }
+            	}
 
-            switch(zdarzenie.key.code)
-            {
-            case sf::Keyboard::Escape:
+            	switch(zdarzenie.key.code)
+           	{
+            	case sf::Keyboard::Escape:
                     quit = true;
                     oknoAplikacji.close();
                     break;
-            default:
+            	default:
                     break;
-            }
+           	}
 
-            switch(zdarzenie.mouseButton.button)
-            {
-            case sf::Mouse::Middle:
+            	switch(zdarzenie.mouseButton.button)
+           	{
+           	case sf::Mouse::Middle:
                     quit = true;
                     oknoAplikacji.close();
                     break;
-            default:
+            	default:
                     break;
-            }
+            	}
 		}
 
 
-		oknoAplikacji.clear(sf::Color(0, 0, 0));
+		oknoAplikacji.clear();
 		oknoAplikacji.setView(v);//ustawia widok
 		for (int i = 0; i < number_of_chunks; i++)
 		{
@@ -243,7 +243,7 @@ int main(int argc, char** argv)
 		oknoAplikacji.display();
 
 
-        time = clock.restart();//pobranie czasu
+        	time = clock.restart();//pobranie czasu
 		send_packet << time.asMicroseconds();//dane do pakietu
 		socket.send( send_packet, remote_ip, remote_port);//wyslanie pakietu
 		send_packet.clear();//czyszczenie pakietu

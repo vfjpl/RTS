@@ -19,7 +19,7 @@ void print_help()
 
 int main(int argc, char** argv)
 {
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //zmienne które można modyfikować argumentami z konsoli
     unsigned short port = 8000;
     unsigned short remote_port = 7000;//port do którego się łączymy
@@ -125,7 +125,7 @@ int main(int argc, char** argv)
     }
     #endif // _WIN32
     */
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     bool quit;
     sf::UdpSocket socket;
     socket.bind( port );
@@ -190,7 +190,7 @@ int main(int argc, char** argv)
 	v.setRotation(45);
 
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     sf::Time time;
     sf::Clock clock;
     network_thread.launch();//odpalenie przyjmowania pakietów
@@ -200,7 +200,7 @@ int main(int argc, char** argv)
 		while (oknoAplikacji.pollEvent(zdarzenie))
 		{
 		//tu obs�uga zdarze�
-            	switch (zdarzenie.type)
+            switch (zdarzenie.type)
             	{
             	case sf::Event::Closed:
                     quit = true;
@@ -210,19 +210,19 @@ int main(int argc, char** argv)
                     break;
             	}
 
-            	switch(zdarzenie.key.code)
-           	{
+            switch(zdarzenie.key.code)
+                {
             	case sf::Keyboard::Escape:
                     quit = true;
                     oknoAplikacji.close();
                     break;
             	default:
                     break;
-           	}
+                }
 
-            	switch(zdarzenie.mouseButton.button)
-           	{
-           	case sf::Mouse::Middle:
+            switch(zdarzenie.mouseButton.button)
+                {
+                case sf::Mouse::Middle:
                     quit = true;
                     oknoAplikacji.close();
                     break;
@@ -243,7 +243,7 @@ int main(int argc, char** argv)
 		oknoAplikacji.display();
 
 
-        	time = clock.restart();//pobranie czasu
+        time = clock.restart();//pobranie czasu
 		send_packet << time.asMicroseconds();//dane do pakietu
 		socket.send( send_packet, remote_ip, remote_port);//wyslanie pakietu
 		send_packet.clear();//czyszczenie pakietu

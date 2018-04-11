@@ -138,7 +138,7 @@ int main(int argc, char** argv)
 
     sf::Thread network_thread( [&]()
         {
-            while( quit )
+            while( !quit )
             {
                 socket.receive( receive_packet, incomming_ip, port );
             }
@@ -196,7 +196,7 @@ int main(int argc, char** argv)
     sf::Time time;
     sf::Clock clock;
     network_thread.launch();//odpalenie przyjmowania pakietów
-	while ( oknoAplikacji.isOpen() )
+	while ( !quit )
 	{
 		sf::Event zdarzenie;
 		while (oknoAplikacji.pollEvent(zdarzenie))
@@ -206,7 +206,6 @@ int main(int argc, char** argv)
             	{
             	case sf::Event::Closed:
                     quit = true;
-                    oknoAplikacji.close();
                     break;
             	default:
                     break;
@@ -216,7 +215,6 @@ int main(int argc, char** argv)
                 {
             	case sf::Keyboard::Escape:
                     quit = true;
-                    oknoAplikacji.close();
                     break;
             	default:
                     break;
@@ -226,7 +224,6 @@ int main(int argc, char** argv)
                 {
                 case sf::Mouse::Middle:
                     quit = true;
-                    oknoAplikacji.close();
                     break;
             	default:
                     break;
@@ -250,7 +247,9 @@ int main(int argc, char** argv)
 		socket.send( send_packet, remote_ip, remote_port);//wyslanie pakietu
 		send_packet.clear();//czyszczenie pakietu
 	}
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    network_thread.terminate();
+	oknoAplikacji.close();
 	delete[] obrazek;
 
     return EXIT_SUCCESS;

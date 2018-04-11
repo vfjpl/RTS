@@ -2,11 +2,6 @@
 #include <SFML/Network.hpp>
 #include <iostream>
 
-/*
-#ifdef _WIN32
-    #include <cstring>
-#endif // _WIN32
-*/
 #ifdef linux
     #include <getopt.h>
 #endif // linux
@@ -63,70 +58,6 @@ int main(int argc, char** argv)
         }
     }
     #endif // linux
-    /*
-    #ifdef _WIN32
-    {
-        for(int i=1; i<argc; i++)
-        {
-            if(strcmp("--width",argv[i])==0)
-            {
-                if((width=atoi(argv[++i]))<=0)
-                {
-                    printf("Bad value for width…\n");
-                    return 0;
-                }
-            }
-            else if(strcmp("--height",argv[i])==0)
-            {
-                if((height=atoi(argv[++i]))<=0)
-                {
-                    printf("Bad value for height…\n");
-                    return 0;
-                }
-            }
-            else if(strcmp("--fullscreen",argv[i])==0)
-            {
-                fullscreen=SDL_WINDOW_FULLSCREEN_DESKTOP;
-            }
-            else if(strcmp("--factor",argv[i])==0)
-            {
-                if((factor=atoi(argv[++i]))<=0)
-                {
-                    printf("Bad value for factor…\n");
-                    return 0;
-                }
-            }
-            else if(strcmp("--noedgecopy",argv[i])==0)
-            {
-                usecopyedges=0;
-            }
-            else if(strcmp("--newrender",argv[i])==0)
-            {
-                printf("Work in progress…\n");
-                return 0;
-            }
-            else if(strcmp("--delay",argv[i])==0)
-            {
-                msdelay=strtoul(argv[++i],NULL,0);
-            }
-            else if(strcmp("--oldmouse",argv[i])==0)
-            {
-                newmouse=false;
-            }
-            else if(strcmp("--help",argv[i])==0)
-            {
-                std::cout<<argv[0]<<"\n";
-                print_help();
-                return 0;
-            }
-            else
-            {
-                return 0;
-            }
-        }
-    }
-    #endif // _WIN32
-    */
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     bool quit;
     sf::UdpSocket socket;
@@ -233,7 +164,6 @@ int main(int argc, char** argv)
 
     //tymczasowe
     //wysylanie prosby o dolaczenie do gry
-    send_packet << (sf::Int64)0;//czas
     send_packet << (sf::Uint8)0;//command
     socket.send( send_packet, remote_ip, remote_port );
     send_packet.clear();
@@ -252,8 +182,6 @@ int main(int argc, char** argv)
 		oknoAplikacji.draw(drzewo);
 		oknoAplikacji.display();
 
-
-		send_packet << time.asMicroseconds();//dane do pakietu
 		socket.send( send_packet, remote_ip, remote_port);//wyslanie pakietu
 		send_packet.clear();//czyszczenie pakietu
 	}

@@ -136,14 +136,6 @@ int main(int argc, char** argv)
     sf::Packet receive_packet;
     sf::IpAddress incomming_ip;
 
-    sf::Thread network_thread( [&]()
-        {
-            while( !quit )
-            {
-                socket.receive( receive_packet, incomming_ip, port );
-            }
-        });
-
 	int map_width = 32, map_height = 32;
 	int number_of_chunks = map_width * map_height;
 
@@ -190,19 +182,22 @@ int main(int argc, char** argv)
 	sf::View v = oknoAplikacji.getDefaultView();//widok ma byc taki jak okno tak jakby ciagnie z niego dane
 	v.setSize(v.getSize().x, v.getSize().y * 2);//tak jak przy teksturze skalujemy 2 wieksza wysoksoc
 	v.setRotation(45);
-
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    sf::Time time;
-    sf::Clock clock;
-    network_thread.launch();//odpalenie przyjmowania pakietów
-	while ( !quit )
-	{
-		sf::Event zdarzenie;
-		while (oknoAplikacji.pollEvent(zdarzenie))
-		{
-		//tu obs�uga zdarze�
-            switch (zdarzenie.type)
+    sf::Thread network_thread( [&]()
+        {
+            while( !quit )
+            {
+                socket.receive( receive_packet, incomming_ip, port );
+            }
+        });
+    sf::Thread input_thread( [&]()
+        {
+            sf::Event zdarzenie;
+            while( !quit )
+            {
+                oknoAplikacji.waitEvent(zdarzenie);
+                //tu obs�uga zdarze�
+                switch (zdarzenie.type)
             	{
             	case sf::Event::Closed:
                     quit = true;
@@ -211,7 +206,7 @@ int main(int argc, char** argv)
                     break;
             	}
 
-            switch(zdarzenie.key.code)
+                switch(zdarzenie.key.code)
                 {
             	case sf::Keyboard::Escape:
                     quit = true;
@@ -220,7 +215,7 @@ int main(int argc, char** argv)
                     break;
                 }
 
-            switch(zdarzenie.mouseButton.button)
+                switch(zdarzenie.mouseButton.button)
                 {
                 case sf::Mouse::Middle:
                     quit = true;
@@ -228,8 +223,16 @@ int main(int argc, char** argv)
             	default:
                     break;
             	}
-		}
-
+            }
+        });
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    sf::Time time;
+    sf::Clock clock;
+	input_thread.launch();//odpalenie obsługi urządzeń wejścia
+    network_thread.launch();//odpalenie przyjmowania pakietów
+	while ( !quit )
+	{
+        time = clock.restart();//pobranie czasu
 
 		oknoAplikacji.clear();
 		oknoAplikacji.setView(v);//ustawia widok
@@ -242,15 +245,15 @@ int main(int argc, char** argv)
 		oknoAplikacji.display();
 
 
-        time = clock.restart();//pobranie czasu
 		send_packet << time.asMicroseconds();//dane do pakietu
 		socket.send( send_packet, remote_ip, remote_port);//wyslanie pakietu
 		send_packet.clear();//czyszczenie pakietu
 	}
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    network_thread.terminate();
+    delete[] obrazek;
 	oknoAplikacji.close();
-	delete[] obrazek;
+    input_thread.terminate();
+    network_thread.terminate();
 
     return EXIT_SUCCESS;
 }

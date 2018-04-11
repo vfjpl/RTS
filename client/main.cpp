@@ -114,7 +114,13 @@ int main(int argc, char** argv)
 	v.setSize(v.getSize().x, v.getSize().y * 2);//tak jak przy teksturze skalujemy 2 wieksza wysoksoc
 	v.setRotation(45);
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//https://www.sfml-dev.org/tutorials/2.4/window-window.php
+    sf::Thread network_thread( [&]()
+        {
+            while( !quit )
+            {
+                socket.receive( receive_packet, incomming_ip, port );
+            }
+        });
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     sf::Time time;
     sf::Clock clock;
@@ -185,3 +191,5 @@ int main(int argc, char** argv)
 
     return EXIT_SUCCESS;
 }
+
+//https://www.sfml-dev.org/tutorials/2.4/window-window.php

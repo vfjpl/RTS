@@ -228,8 +228,16 @@ int main(int argc, char** argv)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     sf::Time time;
     sf::Clock clock;
-	input_thread.launch();//odpalenie obsługi urządzeń wejścia
+    input_thread.launch();//odpalenie obsługi urządzeń wejścia
     network_thread.launch();//odpalenie przyjmowania pakietów
+
+    //tymczasowe
+    //wysylanie prosby o dolaczenie do gry
+    send_packet << (sf::Int64)0;//czas
+    send_packet << (sf::Uint8)0;//command
+    socket.send( send_packet, remote_ip, remote_port );
+    send_packet.clear();
+
 	while ( !quit )
 	{
         time = clock.restart();//pobranie czasu
@@ -252,8 +260,8 @@ int main(int argc, char** argv)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     delete[] obrazek;
 	oknoAplikacji.close();
-    input_thread.terminate();
-    network_thread.terminate();
+	input_thread.terminate();
+	network_thread.terminate();
 
     return EXIT_SUCCESS;
 }

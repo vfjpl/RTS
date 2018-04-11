@@ -132,14 +132,34 @@ int main(int argc, char** argv)
                 sf::Uint8 command;
                 receive_packet >> command;
 
-                //dokumentacja komend (klient)
+                //dokumentacja przychodzących komend
+                //id - oznacza, że operacja dotyczy obiektu w aktualnej grze
+                //LISTA - oznacza, że operacja dotyczy nowego obiektu(dopiero do dodania do aktualnej gry)
                 switch( command )
                 {
+                case 10://dodaj jednostke do gry
+                    //<LISTA_jednostki><pozycja_x><pozycja_y>
+                {
+                    sf::Uint8 LISTA_jednostki;
+                    sf::Uint16 x;
+                    sf::Uint16 y;
+                    receive_packet >> LISTA_jednostki >> x >> y;
+                }
+                case 11://zmien pozycje jednostki
+                    //<id_jednostki><pozycja_x><pozycja_y>
+                {
+                    sf::Uint8 id_jednostki;
+                    sf::Uint16 x;
+                    sf::Uint16 y;
+
+                    receive_packet >> id_jednostki >> x >> y;
+                }
                 default:
+                {
                     break;
                 }
+                }//end switch
             }
-
         }
 
         //obsluga urządzeń wejścia

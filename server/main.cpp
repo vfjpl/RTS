@@ -69,7 +69,7 @@ int main(int argc, char** argv)
             sf::Uint8 command;
             receive_packet >> command;
 
-            //dokumentacja komend (server)
+            //dokumentacja przychodzących komend
             //id - oznacza, że operacja dotyczy obiektu w aktualnej grze
             //LISTA - oznacza, że operacja dotyczy nowego obiektu(dopiero do dodania do aktualnej gry)
             switch( command )

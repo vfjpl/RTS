@@ -69,14 +69,50 @@ int main(int argc, char** argv)
             sf::Uint8 command;
             receive_packet >> command;
 
+            //dokumentacja komend (server)
+            //id - oznacza, że operacja dotyczy obiektu w aktualnej grze
+            //LISTA - oznacza, że operacja dotyczy nowego obiektu(dopiero do dodania do aktualnej gry)
             switch( command )
             {
-            case 1:
-                std::cout<<"New Player!\n";
-                break;
-            default:
+            case 10://przesunięcie jednostki
+                //<id_jednostki><pozycja_x><pozycja_y>
+            {
+                sf::Uint8 id_jednostki;
+                sf::Uint16 x;
+                sf::Uint16 y;
+                receive_packet >> id_jednostki >> x >> y;
                 break;
             }
+            case 11://atakuj
+                //<id_jednostki_naszej><id_jedostki_atakowanej>
+            {
+                sf::Uint8 id_naszej;
+                sf::Uint8 id_atakowanej;
+                receive_packet >> id_naszej >> id_atakowanej;
+                break;
+            }
+            case 12://stwórz jednostkę
+                //<_budynku_z_którego_budujemy><LISTA_jednostki>
+            {
+                sf::Uint8 id_budynku;
+                sf::Uint8 LISTA_jednostki;
+                receive_packet >> id_budynku >> LISTA_jednostki;
+                break;
+            }
+            case 13://wybudowanie budynku
+                //<LISTA_budynku><pozycja_x><pozycja_y>
+            {
+                sf::Uint8 LISTA_budynku;
+                sf::Uint16 x;
+                sf::Uint16 y;
+                receive_packet >> LISTA_budynku >> x >> y;
+                break;
+            }
+            default:
+            {
+                break;
+            }
+            }//end switch
         }
 
 

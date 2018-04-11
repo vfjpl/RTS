@@ -119,13 +119,6 @@ int main(int argc, char** argv)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     sf::Time time;
     sf::Clock clock;
-
-    //tymczasowe
-    //wysylanie prosby o dolaczenie do gry
-    send_packet << (sf::Uint8)1;//command
-    socket.send( send_packet, remote_ip, remote_port );
-    send_packet.clear();
-
     while ( !quit )
     {
         time = clock.restart();//pobranie czasu
@@ -139,6 +132,7 @@ int main(int argc, char** argv)
                 sf::Uint8 command;
                 receive_packet >> command;
 
+                //dokumentacja komend (klient)
                 switch( command )
                 {
                 default:

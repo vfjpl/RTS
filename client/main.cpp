@@ -1,10 +1,12 @@
-#include <SFML/Network.hpp>
 #include <SFML/Graphics.hpp>
+#include <SFML/Network.hpp>
 #include <iostream>
 
+/*
 #ifdef _WIN32
     #include <cstring>
 #endif // _WIN32
+*/
 #ifdef linux
     #include <getopt.h>
 #endif // linux

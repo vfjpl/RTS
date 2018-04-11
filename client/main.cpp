@@ -114,53 +114,10 @@ int main(int argc, char** argv)
 	v.setSize(v.getSize().x, v.getSize().y * 2);//tak jak przy teksturze skalujemy 2 wieksza wysoksoc
 	v.setRotation(45);
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    sf::Thread network_thread( [&]()
-        {
-            while( !quit )
-            {
-                socket.receive( receive_packet, incomming_ip, port );
-            }
-        });
-    sf::Thread input_thread( [&]()
-        {
-            sf::Event zdarzenie;
-            while( !quit )
-            {
-                oknoAplikacji.waitEvent(zdarzenie);
-                //tu obs�uga zdarze�
-                switch (zdarzenie.type)
-            	{
-            	case sf::Event::Closed:
-                    quit = true;
-                    break;
-            	default:
-                    break;
-            	}
-
-                switch(zdarzenie.key.code)
-                {
-            	case sf::Keyboard::Escape:
-                    quit = true;
-                    break;
-            	default:
-                    break;
-                }
-
-                switch(zdarzenie.mouseButton.button)
-                {
-                case sf::Mouse::Middle:
-                    quit = true;
-                    break;
-            	default:
-                    break;
-            	}
-            }
-        });
+//https://www.sfml-dev.org/tutorials/2.4/window-window.php
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     sf::Time time;
     sf::Clock clock;
-    input_thread.launch();//odpalenie obsługi urządzeń wejścia
-    network_thread.launch();//odpalenie przyjmowania pakietów
 
     //tymczasowe
     //wysylanie prosby o dolaczenie do gry
@@ -172,6 +129,41 @@ int main(int argc, char** argv)
 	{
         time = clock.restart();//pobranie czasu
 
+
+        //obsluga urządzeń wejścia
+        sf::Event zdarzenie;
+        while( oknoAplikacji.pollEvent(zdarzenie) )
+        {
+            switch (zdarzenie.type)
+            	{
+            	case sf::Event::Closed:
+                    quit = true;
+                    break;
+            	default:
+                    break;
+            	}
+
+            switch(zdarzenie.key.code)
+                {
+            	case sf::Keyboard::Escape:
+                    quit = true;
+                    break;
+            	default:
+                    break;
+                }
+
+            switch(zdarzenie.mouseButton.button)
+                {
+                case sf::Mouse::Middle:
+                    quit = true;
+                    break;
+            	default:
+                    break;
+            	}
+        }
+
+
+        //rysowanie
 		oknoAplikacji.clear();
 		oknoAplikacji.setView(v);//ustawia widok
 		for (int i = 0; i < number_of_chunks; i++)
@@ -182,14 +174,14 @@ int main(int argc, char** argv)
 		oknoAplikacji.draw(drzewo);
 		oknoAplikacji.display();
 
+
+
 		socket.send( send_packet, remote_ip, remote_port);//wyslanie pakietu
 		send_packet.clear();//czyszczenie pakietu
 	}
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     delete[] obrazek;
 	oknoAplikacji.close();
-	input_thread.terminate();
-	network_thread.terminate();
 
     return EXIT_SUCCESS;
 }

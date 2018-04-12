@@ -1,8 +1,10 @@
 #include <SFML/Network.hpp>
 #include <iostream>
 
+#include "../common/network_opcodes.hpp"
+
 #ifdef linux
-    #include <getopt.h>
+#include <getopt.h>
 #endif // linux
 
 void print_help()
@@ -66,41 +68,34 @@ int main(int argc, char** argv)
         //obsługa pakietu
         while( !receive_packet.endOfPacket() )
         {
-            sf::Uint8 command;
-            receive_packet >> command;
+            sf::Uint8 opcode;
+            receive_packet >> opcode;
 
-            //dokumentacja przychodzących komend
-            //id - oznacza, że operacja dotyczy obiektu w aktualnej grze
-            //LISTA - oznacza, że operacja dotyczy nowego obiektu(dopiero do dodania do aktualnej gry)
-            switch( command )
+            switch( opcode )
             {
-            case 10://przesunięcie jednostki
-                //<id_jednostki><pozycja_x><pozycja_y>
+            case MOVE_UNIT:
             {
-                sf::Uint8 id_jednostki;
+                sf::Uint8 ID_jednostki;
                 sf::Uint16 x;
                 sf::Uint16 y;
-                receive_packet >> id_jednostki >> x >> y;
+                receive_packet >> ID_jednostki >> x >> y;
                 break;
             }
-            case 11://atakuj
-                //<id_jednostki_naszej><id_jedostki_atakowanej>
+            case ATTACK:
             {
-                sf::Uint8 id_naszej;
-                sf::Uint8 id_atakowanej;
-                receive_packet >> id_naszej >> id_atakowanej;
+                sf::Uint8 ID_naszej;
+                sf::Uint8 ID_atakowanej;
+                receive_packet >> ID_naszej >> ID_atakowanej;
                 break;
             }
-            case 12://stwórz jednostkę
-                //<_budynku_z_którego_budujemy><LISTA_jednostki>
+            case CREATE_UNIT:
             {
-                sf::Uint8 id_budynku;
+                sf::Uint8 ID_budynku;
                 sf::Uint8 LISTA_jednostki;
-                receive_packet >> id_budynku >> LISTA_jednostki;
+                receive_packet >> ID_budynku >> LISTA_jednostki;
                 break;
             }
-            case 13://wybudowanie budynku
-                //<LISTA_budynku><pozycja_x><pozycja_y>
+            case CREATE_BUILDING:
             {
                 sf::Uint8 LISTA_budynku;
                 sf::Uint16 x;

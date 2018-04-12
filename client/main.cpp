@@ -2,8 +2,10 @@
 #include <SFML/Network.hpp>
 #include <iostream>
 
+#include "../common/network_opcodes.hpp"
+
 #ifdef linux
-    #include <getopt.h>
+#include <getopt.h>
 #endif // linux
 
 void print_help()
@@ -129,30 +131,26 @@ int main(int argc, char** argv)
         {
             while( !receive_packet.endOfPacket() )
             {
-                sf::Uint8 command;
-                receive_packet >> command;
+                sf::Uint8 opcode;
+                receive_packet >> opcode;
 
-                //dokumentacja przychodzących komend
-                //id - oznacza, że operacja dotyczy obiektu w aktualnej grze
-                //LISTA - oznacza, że operacja dotyczy nowego obiektu(dopiero do dodania do aktualnej gry)
-                switch( command )
+                switch( opcode )
                 {
-                case 10://dodaj jednostke do gry
-                    //<LISTA_jednostki><pozycja_x><pozycja_y>
+                case ADD_UNIT_TO_GAME:
                 {
                     sf::Uint8 LISTA_jednostki;
                     sf::Uint16 x;
                     sf::Uint16 y;
                     receive_packet >> LISTA_jednostki >> x >> y;
+                    break;
                 }
-                case 11://zmien pozycje jednostki
-                    //<id_jednostki><pozycja_x><pozycja_y>
+                case SET_UNIT_POSITION:
                 {
-                    sf::Uint8 id_jednostki;
+                    sf::Uint8 ID_jednostki;
                     sf::Uint16 x;
                     sf::Uint16 y;
-
-                    receive_packet >> id_jednostki >> x >> y;
+                    receive_packet >> ID_jednostki >> x >> y;
+                    break;
                 }
                 default:
                 {

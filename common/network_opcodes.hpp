@@ -3,7 +3,7 @@
 
 //ID - oznacza, że operacja dotyczy obiektu w aktualnej grze
 //LISTA - oznacza, że operacja dotyczy nowego obiektu(dopiero do dodania do aktualnej gry)
-enum opcodes : sf::Uint8
+enum OPCODES : sf::Uint8
 {
 
     UNUSED,

@@ -235,7 +235,14 @@ int main( int argc, char** argv )
                 quit = true;
                 break;
             case sf::Event::KeyPressed:
-                quit = true;
+                switch (zdarzenie.key.code)
+                {
+                case sf::Keyboard::Escape:
+                    quit = true;
+                    break;
+                default:
+                    break;
+                }
                 break;
             case sf::Event::MouseButtonPressed:
                 quit = true;

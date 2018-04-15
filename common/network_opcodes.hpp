@@ -1,9 +1,11 @@
 #ifndef NETWORK_OPCODES_HPP_INCLUDED
 #define NETWORK_OPCODES_HPP_INCLUDED
 
+#include <SFML/Main.hpp>
+
 //ID - oznacza, że operacja dotyczy obiektu w aktualnej grze
 //LISTA - oznacza, że operacja dotyczy nowego obiektu(dopiero do dodania do aktualnej gry)
-enum OPCODES : sf::Uint8
+enum OPCODES: sf::Uint8
 {
 
     UNUSED,

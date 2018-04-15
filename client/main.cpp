@@ -234,37 +234,15 @@ int main( int argc, char** argv )
             case sf::Event::Closed:
                 quit = true;
                 break;
-            default:
+            case sf::Event::KeyPressed:
+                quit = true;
                 break;
-            }
-
-            switch (zdarzenie.key.code)
-            {
-            case sf::Keyboard::Escape:
+            case sf::Event::MouseButtonPressed:
                 quit = true;
                 break;
             default:
                 break;
             }
-
-            switch (zdarzenie.mouseButton.button)
-            {
-            case sf::Mouse::Middle:
-                quit = true;
-                break;
-            default:
-                break;
-            }
-            /*
-            switch (zdarzenie.MouseEntered)
-            {
-            	case sf::Mouse::getPosition
-            	quit = true;
-            	break;
-            default:
-            	break;
-            }
-            */
         }
 
         //RENDER OBRAZU

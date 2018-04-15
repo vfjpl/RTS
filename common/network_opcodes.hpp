@@ -20,11 +20,16 @@ enum OPCODES : sf::Uint8
     CREATE_BUILDING,//wybudowanie budynku
 //<LISTA_budynku><pozycja_x><pozycja_y>
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     ADD_UNIT_TO_GAME,//dodaj jednostke do gry
 //<LISTA_jednostki><pozycja_x><pozycja_y>
 
     SET_UNIT_POSITION,//zmien pozycje jednostki
 //<ID_jednostki><pozycja_x><pozycja_y>
+
+    REMOWE_UNIT_FROM_GAME,//usuń jednostke z gry
+//<ID_jednostki>
 
 };
 

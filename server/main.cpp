@@ -1,7 +1,9 @@
 #include <SFML/Network.hpp>
 #include <iostream>
+#include <stack>
 
 #include "../common/network_opcodes.hpp"
+#include "../common/unit.hpp"
 
 #ifdef linux
 #include <getopt.h>
@@ -57,6 +59,18 @@ int main(int argc, char** argv)
     sf::IpAddress incomming_ip;
     unsigned short incomming_port;
 
+    std::array <unit, 256> LIST_units;//baza jednostek
+
+
+    std::array <unit, 256> units;//jednostki w aktualnej grze
+    std::stack <sf::Uint8> place;
+    for(int i = 255; i>=0; i--)
+        place.push(i);
+
+    units[place.top()] = LIST_units[0];//tutaj jest 0 bo to 0 to jednostka podstawowa(baza)
+    units[place.top()].set_position( 1280/2, 800/2 );
+    send_packet << ADD_UNIT_TO_GAME << place.top() << units[place.top()].get_x() << units[place.top()].get_y();
+    place.pop();//nieintuicyjne .pop() nie zwraca elementu tylko go usuwa
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     sf::Time time;
     sf::Clock clock;
@@ -79,6 +93,10 @@ int main(int argc, char** argv)
                 sf::Uint16 x;
                 sf::Uint16 y;
                 receive_packet >> ID_jednostki >> x >> y;
+
+                //na początek teleportowanie jednostki
+                units[ID_jednostki].set_position( x, y );
+                send_packet << SET_UNIT_POSITION << ID_jednostki << x << y;
                 break;
             }
             case ATTACK:
@@ -110,10 +128,11 @@ int main(int argc, char** argv)
             }//end switch
         }
 
-
         socket.send( send_packet, incomming_ip, incomming_port );
         send_packet.clear();
     }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     return EXIT_SUCCESS;
 }
+//TO DO:
+//drugi gracz nie dostaje informacji o zmianie pozycji jednostki

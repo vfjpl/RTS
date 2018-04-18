@@ -44,7 +44,7 @@ void print_help()
 int main( int argc, char** argv )
 {
     //zmienne które można modyfikować argumentami z konsoli
-    unsigned short local_port = 8000;
+    unsigned short local_port = 8000;//port na którym aplikacja odbiera połączenia
     unsigned short remote_port = 7000;//port do którego się łączymy
     sf::IpAddress remote_ip = "localhost";//ip do którego się łączymy
 
@@ -85,11 +85,11 @@ int main( int argc, char** argv )
     }
 #endif // linux
 //---------------------------------------------------------------------------------------------------------------------//
-    bool quit = false;
+    bool quit = false;//główny wyłącznik
+    //zmienne sieciowe
     sf::UdpSocket socket;
     socket.setBlocking(false);
     socket.bind(local_port);
-
 
     sf::Packet send_packet;
     sf::Packet receive_packet;
@@ -189,7 +189,7 @@ int main( int argc, char** argv )
         time = clock.restart();//pobranie czasu
 
 
-        //GŁÓWNA PĘTLA PAKIETÓW
+        //OBSŁUGA PAKIETÓW
         //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
         while ( !socket.receive( receive_packet, incomming_ip, incomming_port ) )
         {
@@ -202,17 +202,17 @@ int main( int argc, char** argv )
                 {
                 case ADD_UNIT_TO_GAME:
                 {
-                    sf::Uint8 LISTA_jednostki;
-                    sf::Uint16 x;
-                    sf::Uint16 y;
-                    receive_packet >> LISTA_jednostki >> x >> y;
+                    sf::Uint8 BP_jednostki;
+                    sf::Uint8 x;
+                    sf::Uint8 y;
+                    receive_packet >> BP_jednostki >> x >> y;
                     break;
                 }
                 case SET_UNIT_POSITION:
                 {
                     sf::Uint8 ID_jednostki;
-                    sf::Uint16 x;
-                    sf::Uint16 y;
+                    sf::Uint8 x;
+                    sf::Uint8 y;
                     receive_packet >> ID_jednostki >> x >> y;
                     break;
                 }

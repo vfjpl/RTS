@@ -1,6 +1,6 @@
 #include <SFML/Network.hpp>
 #include <iostream>
-#include <stack>
+#include <queue>
 
 #include "../common/network_opcodes.hpp"
 #include "../common/unit.hpp"
@@ -14,12 +14,11 @@ void print_help()
     std::cout<<"-p  --port      default 7000\n"
              "-h  --help      this message\n";
 }
-
+//---------------------------------------------------------------------------------------------------------------------//
 int main(int argc, char** argv)
 {
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //zmienne które można modyfikować argumentami z konsoli
-    unsigned short local_port = 7000;
+    unsigned short local_port = 7000;//port na którym aplikacja odbiera połączenia
 
 #ifdef linux
     {
@@ -49,8 +48,9 @@ int main(int argc, char** argv)
         }
     }
 #endif // linux
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    bool quit = false;
+//---------------------------------------------------------------------------------------------------------------------//
+    bool quit = false;//główny wyłącznik
+    //zmienne sieciowe
     sf::UdpSocket socket;
     socket.bind( local_port );
 
@@ -59,19 +59,22 @@ int main(int argc, char** argv)
     sf::IpAddress incomming_ip;
     unsigned short incomming_port;
 
-    std::array <unit, 256> LIST_units;//baza jednostek
+    //zmienne gry
+    std::array <unit, 256> Posible_Units;//TODO: zmienić na klasę blueprint jednostek
+    //podczas startu do tej bazy Posible_Units trafiają nasze zaprojektowane jednostki
+    //TODO: przegadać gdzie w kodzie/pliku przechowywać nasze zaprojektowane jednostki
 
 
     std::array <unit, 256> units;//jednostki w aktualnej grze
-    std::stack <sf::Uint8> place;
-    for(int i = 255; i>=0; i--)
+    std::queue <sf::Uint8> place;//przechowuje wolne miejsca TODO: pogadać jak to zrobić najepiej
+    for(int i = 0; i < 256; i++)
         place.push(i);
 
-    units[place.top()] = LIST_units[0];//tutaj jest 0 bo to 0 to jednostka podstawowa(baza)
-    units[place.top()].set_position( 1280/2, 800/2 );
-    send_packet << ADD_UNIT_TO_GAME << place.top() << units[place.top()].get_x() << units[place.top()].get_y();
+    units[place.front()] = Posible_Units[0];//tutaj jest 0 bo to 0 to blueprint np głownej bazy
+    units[place.front()].set_position( (1280/32)/2, (800/32)/2 );
+    send_packet << ADD_UNIT_TO_GAME << place.front() << units[place.front()].get_x() << units[place.front()].get_y();
     place.pop();//nieintuicyjne .pop() nie zwraca elementu tylko go usuwa
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//---------------------------------------------------------------------------------------------------------------------//
     sf::Time time;
     sf::Clock clock;
     while( !quit )
@@ -79,7 +82,8 @@ int main(int argc, char** argv)
         socket.receive( receive_packet, incomming_ip, incomming_port );
         time = clock.restart();
 
-        //obsługa pakietu
+        //OBSŁUGA PAKIETÓW
+        //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
         while( !receive_packet.endOfPacket() )
         {
             sf::Uint8 opcode;
@@ -90,8 +94,8 @@ int main(int argc, char** argv)
             case MOVE_UNIT:
             {
                 sf::Uint8 ID_jednostki;
-                sf::Uint16 x;
-                sf::Uint16 y;
+                sf::Uint8 x;
+                sf::Uint8 y;
                 receive_packet >> ID_jednostki >> x >> y;
 
                 //na początek teleportowanie jednostki
@@ -109,16 +113,16 @@ int main(int argc, char** argv)
             case CREATE_UNIT:
             {
                 sf::Uint8 ID_budynku;
-                sf::Uint8 LISTA_jednostki;
-                receive_packet >> ID_budynku >> LISTA_jednostki;
+                sf::Uint8 BP_jednostki;
+                receive_packet >> ID_budynku >> BP_jednostki;
                 break;
             }
             case CREATE_BUILDING:
             {
-                sf::Uint8 LISTA_budynku;
-                sf::Uint16 x;
-                sf::Uint16 y;
-                receive_packet >> LISTA_budynku >> x >> y;
+                sf::Uint8 BP_budynku;
+                sf::Uint8 x;
+                sf::Uint8 y;
+                receive_packet >> BP_budynku >> x >> y;
                 break;
             }
             default:
@@ -131,8 +135,8 @@ int main(int argc, char** argv)
         socket.send( send_packet, incomming_ip, incomming_port );
         send_packet.clear();
     }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//---------------------------------------------------------------------------------------------------------------------//
     return EXIT_SUCCESS;
 }
-//TO DO:
+//TODO:
 //drugi gracz nie dostaje informacji o zmianie pozycji jednostki

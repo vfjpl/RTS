@@ -22,16 +22,22 @@ enum OPCODES: sf::Uint8
     CREATE_BUILDING,//wybudowanie budynku
 // [sf::Uint8 BP_budynku] [sf::Uint8 pozycja_x] [sf::Uint8 pozycja_y]
 
+    SPECJAL_ABILITY,//umiejętność specjalna jednostki
+// [sf::Uint8 ID_jednostki]
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     ADD_UNIT_TO_GAME,//dodaj jednostke do gry
 // [sf::Uint8 BP_jednostki] [sf::Uint8 pozycja_x] [sf::Uint8 pozycja_y]
 
-    SET_UNIT_POSITION,//zmien pozycje jednostki
-// [sf::Uint8 ID_jednostki] [sf::Uint8 pozycja_x] [sf::Uint8pozycja_y]
-
-    REMOWE_UNIT_FROM_GAME,//usuń jednostke z gry
+    REMOVE_UNIT_FROM_GAME,//usuń jednostke z gry
 // [sf::Uint8 ID_jednostki]
+
+    SET_UNIT_POSITION,//zmien pozycje jednostki
+// [sf::Uint8 ID_jednostki] [sf::Uint8 pozycja_x] [sf::Uint8 pozycja_y]
+
+    SET_UNIT_HEALTH,//ustaw punkty hp jednostki
+// [sf::Uint8 ID_jednostki] [sf::Uint8 hp]
 
 };
 

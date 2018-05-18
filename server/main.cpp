@@ -1,8 +1,7 @@
 #include <SFML/Network.hpp>
 #include <iostream>
 
-#include "../common/network_opcodes.hpp"
-#include "../common/player.hpp"
+#include "network.hpp"
 
 #ifdef linux
 #include <getopt.h>
@@ -64,54 +63,22 @@ int main(int argc, char** argv)
     sf::IpAddress incomming_ip;
     unsigned short incomming_port;
 
-    sf::Uint8 opcode;
-    sf::Uint8 players_count = 0;
     player players[2];
 //---------------------------------------------------------------------------------------------------------------------//
-    while ( !quit )
+    while( !quit )
     {
-        while( players_count < number_of_players )
-        {
-            socket.receive( receive_packet, incomming_ip, incomming_port );
-            receive_packet >> opcode;
-            if( opcode == REQUEST_GAME_JOIN )
-                players[players_count++] = player( incomming_ip, incomming_port );
-        }
+        network_players_init(socket, players, number_of_players);
 
-        send_packet << SERVER_STARTED_GAME;
-        for(int i = 0; i < players_count; i++)
-            socket.send( send_packet, players[i].get_ip(), players[i].get_port() );
-        send_packet.clear();
-
+        bool game_quit = false;
         sf::Time time;
         sf::Clock clock;
-        while( !quit )//pętla gry
+        while( !game_quit )//pętla gry
         {
             socket.receive( receive_packet, incomming_ip, incomming_port );
             time = clock.restart();
+            network_packet_receive( receive_packet );
 
-            //OBSŁUGA PAKIETÓW
-            //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-            while( !receive_packet.endOfPacket() )
-            {
-                receive_packet >> opcode;
-                switch( opcode )
-                {
-                case MOVE_UNIT:
-                {
-                    sf::Uint8 ID_jednostki;
-                    sf::Uint8 x;
-                    sf::Uint8 y;
-                    receive_packet >> ID_jednostki >> x >> y;
 
-                    break;
-                }
-                default:
-                {
-                    break;
-                }
-                }//end switch
-            }
 
             socket.send( send_packet, incomming_ip, incomming_port );
             send_packet.clear();

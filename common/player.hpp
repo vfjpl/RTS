@@ -9,7 +9,10 @@ class player
     unsigned short port;
 
 public:
+    player();
     player( sf::IpAddress ip, unsigned short port );
+    sf::IpAddress get_ip();
+    unsigned short get_port();
 
 };
 

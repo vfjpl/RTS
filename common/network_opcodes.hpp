@@ -10,6 +10,13 @@ enum OPCODES: sf::Uint8
 
     UNUSED,
 
+    REQUEST_GAME_JOIN,//prosi o dołączenie do gry
+
+    SERVER_STARTED_GAME,//serwer rozpoczął grę
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//CLIENT OPCODES
+
     MOVE_UNIT,//przesunięcie jednostki
 // [sf::Uint8 ID_jednostki] [sf::Uint8 pozycja_x] [sf::Uint8 pozycja_y]
 
@@ -26,6 +33,7 @@ enum OPCODES: sf::Uint8
 // [sf::Uint8 ID_jednostki]
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//SERVER OPCODES
 
     ADD_UNIT_TO_GAME,//dodaj jednostke do gry
 // [sf::Uint8 BP_jednostki] [sf::Uint8 pozycja_x] [sf::Uint8 pozycja_y]

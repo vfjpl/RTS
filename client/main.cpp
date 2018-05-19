@@ -1,37 +1,12 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Network.hpp>
 #include <iostream>
-#include <cmath>
 
-#include "../common/network_opcodes.hpp"
+#include "network_client.hpp"
 
 #ifdef linux
 #include <getopt.h>
 #endif // linux
-
-void umiesc_obiekt( sf::Sprite& obiekt,
-                    sf::Vector2u wys_obiektu,
-                    sf::Sprite *chunki,
-                    int ktory,
-                    sf::Vector2u texture1_size,
-                    sf::RenderWindow& okno,
-                    sf::View v )
-{
-    sf::Vector2f odn1;
-    sf::Vector2i odn2;
-    odn1 = chunki[ktory].getPosition();
-    odn2 = okno.mapCoordsToPixel( odn1, v );
-    obiekt.setPosition( (odn2.x + (texture1_size.x*sqrt(2) / 2) - (texture1_size.x / 2)),
-                        (odn2.y - wys_obiektu.y + (texture1_size.y*sqrt(2) / 2) - (texture1_size.y / 2)) );
-    //0.4142*32/2  CZYLI: biore dane przeksztalcenia
-    //--> odejmuje wysokosc zeby rysowanie bylo od lewgo dolnego rogu
-    //--> i teraz obnizam rysowanie tekstury do najnizszego punktu rysowania chunka
-    //--> uwzgledniam pierwsiatek po prekstalceniu w wymiarach
-
-    //sa przekatne wiec wymiary chunka razy sqrt2 i w jego polowie czyli /2
-    //a potem przesuwam o polowe wymiaru chunka
-    //czyli przsuniecie jest o polowe zwiekszenia wymiaru przez pierwiastek czyli to 0.41/2
-}
 
 void print_help()
 {
@@ -96,186 +71,31 @@ int main( int argc, char** argv )
     sf::IpAddress incomming_ip;
     unsigned short incomming_port;
 
-    //POMOCNE ZMIENNE
-    //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-    int map_width = 36, map_height = 36;
-    int number_of_chunks = map_width * map_height;
-    int number_of_trees1 = 8;
-
     //MODYFIKOWANIE OKNA APLIKACJI
-    //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-    sf::RenderWindow oknoAplikacji( sf::VideoMode( 1920, 1080 ), "Kelajno", sf::Style::Fullscreen );//to opcja fullscreen
+    sf::RenderWindow oknoAplikacji( sf::VideoMode( 1920, 1080 ), "Kelajno", sf::Style::Fullscreen );//opcja fullscreen
+    //pobierać roździelczość przez getSize()
     oknoAplikacji.setFramerateLimit(60);//ustawiam limit fps na 60
-
-    //WCZYTYWANIE TEKSTUR
-    //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-    sf::Texture texture1;//sluzy do wczytywania tekstury bo jest texture i image
-    sf::Texture texture2;
-    sf::Texture texture3;
-    sf::Texture texture4;
-
-    texture1.loadFromFile("Textures/Grunt.png");//zwraca true lub false
-    texture2.loadFromFile("Textures/Grunt2.png");
-    texture3.loadFromFile("Textures/Drzewko.png");
-    texture4.loadFromFile("Textures/Drzewko2.png");
-
-    sf::Vector2u texture1_size = texture1.getSize();
-    sf::Vector2u texture2_size = texture2.getSize();
-    sf::Vector2u texture3_size = texture3.getSize();
-    sf::Vector2u texture4_size = texture4.getSize();
-
-    //TABLICE OBIEKTÓW
-    //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-    sf::Sprite *image = new sf::Sprite[number_of_chunks];
-    sf::Sprite *drzewo = new sf::Sprite[number_of_trees1];
-
-    //PRZYPISYWANIE TEKSTUR DO CHUNKÓW
-    //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-    for (int i = 0; i < number_of_chunks; i++)
-    {
-        if (i % 2 == 0)
-        {
-            image[i].setTexture(texture1);
-        }
-        else
-        {
-            image[i].setTexture(texture2);
-        }
-
-        if (i < number_of_trees1)
-        {
-            drzewo[i].setTexture(texture4);
-        }
-    }
-
-    //ROZMIESZCZANIE CHUNKÓW W PRZESTRZENI
-    //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-    sf::FloatRect chunk_size = image[0].getGlobalBounds();//biore info wymiarow chunka na przykladzie pierwszego
-    for (int i = 0; i < map_height; i++)
-    {
-        for (int g = 0; g < map_width; g++)
-        {
-            image[g + (i*map_width)].setPosition( (oknoAplikacji.getSize().x*0.5 + 250) - (g*chunk_size.width),
-                                                  (oknoAplikacji.getSize().y*0.5 - 250) + (i*chunk_size.height) );
-            //podwojna petla "i" dla nr wiersza i "g" dla kolumny
-            //do szerokosci dodaje wielokrotnosci kolumnowe i wierszowe dla wysokosci 250 na korekte
-        }
-    }
-
-    //MODYFIKOWANIE WIDOKU
-    //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-    sf::View v = oknoAplikacji.getDefaultView();//widok ma byc taki jak okno tak jakby ciagnie z niego dane
-    v.setSize( v.getSize().x, v.getSize().y * 2 );//tak jak przy teksturze skalujemy 2 wieksza wysoksoc
-    v.setRotation(45);
-
-    //UMIESZCZANIE OBIEKTÓW NA KONKRETNYCH CHUNKACH
-    //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-    umiesc_obiekt( drzewo[0], texture4_size, image, 1000, texture1_size, oknoAplikacji, v );
-    umiesc_obiekt( drzewo[1], texture4_size, image, 250, texture1_size, oknoAplikacji, v );
-    umiesc_obiekt( drzewo[2], texture4_size, image, 453, texture1_size, oknoAplikacji, v );
-    umiesc_obiekt( drzewo[3], texture4_size, image, 841, texture1_size, oknoAplikacji, v );
-    umiesc_obiekt( drzewo[4], texture4_size, image, 134, texture1_size, oknoAplikacji, v );
-    umiesc_obiekt( drzewo[5], texture4_size, image, 345, texture1_size, oknoAplikacji, v );
-    umiesc_obiekt( drzewo[6], texture4_size, image, 612, texture1_size, oknoAplikacji, v );
-    umiesc_obiekt( drzewo[7], texture4_size, image, 748, texture1_size, oknoAplikacji, v );
-
 //---------------------------------------------------------------------------------------------------------------------//
-    sf::Time time;
-    sf::Clock clock;
-    //GŁÓWNA PĘTLA GRY
-    //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-    while (!quit)
+    while( !quit )
     {
-        time = clock.restart();//pobranie czasu
+        //miejsce na menu!!!!!!!!!!!!!!!!!
 
-
-        //OBSŁUGA PAKIETÓW
-        //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-        while ( !socket.receive( receive_packet, incomming_ip, incomming_port ) )
+        sf::Clock clock;
+        sf::Time time;
+        bool quit_game = false;
+        while( !quit_game )//pętla gry
         {
-            while( !receive_packet.endOfPacket() )
-            {
-                sf::Uint8 opcode;
-                receive_packet >> opcode;
+            time = clock.restart();//pobranie czasu od ostatniej klatki
+            while ( !socket.receive( receive_packet, incomming_ip, incomming_port ) )
+                network_packet_receive( receive_packet );
 
-                switch( opcode )
-                {
-                case ADD_UNIT_TO_GAME:
-                {
-                    sf::Uint8 BP_jednostki;
-                    sf::Uint8 x;
-                    sf::Uint8 y;
-                    receive_packet >> BP_jednostki >> x >> y;
-                    break;
-                }
-                case SET_UNIT_POSITION:
-                {
-                    sf::Uint8 ID_jednostki;
-                    sf::Uint8 x;
-                    sf::Uint8 y;
-                    receive_packet >> ID_jednostki >> x >> y;
-                    break;
-                }
-                default:
-                {
-                    break;
-                }
-                }//end switch
-            }
-        }
-
-        //OBSŁUGA URZĄDZEŃ WEJŚCIA
-        //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-        sf::Event zdarzenie;
-        while (oknoAplikacji.pollEvent(zdarzenie))
-        {
-            switch (zdarzenie.type)
-            {
-            case sf::Event::Closed:
-                quit = true;
-                break;
-            case sf::Event::KeyPressed:
-                switch (zdarzenie.key.code)
-                {
-                case sf::Keyboard::Escape:
-                    quit = true;
-                    break;
-                default:
-                    break;
-                }
-                break;
-            case sf::Event::MouseButtonPressed:
-                quit = true;
-                break;
-            default:
-                break;
-            }
-        }
-
-        //RENDER OBRAZU
-        //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-        oknoAplikacji.clear();
-        oknoAplikacji.setView(v);//ustawia widok
-        for (int i = 0; i < number_of_chunks; i++)
-        {
-            oknoAplikacji.draw(image[i]);//wyswietla chunki
-        }
-        oknoAplikacji.setView(oknoAplikacji.getDefaultView());//zeby zrzutowac jednostki i obiekty prosto
-        for (int i = 0; i < number_of_trees1; i++)
-        {
-            oknoAplikacji.draw(drzewo[i]);
-        }
-        oknoAplikacji.display();
-
-        socket.send( send_packet, remote_ip, remote_port );//wyslanie pakietu
-        send_packet.clear();//czyszczenie pakietu
+            socket.send( send_packet, remote_ip, remote_port );
+            send_packet.clear();
+        }//pętla gry
     }
 //---------------------------------------------------------------------------------------------------------------------//
-    delete[] image;
-    delete[] drzewo;
     oknoAplikacji.close();
 
     return EXIT_SUCCESS;
 }
-
 //https://www.sfml-dev.org/tutorials/2.4/window-window.php

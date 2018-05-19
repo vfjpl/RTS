@@ -1,7 +1,7 @@
 #include <SFML/Network.hpp>
 #include <iostream>
 
-#include "network.hpp"
+#include "network_server.hpp"
 
 #ifdef linux
 #include <getopt.h>
@@ -9,9 +9,9 @@
 
 void print_help()
 {
-    std::cout<<"-p  --port            default 7000\n"
-             "-n --numberofplayers  default 1\n"
-             "-h  --help            this message\n";
+    std::cout<<"-p --port               default 7000\n"
+             "-n --number_of_players  default 1\n"
+             "-h --help               this message\n";
 }
 //---------------------------------------------------------------------------------------------------------------------//
 int main(int argc, char** argv)
@@ -24,9 +24,9 @@ int main(int argc, char** argv)
     {
         static struct option longopts[] =
         {
-            {"port",            required_argument, NULL, 'p'},
-            {"numberofplayers", required_argument, NULL, 'n'},
-            {"help",            no_argument,       NULL, 'h'},
+            {"port",              required_argument, NULL, 'p'},
+            {"number_of_players", required_argument, NULL, 'n'},
+            {"help",              no_argument,       NULL, 'h'},
         };
 
         int c;
@@ -63,16 +63,16 @@ int main(int argc, char** argv)
     sf::IpAddress incomming_ip;
     unsigned short incomming_port;
 
-    player players[2];
+    player players[4];
 //---------------------------------------------------------------------------------------------------------------------//
     while( !quit )
     {
         network_players_init(socket, players, number_of_players);
 
-        bool game_quit = false;
-        sf::Time time;
         sf::Clock clock;
-        while( !game_quit )//pętla gry
+        sf::Time time;
+        bool quit_game = false;
+        while( !quit_game )//pętla gry
         {
             socket.receive( receive_packet, incomming_ip, incomming_port );
             time = clock.restart();

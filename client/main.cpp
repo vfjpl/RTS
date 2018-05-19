@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "network_client.hpp"
+#include "input_client.hpp"
 
 #ifdef linux
 #include <getopt.h>
@@ -72,9 +73,9 @@ int main( int argc, char** argv )
     unsigned short incomming_port;
 
     //MODYFIKOWANIE OKNA APLIKACJI
-    sf::RenderWindow oknoAplikacji( sf::VideoMode( 1920, 1080 ), "Kelajno", sf::Style::Fullscreen );//opcja fullscreen
+    sf::RenderWindow window( sf::VideoMode( 1920, 1080 ), "Kelajno", sf::Style::Fullscreen );//opcja fullscreen
     //pobierać roździelczość przez getSize()
-    oknoAplikacji.setFramerateLimit(60);//ustawiam limit fps na 60
+    window.setFramerateLimit(60);//ustawiam limit fps na 60
 //---------------------------------------------------------------------------------------------------------------------//
     while( !quit )
     {
@@ -86,16 +87,20 @@ int main( int argc, char** argv )
         while( !quit_game )//pętla gry
         {
             time = clock.restart();//pobranie czasu od ostatniej klatki
-            while ( !socket.receive( receive_packet, incomming_ip, incomming_port ) )
+            while( !socket.receive( receive_packet, incomming_ip, incomming_port ) )
                 network_packet_receive( receive_packet );
+
+            sf::Event event;
+            while( window.pollEvent( event ) )
+                input_receive( event, quit_game, quit );
 
             socket.send( send_packet, remote_ip, remote_port );
             send_packet.clear();
         }//pętla gry
     }
 //---------------------------------------------------------------------------------------------------------------------//
-    oknoAplikacji.close();
+    window.close();
 
     return EXIT_SUCCESS;
 }
-//https://www.sfml-dev.org/tutorials/2.4/window-window.php
+//https://www.sfml-dev.org/tutorials/2.5/window-window.php

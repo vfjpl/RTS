@@ -58,7 +58,7 @@ void network_players_init(sf::UdpSocket& socket, player* players, sf::Uint8 numb
     sf::IpAddress incomming_ip;
     unsigned short incomming_port;
 
-    for(int i = 0; i < number_of_players; )
+    for(sf::Uint8 i = 0; i < number_of_players; )
     {
         socket.receive( receive_packet, incomming_ip, incomming_port );
         sf::Uint8 opcode;
@@ -68,6 +68,6 @@ void network_players_init(sf::UdpSocket& socket, player* players, sf::Uint8 numb
     }
 
     send_packet << SERVER_STARTED_GAME;
-    for(int i = 0; i < number_of_players; i++)
+    for(sf::Uint8 i = 0; i < number_of_players; i++)
         socket.send( send_packet, players[i].get_ip(), players[i].get_port() );
 }

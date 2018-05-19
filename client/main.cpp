@@ -79,7 +79,7 @@ int main( int argc, char** argv )
 //---------------------------------------------------------------------------------------------------------------------//
     while( !quit )
     {
-        //miejsce na menu!!!!!!!!!!!!!!!!!
+        //miejsce na menu
 
         sf::Clock clock;
         sf::Time time;
@@ -93,6 +93,10 @@ int main( int argc, char** argv )
             sf::Event event;
             while( window.pollEvent( event ) )
                 input_receive( event, quit_game, quit );
+
+
+            window.clear();
+            window.display();
 
             socket.send( send_packet, remote_ip, remote_port );
             send_packet.clear();

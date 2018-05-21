@@ -9,9 +9,9 @@
 
 void print_help()
 {
-    std::cout<<"-p --port               default 7000\n"
-             "-n --number_of_players  default 1\n"
-             "-h --help               this message\n";
+    std::cout<<"-p  --port               default: 7000\n"
+             "-n  --number_of_players  default: 1\n"
+             "-h  --help               this message\n";
 }
 //---------------------------------------------------------------------------------------------------------------------//
 int main(int argc, char** argv)
@@ -22,7 +22,7 @@ int main(int argc, char** argv)
 
 #ifdef linux
     {
-        static struct option longopts[] =
+        const struct option longopts[] =
         {
             {"port",              required_argument, NULL, 'p'},
             {"number_of_players", required_argument, NULL, 'n'},
@@ -35,13 +35,13 @@ int main(int argc, char** argv)
             switch (c)
             {
             case 'p':
-                local_port = std::stoul( optarg, NULL, 0 );
+                local_port = std::stoul( optarg );
                 break;
             case 'n':
-                number_of_players = std::stoul( optarg, NULL, 0 );
+                number_of_players = std::stoul( optarg );
                 break;
             case 'h':
-                std::cout<<argv[0]<<"\n";
+                std::cout << argv[0] << "\n";
                 print_help();
                 return 0;
             case '?':
@@ -63,7 +63,7 @@ int main(int argc, char** argv)
     sf::IpAddress incomming_ip;
     unsigned short incomming_port;
 
-    player players[4];
+    player players[2];
 //---------------------------------------------------------------------------------------------------------------------//
     while( !quit )
     {

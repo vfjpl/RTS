@@ -3,6 +3,6 @@
 
 #include <SFML/Window.hpp>
 
-void input_receive(sf::Event& event, bool& quit_game, bool& quit);
+void input_receive(const sf::Event& event, bool& quit_game, bool& quit);
 
 #endif // INPUT_CLIENT_HPP_INCLUDED

@@ -11,22 +11,22 @@
 
 void print_help()
 {
-    std::cout << "-p --port       default 7000\n"
-              "-l --local_port default 8000\n"
-              "-i --ip         default localhost\n"
-              "-h --help       this message\n";
+    std::cout << "-p  --port       default: 7000\n"
+              "-l  --local_port  default: sf::UdpSocket::AnyPort\n"
+              "-i  --ip          default: localhost\n"
+              "-h  --help        this message\n";
 }
 //---------------------------------------------------------------------------------------------------------------------//
 int main( int argc, char** argv )
 {
     //zmienne które można modyfikować argumentami z konsoli
-    unsigned short local_port = 8000;//port na którym aplikacja odbiera połączenia
+    unsigned short local_port = sf::UdpSocket::AnyPort;//port na którym aplikacja odbiera połączenia
     unsigned short remote_port = 7000;//port do którego się łączymy
     sf::IpAddress remote_ip = "localhost";//ip do którego się łączymy
 
 #ifdef linux
     {
-        static struct option longopts[] =
+        const struct option longopts[] =
         {
             { "port",       required_argument, NULL, 'p' },
             { "local_port", required_argument, NULL, 'l' },
@@ -40,10 +40,10 @@ int main( int argc, char** argv )
             switch (c)
             {
             case 'p':
-                remote_port = std::stoul( optarg, NULL, 0 );
+                remote_port = std::stoul( optarg );
                 break;
             case 'l':
-                local_port = std::stoul( optarg, NULL, 0 );
+                local_port = std::stoul( optarg );
                 break;
             case 'i':
                 remote_ip = optarg;
@@ -65,7 +65,7 @@ int main( int argc, char** argv )
     //zmienne sieciowe
     sf::UdpSocket socket;
     socket.setBlocking(false);
-    socket.bind(local_port);
+    //socket.bind(local_port);
 
     sf::Packet send_packet;
     sf::Packet receive_packet;
@@ -83,6 +83,7 @@ int main( int argc, char** argv )
 
         sf::Clock clock;
         sf::Time time;
+        sf::Event event;
         bool quit_game = false;
         while( !quit_game )//pętla gry
         {
@@ -90,7 +91,6 @@ int main( int argc, char** argv )
             while( !socket.receive( receive_packet, incomming_ip, incomming_port ) )
                 network_packet_receive( receive_packet );
 
-            sf::Event event;
             while( window.pollEvent( event ) )
                 input_receive( event, quit_game, quit );
 

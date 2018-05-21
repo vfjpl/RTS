@@ -64,7 +64,7 @@ void network_players_init(sf::UdpSocket& socket, player* players, sf::Uint8 numb
         sf::Uint8 opcode;
         receive_packet >> opcode;
         if( opcode == REQUEST_GAME_JOIN )
-            players[i++] = player( incomming_ip, incomming_port );
+            players[i++].set_ip_port( incomming_ip, incomming_port);
     }
 
     send_packet << SERVER_STARTED_GAME;

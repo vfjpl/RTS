@@ -5,7 +5,7 @@
 
 // ID - oznacza, że operacja dotyczy konkretnego obiektu.
 // BP - oznacza, że operacja dotyczy możliwego okietu.
-enum OPCODES: sf::Uint8
+enum: sf::Uint8
 {
 
     UNUSED,

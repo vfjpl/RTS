@@ -11,8 +11,9 @@ class player
 public:
     player();
     player( sf::IpAddress ip, unsigned short port );
-    sf::IpAddress get_ip();
-    unsigned short get_port();
+    void set_ip_port( sf::IpAddress ip, unsigned short port );
+    sf::IpAddress get_ip() const;
+    unsigned short get_port() const;
 
 };
 

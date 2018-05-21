@@ -14,12 +14,12 @@ void unit::set_position( sf::Uint8 x, sf::Uint8 y )
     this->y = y;
 }
 
-sf::Uint8 unit::get_x()
+sf::Uint8 unit::get_x() const
 {
     return x;
 }
 
-sf::Uint8 unit::get_y()
+sf::Uint8 unit::get_y() const
 {
     return y;
 }

@@ -5,6 +5,7 @@
 #include "../common/player.hpp"
 
 void network_packet_receive(sf::Packet& receive_packet);
-void network_players_init(sf::UdpSocket& socket, Player* players, sf::Uint8 number_of_players);
+void network_lobby_packet_receive(sf::Packet& receive, sf::Packet& send, sf::Uint8& current, Player* p_tab,
+                                  const sf::IpAddress& ip, unsigned short port, bool* ready_table);
 
 #endif // NETWORK_SERVER_HPP_INCLUDED

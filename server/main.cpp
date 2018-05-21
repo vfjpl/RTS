@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "network_server.hpp"
+#include "lobby_server.hpp"
 
 #ifdef linux
 #include <getopt.h>
@@ -56,7 +57,7 @@ int main(int argc, char** argv)
     bool quit = false;//główny wyłącznik
     //zmienne sieciowe
     sf::UdpSocket socket;
-    socket.bind( local_port );
+    socket.bind(local_port);
 
     sf::Packet send_packet;
     sf::Packet receive_packet;
@@ -67,7 +68,7 @@ int main(int argc, char** argv)
 //---------------------------------------------------------------------------------------------------------------------//
     while( !quit )
     {
-        network_players_init(socket, players, number_of_players);
+        lobby_server(socket, players, number_of_players);
 
         sf::Clock clock;
         sf::Time time;

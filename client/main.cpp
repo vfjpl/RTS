@@ -4,6 +4,7 @@
 
 #include "network_client.hpp"
 #include "input_client.hpp"
+#include "menu_client.hpp"
 
 #ifdef linux
 #include <getopt.h>
@@ -65,7 +66,7 @@ int main( int argc, char** argv )
     //zmienne sieciowe
     sf::UdpSocket socket;
     socket.setBlocking(false);
-    //socket.bind(local_port);
+    //socket.bind(local_port);//nie potrzeba by odbierac
 
     sf::Packet send_packet;
     sf::Packet receive_packet;
@@ -73,13 +74,13 @@ int main( int argc, char** argv )
     unsigned short incomming_port;
 
     //MODYFIKOWANIE OKNA APLIKACJI
-    sf::RenderWindow window( sf::VideoMode( 1920, 1080 ), "Kelajno", sf::Style::Fullscreen );//opcja fullscreen
+    sf::RenderWindow window( sf::VideoMode( 800, 600 ), "Kelajno" );//sf::Style::Fullscreen
     //pobierać roździelczość przez getSize()
     window.setFramerateLimit(60);//ustawiam limit fps na 60
 //---------------------------------------------------------------------------------------------------------------------//
     while( !quit )
     {
-        //miejsce na menu
+        menu_temp(window, socket, remote_ip, remote_port);
 
         sf::Clock clock;
         sf::Time time;

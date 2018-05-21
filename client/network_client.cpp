@@ -34,3 +34,19 @@ void network_packet_receive(sf::Packet& receive_packet)
         }//end switch
     }
 }
+
+void network_menu_packet_receive(sf::Packet& receive_packet)
+{
+    sf::Uint8 opcode;
+    while( !receive_packet.endOfPacket() )
+    {
+        receive_packet >> opcode;
+        switch( opcode )
+        {
+        case PLAYER_CONNECTED:
+            break;
+        default:
+            break;
+        }//end switch
+    }
+}

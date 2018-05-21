@@ -5,6 +5,10 @@
 
 // ID - oznacza, że operacja dotyczy konkretnego obiektu.
 // BP - oznacza, że operacja dotyczy możliwego okietu.
+
+// Wpisywanie rozkazów do pakietu:
+// packet << (sf::Uint8)opcode; LUB packet << sf::Uint8(opcode); LUB packet << (sf::Uint8)(opcode);
+
 enum: sf::Uint8
 {
 

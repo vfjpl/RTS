@@ -34,7 +34,7 @@ void network_menu_packet_receive(sf::Packet& receive_packet, std::vector<Player>
         {
             sf::Uint8 id;
             receive_packet >> id;
-            if((sf::Uint8)players.size() < id)
+            if(players.size() < id)
                 players.resize(id);
             players.emplace_back();
             break;

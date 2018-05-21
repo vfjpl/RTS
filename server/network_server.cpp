@@ -28,8 +28,8 @@ void network_lobby_packet_receive(sf::Packet& receive_packet, sf::Packet& send_p
         {
         case CLIENT_JOIN_GAME:
         {
-            players.emplace_back(ip, port);
             send_packet<<(sf::Uint8)SERVER_PLAYER_CONNECTED<<(sf::Uint8)players.size();
+            players.emplace_back(ip, port);
             break;
         }
         case CLIENT_DISCONNECT:

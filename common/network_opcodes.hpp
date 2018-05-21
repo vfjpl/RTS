@@ -15,19 +15,19 @@ enum: sf::Uint8
     REQUEST_GAME_JOIN,//prosi o dołączenie do gry
 
     PLAYER_CONNECTED,//informacja o tym że dołączył ktoś do lobby
-// [?]
+// [sf::Uint8 ID_gracza]
 
-    SEND_PLAYER_READY,//wysyła informacje że gotowy
+    SEND_PLAYER_READY,//wysyła informacje że gotowy do serwera
 // [sf::Uint8 ID_gracza]
 
     PLAYER_READY,//wskazuje gotowość gracza na rozpoczęcie gry
 // [sf::Uint8 ID_gracza]
 
     SEND_MESSAGE,//wysyła wiadomość do serwera na czat
-// [?]
+// [sf::Uint8 ID_gracza] [std::wstring tekst]
 
     SERVER_SEND_MESSAGE,//to samo tylko teraz serwer rozsyłą graczą
-// [?]
+// [sf::Uint8 ID_gracza] [std::wstring tekst]
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //CLIENT OPCODES

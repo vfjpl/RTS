@@ -61,19 +61,26 @@ void network_lobby_packet_receive(sf::Packet& receive, sf::Packet& send, sf::Uin
         switch( opcode )
         {
         case REQUEST_GAME_JOIN:
-            ready_table[current] = false;
-            p_tab[current++].set_ip_port(ip, port);
-            send<<PLAYER_CONNECTED;
+            ready_table[current] = false;//tutaj?
+            p_tab[current].set_ip_port(ip, port);
+            send<<PLAYER_CONNECTED<<current++;//wysyłam bo jak dołączy drugi gracz to nie wie że jest drugi
             break;
         case SEND_PLAYER_READY:
         {
             sf::Uint8 id;
             receive >> id;
             ready_table[id] = true;
+            send<<PLAYER_READY<<id;
             break;
         }
         case SEND_MESSAGE:
+        {
+            sf::Uint8 id;
+            std::wstring str;
+            receive >> id >> str;
+            send<<SERVER_SEND_MESSAGE<<id<<str;
             break;
+        }
         default:
             break;
         }//end switch
@@ -112,6 +119,8 @@ void network_players_init(sf::UdpSocket& socket, Player* players, sf::Uint8 numb
     send_packet << SERVER_STARTED_GAME;
     for(sf::Uint8 i = 0; i < number_of_players; i++)
         socket.send( send_packet, players[i].get_ip(), players[i].get_port() );
+
+    delete[] ready_table;
 }
 //TODO:
 //ogarnąć jak zarządzać na ilu graczy gra

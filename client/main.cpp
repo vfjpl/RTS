@@ -104,7 +104,6 @@ int main( int argc, char** argv )
     }
 //---------------------------------------------------------------------------------------------------------------------//
     window.close();
-
     return EXIT_SUCCESS;
 }
 //https://www.sfml-dev.org/tutorials/2.5/window-window.php

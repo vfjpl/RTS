@@ -74,18 +74,20 @@ int main(int argc, char** argv)
         bool quit_game = false;
         while( !quit_game )//pętla gry
         {
-            socket.receive( receive_packet, incomming_ip, incomming_port );
-            time = clock.restart();
-            network_packet_receive( receive_packet );
+            for(sf::Uint8 i=0; i<number_of_players; i++)
+            {
+                socket.receive( receive_packet, incomming_ip, incomming_port );
+                network_packet_receive( receive_packet );
+            }
+            time = clock.restart();//tutaj?
 
 
-
-            socket.send( send_packet, incomming_ip, incomming_port );
+            for(sf::Uint8 i=0; i<number_of_players; i++)
+                socket.send( send_packet, players[i].get_ip(), players[i].get_port() );
             send_packet.clear();
         }//pętla gry
     }
 //---------------------------------------------------------------------------------------------------------------------//
+    delete[] players;
     return EXIT_SUCCESS;
 }
-//TODO:
-//drugi gracz nie dostaje informacji o zmianie pozycji jednostki

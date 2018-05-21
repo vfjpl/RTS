@@ -5,18 +5,24 @@
 
 class Player
 {
+    std::wstring name;
     sf::IpAddress ip;
     unsigned short port;
+    bool ready;
 
 public:
     Player();
     Player(const sf::IpAddress& ip, unsigned short port);
     void set_ip_port(const sf::IpAddress& ip, unsigned short port);
-    sf::IpAddress get_ip() const;
+    void set_name(const std::wstring& name);
+    void set_ready_status(bool status);
+
+    bool get_ready_status() const;
+    const std::wstring& get_name() const;
+    const sf::IpAddress& get_ip() const;
     unsigned short get_port() const;
 
     bool compare(const sf::IpAddress& ip, unsigned short port);
-
 };
 
 #endif // PLAYER_HPP_INCLUDED

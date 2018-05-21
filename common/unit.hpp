@@ -14,7 +14,6 @@ public:
     void set_position(sf::Uint8 x, sf::Uint8 y);
     sf::Uint8 get_x() const;
     sf::Uint8 get_y() const;
-
 };
 
 #endif // UNIT_HPP_INCLUDED

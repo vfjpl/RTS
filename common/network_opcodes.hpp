@@ -14,27 +14,40 @@ enum: sf::Uint8
 
     UNUSED,
 
-    SERVER_STARTED_GAME,//serwer rozpoczął grę
+    SERVER_START_GAME,//serwer rozpoczął grę
 
-    REQUEST_GAME_JOIN,//prosi o dołączenie do gry
-
-    PLAYER_CONNECTED,//informacja o tym że dołączył ktoś do lobby
+    SERVER_PLAYER_CONNECTED,//informacja o tym że dołączył ktoś do lobby
 // [sf::Uint8 ID_gracza]
 
-    SEND_PLAYER_READY,//wysyła informacje że gotowy do serwera
+    SERVER_PLAYER_DISCONNECTED,
 // [sf::Uint8 ID_gracza]
 
-    PLAYER_READY,//wskazuje gotowość gracza na rozpoczęcie gry
+    SERVER_PLAYER_READY,//wskazuje gotowość gracza na rozpoczęcie gry
 // [sf::Uint8 ID_gracza]
 
-    SEND_MESSAGE,//wysyła wiadomość do serwera na czat
-// [sf::Uint8 ID_gracza] [std::wstring tekst]
+    SERVER_PLAYER_NOTREADY,//wskazuje brak gotowości gracza na rozpoczęcie gry
+// [sf::Uint8 ID_gracza]
 
-    SERVER_SEND_MESSAGE,//to samo tylko teraz serwer rozsyłą graczą
+    SERVER_MESSAGE,//to samo tylko teraz serwer rozsyłą graczą
 // [sf::Uint8 ID_gracza] [std::wstring tekst]
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//CLIENT OPCODES
+
+    CLIENT_JOIN_GAME,//prosi o dołączenie do gry
+
+    CLIENT_DISCONNECT,//rozłącza się;
+// [sf::Uint8 ID_gracza]
+
+    CLIENT_READY,//wysyła informacje że gotowy do serwera
+// [sf::Uint8 ID_gracza]
+
+    CLIENT_NOTREADY,//wysyła informacje że nie gotowy do serwera
+// [sf::Uint8 ID_gracza]
+
+    CLIENT_SEND_MESSAGE,//wysyła wiadomość do serwera na czat
+// [sf::Uint8 ID_gracza] [std::wstring tekst]
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     MOVE_UNIT,//przesunięcie jednostki
 // [sf::Uint8 ID_jednostki] [sf::Uint8 pozycja_x] [sf::Uint8 pozycja_y]
@@ -52,7 +65,6 @@ enum: sf::Uint8
 // [sf::Uint8 ID_jednostki]
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//SERVER OPCODES
 
     ADD_UNIT_TO_GAME,//dodaj jednostke do gry
 // [sf::Uint8 BP_jednostki] [sf::Uint8 pozycja_x] [sf::Uint8 pozycja_y]

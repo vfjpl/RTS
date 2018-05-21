@@ -14,7 +14,27 @@ void Player::set_ip_port(const sf::IpAddress& ip, unsigned short port)
     this->port = port;
 }
 
-sf::IpAddress Player::get_ip() const
+void Player::set_name(const std::wstring& name)
+{
+    this->name = name;
+}
+
+void Player::set_ready_status(bool status)
+{
+    this->ready = status;
+}
+
+bool Player::get_ready_status() const
+{
+    return ready;
+}
+
+const std::wstring& Player::get_name() const
+{
+    return name;
+}
+
+const sf::IpAddress& Player::get_ip() const
 {
     return ip;
 }

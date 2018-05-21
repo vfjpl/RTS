@@ -10,9 +10,24 @@ enum: sf::Uint8
 
     UNUSED,
 
+    SERVER_STARTED_GAME,//serwer rozpoczął grę
+
     REQUEST_GAME_JOIN,//prosi o dołączenie do gry
 
-    SERVER_STARTED_GAME,//serwer rozpoczął grę
+    PLAYER_CONNECTED,//informacja o tym że dołączył ktoś do lobby
+// [?]
+
+    SEND_PLAYER_READY,//wysyła informacje że gotowy
+// [sf::Uint8 ID_gracza]
+
+    PLAYER_READY,//wskazuje gotowość gracza na rozpoczęcie gry
+// [sf::Uint8 ID_gracza]
+
+    SEND_MESSAGE,//wysyła wiadomość do serwera na czat
+// [?]
+
+    SERVER_SEND_MESSAGE,//to samo tylko teraz serwer rozsyłą graczą
+// [?]
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //CLIENT OPCODES

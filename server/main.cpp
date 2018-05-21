@@ -63,7 +63,7 @@ int main(int argc, char** argv)
     sf::IpAddress incomming_ip;
     unsigned short incomming_port;
 
-    player players[2];
+    Player *players = new Player[number_of_players];
 //---------------------------------------------------------------------------------------------------------------------//
     while( !quit )
     {

@@ -3,17 +3,19 @@
 
 #include <SFML/Network.hpp>
 
-class player
+class Player
 {
     sf::IpAddress ip;
     unsigned short port;
 
 public:
-    player();
-    player( sf::IpAddress ip, unsigned short port );
-    void set_ip_port( sf::IpAddress ip, unsigned short port );
+    Player();
+    Player(const sf::IpAddress& ip, unsigned short port);
+    void set_ip_port(const sf::IpAddress& ip, unsigned short port);
     sf::IpAddress get_ip() const;
     unsigned short get_port() const;
+
+    bool compare(const sf::IpAddress& ip, unsigned short port);
 
 };
 

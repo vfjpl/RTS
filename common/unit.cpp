@@ -1,25 +1,25 @@
 #include "unit.hpp"
 
-unit::unit() {}
+Unit::Unit() {}
 
-unit::unit( sf::Uint8 x, sf::Uint8 y )
+Unit::Unit(sf::Uint8 x, sf::Uint8 y)
 {
     this->x = x;
     this->y = y;
 }
 
-void unit::set_position( sf::Uint8 x, sf::Uint8 y )
+void Unit::set_position(sf::Uint8 x, sf::Uint8 y)
 {
     this->x = x;
     this->y = y;
 }
 
-sf::Uint8 unit::get_x() const
+sf::Uint8 Unit::get_x() const
 {
     return x;
 }
 
-sf::Uint8 unit::get_y() const
+sf::Uint8 Unit::get_y() const
 {
     return y;
 }

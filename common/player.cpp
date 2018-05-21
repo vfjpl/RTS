@@ -1,25 +1,34 @@
 #include "player.hpp"
 
-player::player() {}
+Player::Player() {}
 
-player::player( sf::IpAddress ip, unsigned short port )
+Player::Player(const sf::IpAddress& ip, unsigned short port)
 {
     this->ip = ip;
     this->port = port;
 }
 
-void player::set_ip_port( sf::IpAddress ip, unsigned short port )
+void Player::set_ip_port(const sf::IpAddress& ip, unsigned short port)
 {
     this->ip = ip;
     this->port = port;
 }
 
-sf::IpAddress player::get_ip() const
+sf::IpAddress Player::get_ip() const
 {
     return ip;
 }
 
-unsigned short player::get_port() const
+unsigned short Player::get_port() const
 {
     return port;
+}
+
+bool Player::compare(const sf::IpAddress& ip, unsigned short port)
+{
+    if(this->port == port)
+        if(this->ip == ip)
+            return true;
+
+    return false;
 }

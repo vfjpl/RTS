@@ -47,15 +47,9 @@ void network_menu_packet_receive(sf::Packet& receive_packet, std::vector<Player>
         case SERVER_PLAYER_READY:
         {
             sf::Uint8 id;
-            receive_packet >> id;
-            players[id].set_ready_status(true);
-            break;
-        }
-        case SERVER_PLAYER_NOTREADY:
-        {
-            sf::Uint8 id;
-            receive_packet >> id;
-            players[id].set_ready_status(false);
+            bool status;
+            receive_packet >> id >> status;
+            players[id].set_ready_status(status);
             break;
         }
         case SERVER_MESSAGE:

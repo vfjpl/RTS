@@ -43,17 +43,10 @@ void network_lobby_packet_receive(sf::Packet& receive_packet, sf::Packet& send_p
         case CLIENT_READY:
         {
             sf::Uint8 id;
-            receive_packet >> id;
-            players[id].set_ready_status(true);
-            send_packet<<(sf::Uint8)SERVER_PLAYER_READY<<id;
-            break;
-        }
-        case CLIENT_NOTREADY:
-        {
-            sf::Uint8 id;
-            receive_packet >> id;
-            players[id].set_ready_status(false);
-            send_packet<<(sf::Uint8)SERVER_PLAYER_NOTREADY<<id;
+            bool status;
+            receive_packet >> id >> status;
+            players[id].set_ready_status(status);
+            send_packet<<(sf::Uint8)SERVER_PLAYER_READY<<id<<status;
             break;
         }
         case CLIENT_SEND_MESSAGE:
@@ -62,6 +55,15 @@ void network_lobby_packet_receive(sf::Packet& receive_packet, sf::Packet& send_p
             std::wstring str;
             receive_packet >> id >> str;
             send_packet<<(sf::Uint8)SERVER_MESSAGE<<id<<str;
+            break;
+        }
+        case CLIENT_SET_NAME:
+        {
+            sf::Uint8 id;
+            std::wstring str;
+            receive_packet >> id >> str;
+            players[id].set_name(str);
+            send_packet<<(sf::Uint8)SERVER_PLAYER_NAME<<id<<str;
             break;
         }
         default:

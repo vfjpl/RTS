@@ -22,11 +22,8 @@ enum: sf::Uint8
     SERVER_PLAYER_DISCONNECTED,//gracz opuścił grę
 // [sf::Uint8 ID_gracza]
 
-    SERVER_PLAYER_READY,//wskazuje gotowość gracza na rozpoczęcie gry
-// [sf::Uint8 ID_gracza]
-
-    SERVER_PLAYER_NOTREADY,//wskazuje brak gotowości gracza na rozpoczęcie gry
-// [sf::Uint8 ID_gracza]
+    SERVER_PLAYER_READY,//rozsyła informacje o statusie gracza
+// [sf::Uint8 ID_gracza] [bool status]
 
     SERVER_MESSAGE,//serwer rozsyłą wiadomość graczą
 // [sf::Uint8 ID_gracza] [std::wstring tekst]
@@ -41,14 +38,14 @@ enum: sf::Uint8
     CLIENT_DISCONNECT,//rozłącza się
 // [sf::Uint8 ID_gracza]
 
-    CLIENT_READY,//wysyła informacje że gotowy do serwera
-// [sf::Uint8 ID_gracza]
-
-    CLIENT_NOTREADY,//wysyła informacje że nie gotowy do serwera
-// [sf::Uint8 ID_gracza]
+    CLIENT_READY,//wysyła informacje o statusie gracza
+// [sf::Uint8 ID_gracza] [bool ready]
 
     CLIENT_SEND_MESSAGE,//wysyła wiadomość do serwera na czat
 // [sf::Uint8 ID_gracza] [std::wstring tekst]
+
+    CLIENT_SET_NAME,//ustawia nick gracza
+// [sf::Uint8 ID_gracza] [std::wstring nick]
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

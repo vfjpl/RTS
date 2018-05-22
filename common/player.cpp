@@ -24,11 +24,6 @@ void Player::set_ready_status(bool status)
     this->ready = status;
 }
 
-bool Player::get_ready_status() const
-{
-    return ready;
-}
-
 const std::wstring& Player::get_name() const
 {
     return name;
@@ -44,7 +39,12 @@ unsigned short Player::get_port() const
     return port;
 }
 
-bool Player::compare(const sf::IpAddress& ip, unsigned short port)
+bool Player::get_ready_status() const
+{
+    return ready;
+}
+
+bool Player::compare(const sf::IpAddress& ip, unsigned short port) const
 {
     if(this->port == port)
         if(this->ip == ip)

@@ -19,7 +19,7 @@ enum: sf::Uint8
     SERVER_PLAYER_CONNECTED,//informacja o tym że dołączył ktoś do lobby
 // [sf::Uint8 ID_gracza]
 
-    SERVER_PLAYER_DISCONNECTED,
+    SERVER_PLAYER_DISCONNECTED,//gracz opuścił grę
 // [sf::Uint8 ID_gracza]
 
     SERVER_PLAYER_READY,//wskazuje gotowość gracza na rozpoczęcie gry
@@ -28,14 +28,17 @@ enum: sf::Uint8
     SERVER_PLAYER_NOTREADY,//wskazuje brak gotowości gracza na rozpoczęcie gry
 // [sf::Uint8 ID_gracza]
 
-    SERVER_MESSAGE,//to samo tylko teraz serwer rozsyłą graczą
+    SERVER_MESSAGE,//serwer rozsyłą wiadomość graczą
 // [sf::Uint8 ID_gracza] [std::wstring tekst]
+
+    SERVER_PLAYER_NAME,//serwer rozsyłą nick gracza
+// [sf::Uint8 ID_gracza] [std::wstring nick]
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     CLIENT_JOIN_GAME,//prosi o dołączenie do gry
 
-    CLIENT_DISCONNECT,//rozłącza się;
+    CLIENT_DISCONNECT,//rozłącza się
 // [sf::Uint8 ID_gracza]
 
     CLIENT_READY,//wysyła informacje że gotowy do serwera

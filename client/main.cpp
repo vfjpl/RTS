@@ -23,12 +23,12 @@ int main()
 //---------------------------------------------------------------------------------------------------------------------//
     while( !quit )
     {
-        menu_temp(window, socket, players, remote_ip, remote_port);
+        bool quit_game = false;
+        menu_temp(window, socket, players, remote_ip, remote_port, quit, quit_game);
 
         sf::Clock clock;
         sf::Time time;
         sf::Event event;
-        bool quit_game = false;
         while( !quit_game )//pętla gry
         {
             time = clock.restart();

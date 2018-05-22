@@ -14,7 +14,7 @@ void input_keypressed(const sf::Event& event, bool& quit_game, bool& quit)
     {
         break;
     }
-    }
+    }//end switch
 }
 
 void input_mousebuttonpressed(const sf::Event& event, bool& quit_game, bool& quit)
@@ -31,7 +31,7 @@ void input_mousebuttonpressed(const sf::Event& event, bool& quit_game, bool& qui
     {
         break;
     }
-    }
+    }//end switch
 }
 
 void input_receive(const sf::Event& event, bool& quit_game, bool& quit)
@@ -58,5 +58,23 @@ void input_receive(const sf::Event& event, bool& quit_game, bool& quit)
     {
         break;
     }
+    }//end switch
+}
+
+void input_menu_receive(const sf::Event& event, bool& quit_menu, bool& quit, bool& quit_game)
+{
+    switch(event.type)
+    {
+    case sf::Event::Closed:
+    {
+        quit = true;
+        quit_game = true;
+        quit_menu = true;
+        break;
     }
+    default:
+    {
+        break;
+    }
+    }//end switch
 }

@@ -34,9 +34,7 @@ void network_menu_packet_receive(sf::Packet& receive_packet, std::vector<Player>
         {
             sf::Uint8 id;
             receive_packet >> id;
-            if(players.size() < id)
-                players.resize(id);
-            players.emplace_back();
+            players.resize(id + 1);
             break;
         }
         case SERVER_PLAYER_DISCONNECTED:
@@ -62,6 +60,17 @@ void network_menu_packet_receive(sf::Packet& receive_packet, std::vector<Player>
         }
         case SERVER_MESSAGE:
         {
+            sf::Uint8 id;
+            std::wstring str;
+            receive_packet >> id >> str;
+            break;
+        }
+        case SERVER_PLAYER_NAME:
+        {
+            sf::Uint8 id;
+            std::wstring str;
+            receive_packet >> id >> str;
+            players[id].set_name(str);
             break;
         }
         default:

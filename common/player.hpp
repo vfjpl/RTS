@@ -17,12 +17,12 @@ public:
     void set_name(const std::wstring& name);
     void set_ready_status(bool status);
 
-    bool get_ready_status() const;
     const std::wstring& get_name() const;
     const sf::IpAddress& get_ip() const;
     unsigned short get_port() const;
+    bool get_ready_status() const;
 
-    bool compare(const sf::IpAddress& ip, unsigned short port);
+    bool compare(const sf::IpAddress& ip, unsigned short port) const;
 };
 
 #endif // PLAYER_HPP_INCLUDED

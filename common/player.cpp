@@ -1,54 +1,64 @@
 #include "player.hpp"
+#include <iostream>
 
 Player::Player() {}
 
-Player::Player(const sf::IpAddress& ip, unsigned short port)
+Player::Player(sf::IpAddress ip, unsigned short port)
 {
-    this->ip = ip;
-    this->port = port;
+    m_ip = ip;
+    m_port = port;
 }
 
-void Player::set_ip_port(const sf::IpAddress& ip, unsigned short port)
+void Player::set_ip_port(sf::IpAddress ip, unsigned short port)
 {
-    this->ip = ip;
-    this->port = port;
+    m_ip = ip;
+    m_port = port;
 }
 
 void Player::set_name(const std::wstring& name)
 {
-    this->name = name;
+    m_name = name;
 }
 
 void Player::set_ready_status(bool status)
 {
-    this->ready = status;
+    m_ready = status;
 }
 
 const std::wstring& Player::get_name() const
 {
-    return name;
+    return m_name;
 }
 
-const sf::IpAddress& Player::get_ip() const
+sf::IpAddress Player::get_ip() const
 {
-    return ip;
+    return m_ip;
 }
 
 unsigned short Player::get_port() const
 {
-    return port;
+    return m_port;
 }
 
 bool Player::get_ready_status() const
 {
-    return ready;
+    return m_ready;
 }
 
-bool Player::compare(const sf::IpAddress& ip, unsigned short port) const
+bool Player::compare(sf::IpAddress ip, unsigned short port) const
 {
-    if(this->port == port)
-        if(this->ip == ip)
+    if(m_port == port)
+        if(m_ip == ip)
             return true;
 
     return false;
+}
+
+void Player::debug_show_size() const
+{
+    //keep up to date!
+    std::cout << sizeof(m_name) << "\n"
+              << sizeof(m_ip) << "\n"
+              << sizeof(m_port) << "\n"
+              << sizeof(m_ready) << "\n";
 }

@@ -4,22 +4,22 @@ Unit::Unit() {}
 
 Unit::Unit(sf::Uint8 x, sf::Uint8 y)
 {
-    this->x = x;
-    this->y = y;
+    m_x = x;
+    m_y = y;
 }
 
 void Unit::set_position(sf::Uint8 x, sf::Uint8 y)
 {
-    this->x = x;
-    this->y = y;
+    m_x = x;
+    m_y = y;
 }
 
 sf::Uint8 Unit::get_x() const
 {
-    return x;
+    return m_x;
 }
 
 sf::Uint8 Unit::get_y() const
 {
-    return y;
+    return m_y;
 }

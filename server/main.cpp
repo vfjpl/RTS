@@ -1,40 +1,22 @@
-#include "lobby_server.hpp"
-#include "network_server.hpp"
+#include "game_server_session.hpp"
 
 int main()
 {
-    bool quit = false;
-    sf::UdpSocket socket;
-    socket.bind(7000);
+    Game_Server_Session session;
+    bool game_loop;
 
-    sf::Packet send_packet;
-    sf::Packet receive_packet;
-    sf::IpAddress incomming_ip;
-    unsigned short incomming_port;
-
-    std::vector<Player> players;
-//---------------------------------------------------------------------------------------------------------------------//
-    while( !quit )
+    while( true )
     {
-        lobby_server(socket, players);
-
-        sf::Clock clock;
-        sf::Time time;
-        bool quit_game = false;
-        while( !quit_game )//pętla gry
+        session.lobby_receive_packets();
+        game_loop = session.lobby_logic();
+        session.send_packets();
+        while( game_loop )
         {
-            for(sf::Uint8 i=0; i <= players.size(); i++)
-            {
-                socket.receive( receive_packet, incomming_ip, incomming_port );
-                network_packet_receive( receive_packet );
-            }
-
-
-            for(sf::Uint8 i=0; i < players.size(); i++)
-                socket.send( send_packet, players[i].get_ip(), players[i].get_port() );
-            send_packet.clear();
-        }//pętla gry
+            session.receive_packets();
+            session.game_logic();
+            session.send_packets();
+        }
     }
-//---------------------------------------------------------------------------------------------------------------------//
+
     return EXIT_SUCCESS;
 }

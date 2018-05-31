@@ -5,24 +5,27 @@
 
 class Player
 {
-    std::wstring name;
-    sf::IpAddress ip;
-    unsigned short port;
-    bool ready;
+    //sort from largest to smallest!
+    std::wstring m_name;//32
+    sf::IpAddress m_ip;//8
+    unsigned short m_port;//2
+    bool m_ready;//1
 
 public:
     Player();
-    Player(const sf::IpAddress& ip, unsigned short port);
-    void set_ip_port(const sf::IpAddress& ip, unsigned short port);
+    Player(sf::IpAddress ip, unsigned short port);
+    void set_ip_port(sf::IpAddress ip, unsigned short port);
     void set_name(const std::wstring& name);
     void set_ready_status(bool status);
 
     const std::wstring& get_name() const;
-    const sf::IpAddress& get_ip() const;
+    sf::IpAddress get_ip() const;
     unsigned short get_port() const;
     bool get_ready_status() const;
 
-    bool compare(const sf::IpAddress& ip, unsigned short port) const;
+    bool compare(sf::IpAddress ip, unsigned short port) const;
+
+    void debug_show_size() const;
 };
 
 #endif // PLAYER_HPP_INCLUDED

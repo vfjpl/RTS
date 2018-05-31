@@ -1,0 +1,131 @@
+#include "game_server_session.hpp"
+#include "../common/network_opcodes.hpp"
+#include <iostream>
+
+Game_Server_Session::Game_Server_Session()
+{
+    socket.bind(7000);
+}
+
+void Game_Server_Session::lobby_receive_packets()
+{
+    sf::IpAddress incomming_ip;
+    unsigned short incomming_port;
+    sf::Uint8 opcode;
+    for(sf::Uint8 i = 0; i <= players.size(); i++)
+    {
+        socket.receive( received_packet, incomming_ip, incomming_port );
+        while( !received_packet.endOfPacket() )
+        {
+            received_packet >> opcode;
+            switch( opcode )
+            {
+            case CLIENT_JOIN_GAME:
+            {
+                packet_to_send<<(sf::Uint8)SERVER_PLAYER_CONNECTED<<(sf::Uint8)players.size();
+                players.emplace_back(incomming_ip, incomming_port);
+                break;
+            }
+            case CLIENT_DISCONNECT:
+            {
+                sf::Uint8 id;
+                received_packet >> id;
+                players.erase(players.begin() + id);
+                packet_to_send<<(sf::Uint8)SERVER_PLAYER_DISCONNECTED<<id;
+                break;
+            }
+            case CLIENT_READY:
+            {
+                sf::Uint8 id;
+                bool status;
+                received_packet >> id >> status;
+                players[id].set_ready_status(status);
+                packet_to_send<<(sf::Uint8)SERVER_PLAYER_READY<<id<<status;
+                break;
+            }
+            case CLIENT_SEND_MESSAGE:
+            {
+                sf::Uint8 id;
+                std::wstring str;
+                received_packet >> id >> str;
+                packet_to_send<<(sf::Uint8)SERVER_MESSAGE<<id<<str;
+                break;
+            }
+            case CLIENT_SET_NAME:
+            {
+                sf::Uint8 id;
+                std::wstring str;
+                received_packet >> id >> str;
+                players[id].set_name(str);
+                packet_to_send<<(sf::Uint8)SERVER_PLAYER_NAME<<id<<str;
+                break;
+            }
+            default:
+            {
+                received_packet.clear();
+                break;
+            }
+            }//end switch
+        }
+    }
+}
+
+void Game_Server_Session::receive_packets()
+{
+    sf::IpAddress incomming_ip;
+    unsigned short incomming_port;
+    sf::Uint8 opcode;
+    for(sf::Uint8 i = 0; i <= players.size(); i++)
+    {
+        socket.receive( received_packet, incomming_ip, incomming_port );
+        while( !received_packet.endOfPacket() )
+        {
+            received_packet >> opcode;
+            switch( opcode )
+            {
+            default:
+            {
+                received_packet.clear();
+                break;
+            }
+            }//end switch
+        }
+    }
+}
+
+void Game_Server_Session::send_packets()
+{
+    for(sf::Uint8 i = 0; i < players.size(); i++)
+        socket.send( packet_to_send, players[i].get_ip(), players[i].get_port() );
+    packet_to_send.clear();
+}
+
+bool Game_Server_Session::lobby_logic()
+{
+    time = clock.restart();
+
+    bool ready = true;
+    for(sf::Uint8 i = 0; i < players.size(); i++)
+        ready = ready && players[i].get_ready_status();
+
+    if( ready )
+        packet_to_send << (sf::Uint8)SERVER_START_GAME;
+
+    return ready;
+}
+
+void Game_Server_Session::game_logic()
+{
+    time = clock.restart();
+}
+
+void Game_Server_Session::debug_show_size() const
+{
+    //keep up to date!
+    std::cout << sizeof(packet_to_send) << "\n"
+              << sizeof(received_packet) << "\n"
+              << sizeof(socket) << "\n"
+              << sizeof(players) << "\n"
+              << sizeof(clock) << "\n"
+              << sizeof(time) << "\n";
+}

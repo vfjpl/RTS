@@ -5,8 +5,8 @@
 
 class Unit
 {
-    sf::Uint8 x;
-    sf::Uint8 y;
+    sf::Uint8 m_x;
+    sf::Uint8 m_y;
 
 public:
     Unit();

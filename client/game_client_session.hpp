@@ -24,10 +24,10 @@ class Game_Client_Session
 public:
     Game_Client_Session();
 
-    void main_menu_receive_packets();
-    void main_menu_receive_inputs();
-    void main_menu_logic();
-    void main_menu_draw_frame();
+    void lobby_receive_packets();
+    void lobby_receive_inputs();
+    void lobby_logic();
+    void lobby_draw_frame();
 
     void game_receive_packets();
     void game_receive_inputs();

@@ -9,7 +9,7 @@ Game_Client_Session::Game_Client_Session()
     window.setFramerateLimit(60);
 }
 
-void Game_Client_Session::main_menu_receive_packets()
+void Game_Client_Session::lobby_receive_packets()
 {
     sf::IpAddress incomming_ip;
     unsigned short incomming_port;
@@ -73,7 +73,7 @@ void Game_Client_Session::main_menu_receive_packets()
     }
 }
 
-void Game_Client_Session::main_menu_receive_inputs()
+void Game_Client_Session::lobby_receive_inputs()
 {
     while( window.pollEvent(event) )
     {
@@ -93,12 +93,12 @@ void Game_Client_Session::main_menu_receive_inputs()
     }
 }
 
-void Game_Client_Session::main_menu_logic()
+void Game_Client_Session::lobby_logic()
 {
     time = clock.restart();
 }
 
-void Game_Client_Session::main_menu_draw_frame()
+void Game_Client_Session::lobby_draw_frame()
 {
     window.clear();
     window.display();

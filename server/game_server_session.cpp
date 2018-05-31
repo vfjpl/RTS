@@ -104,9 +104,12 @@ bool Game_Server_Session::lobby_logic()
 {
     time = clock.restart();
 
+    if(players.size() == 0)
+        return false;
+
     bool ready = true;
     for(sf::Uint8 i = 0; i < players.size(); i++)
-        ready = ready && players[i].get_ready_status();
+        ready &= players[i].get_ready_status();
 
     if( ready )
         packet_to_send << (sf::Uint8)SERVER_START_GAME;

@@ -1,4 +1,5 @@
 #include "unit.hpp"
+#include <iostream>
 
 Unit::Unit() {}
 
@@ -22,4 +23,10 @@ sf::Uint8 Unit::get_x() const
 sf::Uint8 Unit::get_y() const
 {
     return m_y;
+}
+
+void Unit::debug_show_size() const
+{
+    std::cout << sizeof(m_x) << "\n"
+              << sizeof(m_y) << "\n";
 }

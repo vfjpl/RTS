@@ -1,63 +1,66 @@
-#include "game_server_session.hpp"
+#include "game_client_session.hpp"
 #include "../common/network_opcodes.hpp"
 #include <iostream>
 
-Game_Server_Session::Game_Server_Session()
+Game_Client_Session::Game_Client_Session()
 {
-    socket.bind(7000);
+    socket.setBlocking(false);
+    window.create(sf::VideoMode(800, 600), "Kelajno");//sf::Style::Fullscreen
+    window.setFramerateLimit(60);
 }
 
-void Game_Server_Session::lobby_receive_packets()
+void Game_Client_Session::main_menu_receive_packets()
 {
     sf::IpAddress incomming_ip;
     unsigned short incomming_port;
     sf::Uint8 opcode;
-    for(sf::Uint8 i = 0; i <= players.size(); i++)
+    while ( !socket.receive( received_packet, incomming_ip, incomming_port ) )
     {
-        socket.receive( received_packet, incomming_ip, incomming_port );
         while( !received_packet.endOfPacket() )
         {
             received_packet >> opcode;
             switch( opcode )
             {
-            case CLIENT_JOIN_GAME:
+            case SERVER_START_GAME:
             {
-                packet_to_send<<(sf::Uint8)SERVER_PLAYER_CONNECTED<<(sf::Uint8)players.size();
-                players.emplace_back(incomming_ip, incomming_port);
+                game_loop = true;
                 break;
             }
-            case CLIENT_DISCONNECT:
+            case SERVER_PLAYER_CONNECTED:
+            {
+                sf::Uint8 id;
+                received_packet >> id;
+                players.resize(id + 1);
+                break;
+            }
+            case SERVER_PLAYER_DISCONNECTED:
             {
                 sf::Uint8 id;
                 received_packet >> id;
                 players.erase(players.begin() + id);
-                packet_to_send<<(sf::Uint8)SERVER_PLAYER_DISCONNECTED<<id;
                 break;
             }
-            case CLIENT_READY:
+            case SERVER_PLAYER_READY:
             {
                 sf::Uint8 id;
                 bool status;
                 received_packet >> id >> status;
                 players[id].set_ready_status(status);
-                packet_to_send<<(sf::Uint8)SERVER_PLAYER_READY<<id<<status;
                 break;
             }
-            case CLIENT_SEND_MESSAGE:
+            case SERVER_MESSAGE:
             {
                 sf::Uint8 id;
                 std::wstring str;
                 received_packet >> id >> str;
-                packet_to_send<<(sf::Uint8)SERVER_MESSAGE<<id<<str;
                 break;
             }
-            case CLIENT_SET_NAME:
+            case SERVER_PLAYER_NAME:
             {
                 sf::Uint8 id;
                 std::wstring str;
                 received_packet >> id >> str;
                 players[id].set_name(str);
-                packet_to_send<<(sf::Uint8)SERVER_PLAYER_NAME<<id<<str;
                 break;
             }
             default:
@@ -70,29 +73,45 @@ void Game_Server_Session::lobby_receive_packets()
     }
 }
 
-void Game_Server_Session::lobby_logic()
+void Game_Client_Session::main_menu_receive_inputs()
 {
-    time = clock.restart();
-
-    if(players.size() == 0)
-        return;
-
-    game_loop = true;
-    for(sf::Uint8 i = 0; i < players.size(); i++)
-        game_loop &= players[i].get_ready_status();
-
-    if( game_loop )
-        packet_to_send << (sf::Uint8)SERVER_START_GAME;
+    sf::Event event;
+    while( window.pollEvent(event) )
+    {
+        switch(event.type)
+        {
+        case sf::Event::Closed:
+        {
+            app_loop = false;
+            game_loop = false;
+            break;
+        }
+        default:
+        {
+            break;
+        }
+        }//end switch
+    }
 }
 
-void Game_Server_Session::game_receive_packets()
+void Game_Client_Session::main_menu_logic()
+{
+    time = clock.restart();
+}
+
+void Game_Client_Session::main_menu_draw_frame()
+{
+    window.clear();
+    window.display();
+}
+
+void Game_Client_Session::game_receive_packets()
 {
     sf::IpAddress incomming_ip;
     unsigned short incomming_port;
     sf::Uint8 opcode;
-    for(sf::Uint8 i = 0; i <= players.size(); i++)
+    while ( !socket.receive( received_packet, incomming_ip, incomming_port ) )
     {
-        socket.receive( received_packet, incomming_ip, incomming_port );
         while( !received_packet.endOfPacket() )
         {
             received_packet >> opcode;
@@ -108,37 +127,50 @@ void Game_Server_Session::game_receive_packets()
     }
 }
 
-void Game_Server_Session::game_logic()
+void Game_Client_Session::game_receive_inputs()
+{
+
+}
+
+void Game_Client_Session::game_logic()
 {
     time = clock.restart();
 }
 
-void Game_Server_Session::send_packets()
+void Game_Client_Session::game_draw_frame()
 {
-    for(sf::Uint8 i = 0; i < players.size(); i++)
-        socket.send( packet_to_send, players[i].get_ip(), players[i].get_port() );
+    window.clear();
+    window.display();
+}
+
+void Game_Client_Session::send_packets()
+{
+    socket.send( packet_to_send, remote_ip, remote_port );
     packet_to_send.clear();
 }
 
-bool Game_Server_Session::get_app_loop() const
+bool Game_Client_Session::get_app_loop() const
 {
     return app_loop;
 }
 
-bool Game_Server_Session::get_game_loop() const
+bool Game_Client_Session::get_game_loop() const
 {
     return game_loop;
 }
 
-void Game_Server_Session::debug_show_size() const
+void Game_Client_Session::debug_show_size() const
 {
     //keep up to date!
-    std::cout << sizeof(packet_to_send) << "\n"
+    std::cout << sizeof(window) << "\n"
+              << sizeof(packet_to_send) << "\n"
               << sizeof(received_packet) << "\n"
               << sizeof(socket) << "\n"
               << sizeof(players) << "\n"
               << sizeof(clock) << "\n"
               << sizeof(time) << "\n"
+              << sizeof(remote_ip) << "\n"
+              << sizeof(remote_port) << "\n"
               << sizeof(app_loop) << "\n"
               << sizeof(game_loop) << "\n";
 }

@@ -1,53 +1,25 @@
-#include "menu_client.hpp"
-#include "input_client.hpp"
-#include "network_client.hpp"
+#include "game_client_session.hpp"
 
 int main()
 {
-    bool quit = false;
-    sf::UdpSocket socket;
-    socket.setBlocking(false);
+    Game_Client_Session session;
 
-    unsigned short remote_port = 7000;
-    sf::IpAddress remote_ip = "localhost";
-    sf::Packet send_packet;
-    sf::Packet receive_packet;
-    sf::IpAddress incomming_ip;
-    unsigned short incomming_port;
-
-    std::vector<Player> players;
-
-    sf::RenderWindow window( sf::VideoMode( 800, 600 ), "Kelajno" );//sf::Style::Fullscreen
-    //pobierać roździelczość przez getSize()
-    window.setFramerateLimit(60);
-//---------------------------------------------------------------------------------------------------------------------//
-    while( !quit )
+    while( session.get_app_loop() )
     {
-        bool quit_game = false;
-        menu_temp(window, socket, players, remote_ip, remote_port, quit, quit_game);
-
-        sf::Clock clock;
-        sf::Time time;
-        sf::Event event;
-        while( !quit_game )//pętla gry
+        session.main_menu_receive_packets();
+        session.main_menu_receive_inputs();
+        session.main_menu_logic();
+        session.main_menu_draw_frame();
+        session.send_packets();
+        while( session.get_game_loop() )
         {
-            time = clock.restart();
-            while( !socket.receive( receive_packet, incomming_ip, incomming_port ) )
-                network_packet_receive( receive_packet );
-
-            while( window.pollEvent( event ) )
-                input_receive( event, quit_game, quit );
-
-
-            window.clear();
-            window.display();
-
-            socket.send( send_packet, remote_ip, remote_port );
-            send_packet.clear();
-        }//pętla gry
+            session.game_receive_packets();
+            session.game_receive_inputs();
+            session.game_logic();
+            session.game_draw_frame();
+            session.send_packets();
+        }
     }
-//---------------------------------------------------------------------------------------------------------------------//
-    window.close();
+
     return EXIT_SUCCESS;
 }
-//https://www.sfml-dev.org/tutorials/2.5/window-window.php

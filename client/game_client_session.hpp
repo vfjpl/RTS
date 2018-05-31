@@ -13,6 +13,7 @@ class Game_Client_Session
     sf::Packet received_packet;//56
     sf::UdpSocket socket;//48
     std::vector<Player> players;//24
+    sf::Event event;//20
     sf::Clock clock;//8
     sf::Time time;//8
     sf::IpAddress remote_ip = "localhost";//8
@@ -38,6 +39,10 @@ public:
     bool get_game_loop() const;
 
     void debug_show_size() const;
+
+private:
+    void game_receive_inputs_keypress();
+    void game_receive_inputs_mousepress();
 };
 
 #endif // GAME_CLIENT_SESSION_HPP_INCLUDED

@@ -75,7 +75,6 @@ void Game_Client_Session::main_menu_receive_packets()
 
 void Game_Client_Session::main_menu_receive_inputs()
 {
-    sf::Event event;
     while( window.pollEvent(event) )
     {
         switch(event.type)
@@ -129,7 +128,66 @@ void Game_Client_Session::game_receive_packets()
 
 void Game_Client_Session::game_receive_inputs()
 {
+    while( window.pollEvent(event) )
+    {
+        switch(event.type)
+        {
+        case sf::Event::Closed:
+        {
+            app_loop = false;
+            game_loop = false;
+            break;
+        }
+        case sf::Event::KeyPressed:
+        {
+            game_receive_inputs_keypress();
+            break;
+        }
+        case sf::Event::MouseButtonPressed:
+        {
+            game_receive_inputs_mousepress();
+            break;
+        }
+        default:
+        {
+            break;
+        }
+        }//end switch
+    }
+}
 
+void Game_Client_Session::game_receive_inputs_keypress()
+{
+    switch(event.key.code)
+    {
+    case sf::Keyboard::Escape:
+    {
+        app_loop = false;
+        game_loop = false;
+        break;
+    }
+    default:
+    {
+        break;
+    }
+    }//end switch
+}
+
+void Game_Client_Session::game_receive_inputs_mousepress()
+{
+    switch(event.mouseButton.button)
+    {
+    case sf::Mouse::Middle:
+    {
+        app_loop = false;
+        game_loop = false;
+        break;
+    }
+    default:
+    {
+        break;
+    }
+    }//end switch
 }
 
 void Game_Client_Session::game_logic()
@@ -167,6 +225,7 @@ void Game_Client_Session::debug_show_size() const
               << sizeof(received_packet) << "\n"
               << sizeof(socket) << "\n"
               << sizeof(players) << "\n"
+              << sizeof(event) << "\n"
               << sizeof(clock) << "\n"
               << sizeof(time) << "\n"
               << sizeof(remote_ip) << "\n"

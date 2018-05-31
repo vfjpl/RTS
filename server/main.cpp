@@ -3,14 +3,13 @@
 int main()
 {
     Game_Server_Session session;
-    bool game_loop;
 
-    while( true )
+    while( session.get_app_loop() )
     {
         session.lobby_receive_packets();
-        game_loop = session.lobby_logic();
+        session.lobby_logic();
         session.send_packets();
-        while( game_loop )
+        while( session.get_game_loop() )
         {
             session.receive_packets();
             session.game_logic();

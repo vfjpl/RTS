@@ -100,26 +100,34 @@ void Game_Server_Session::send_packets()
     packet_to_send.clear();
 }
 
-bool Game_Server_Session::lobby_logic()
+void Game_Server_Session::lobby_logic()
 {
     time = clock.restart();
 
     if(players.size() == 0)
-        return false;
+        return;
 
-    bool ready = true;
+    game_loop = true;
     for(sf::Uint8 i = 0; i < players.size(); i++)
-        ready &= players[i].get_ready_status();
+        game_loop &= players[i].get_ready_status();
 
-    if( ready )
+    if( game_loop )
         packet_to_send << (sf::Uint8)SERVER_START_GAME;
-
-    return ready;
 }
 
 void Game_Server_Session::game_logic()
 {
     time = clock.restart();
+}
+
+bool Game_Server_Session::get_app_loop() const
+{
+    return app_loop;
+}
+
+bool Game_Server_Session::get_game_loop() const
+{
+    return game_loop;
 }
 
 void Game_Server_Session::debug_show_size() const
@@ -130,5 +138,7 @@ void Game_Server_Session::debug_show_size() const
               << sizeof(socket) << "\n"
               << sizeof(players) << "\n"
               << sizeof(clock) << "\n"
-              << sizeof(time) << "\n";
+              << sizeof(time) << "\n"
+              << sizeof(app_loop) << "\n"
+              << sizeof(game_loop) << "\n";
 }

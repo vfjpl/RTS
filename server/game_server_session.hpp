@@ -13,6 +13,8 @@ class Game_Server_Session
     std::vector<Player> players;//24
     sf::Clock clock;//8
     sf::Time time;//8
+    bool app_loop = true;//1
+    bool game_loop = false;//1
 
 public:
     Game_Server_Session();
@@ -20,8 +22,11 @@ public:
     void lobby_receive_packets();
     void receive_packets();
     void send_packets();
-    bool lobby_logic();
+    void lobby_logic();
     void game_logic();
+
+    bool get_app_loop() const;
+    bool get_game_loop() const;
 
     void debug_show_size() const;
 };

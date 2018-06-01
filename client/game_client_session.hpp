@@ -18,6 +18,7 @@ class Game_Client_Session
     sf::Time time;//8
     sf::IpAddress remote_ip = "localhost";//8
     unsigned short remote_port = 7000;//2
+    sf::Uint8 my_id = 0;//1
     bool app_loop = true;//1
     bool game_loop = false;//1
 

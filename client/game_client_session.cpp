@@ -30,6 +30,8 @@ void Game_Client_Session::lobby_receive_packets()
             {
                 sf::Uint8 id;
                 received_packet >> id;
+                if(players.size() < id)
+                    my_id = id;
                 players.resize(id + 1);
                 break;
             }
@@ -40,27 +42,27 @@ void Game_Client_Session::lobby_receive_packets()
                 players.erase(players.begin() + id);
                 break;
             }
-            case SERVER_PLAYER_READY:
+            case SERVER_PLAYER_READY_STATUS:
             {
                 sf::Uint8 id;
-                bool status;
-                received_packet >> id >> status;
-                players[id].set_ready_status(status);
+                bool ready_status;
+                received_packet >> id >> ready_status;
+                players[id].set_ready_status(ready_status);
                 break;
             }
-            case SERVER_MESSAGE:
+            case SERVER_PLAYER_MESSAGE:
             {
                 sf::Uint8 id;
                 std::wstring str;
                 received_packet >> id >> str;
                 break;
             }
-            case SERVER_PLAYER_NAME:
+            case SERVER_PLAYER_NICKNAME:
             {
                 sf::Uint8 id;
                 std::wstring str;
                 received_packet >> id >> str;
-                players[id].set_name(str);
+                players[id].set_nickname(str);
                 break;
             }
             default:
@@ -230,6 +232,7 @@ void Game_Client_Session::debug_show_size() const
               << sizeof(time) << "\n"
               << sizeof(remote_ip) << "\n"
               << sizeof(remote_port) << "\n"
+              << sizeof(my_id) << "\n"
               << sizeof(app_loop) << "\n"
               << sizeof(game_loop) << "\n";
 }

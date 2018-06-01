@@ -20,13 +20,13 @@ void Game_Server_Session::lobby_receive_packets()
             received_packet >> opcode;
             switch( opcode )
             {
-            case CLIENT_JOIN_GAME:
+            case JOIN_GAME:
             {
                 packet_to_send<<(sf::Uint8)SERVER_PLAYER_CONNECTED<<(sf::Uint8)players.size();
                 players.emplace_back(incomming_ip, incomming_port);
                 break;
             }
-            case CLIENT_DISCONNECT:
+            case DISCONNECT:
             {
                 sf::Uint8 id;
                 received_packet >> id;
@@ -34,30 +34,30 @@ void Game_Server_Session::lobby_receive_packets()
                 packet_to_send<<(sf::Uint8)SERVER_PLAYER_DISCONNECTED<<id;
                 break;
             }
-            case CLIENT_READY:
+            case SET_READY_STATUS:
             {
                 sf::Uint8 id;
-                bool status;
-                received_packet >> id >> status;
-                players[id].set_ready_status(status);
-                packet_to_send<<(sf::Uint8)SERVER_PLAYER_READY<<id<<status;
+                bool ready_status;
+                received_packet >> id >> ready_status;
+                players[id].set_ready_status(ready_status);
+                packet_to_send<<(sf::Uint8)SERVER_PLAYER_READY_STATUS<<id<<ready_status;
                 break;
             }
-            case CLIENT_SEND_MESSAGE:
+            case SEND_MESSAGE:
             {
                 sf::Uint8 id;
                 std::wstring str;
                 received_packet >> id >> str;
-                packet_to_send<<(sf::Uint8)SERVER_MESSAGE<<id<<str;
+                packet_to_send<<(sf::Uint8)SERVER_PLAYER_MESSAGE<<id<<str;
                 break;
             }
-            case CLIENT_SET_NAME:
+            case SET_NICKNAME:
             {
                 sf::Uint8 id;
                 std::wstring str;
                 received_packet >> id >> str;
-                players[id].set_name(str);
-                packet_to_send<<(sf::Uint8)SERVER_PLAYER_NAME<<id<<str;
+                players[id].set_nickname(str);
+                packet_to_send<<(sf::Uint8)SERVER_PLAYER_NICKNAME<<id<<str;
                 break;
             }
             default:

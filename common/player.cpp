@@ -15,19 +15,19 @@ void Player::set_ip_port(sf::IpAddress ip, unsigned short port)
     m_port = port;
 }
 
-void Player::set_name(const std::wstring& name)
+void Player::set_nickname(const std::wstring& nickname)
 {
-    m_name = name;
+    m_nickname = nickname;
 }
 
-void Player::set_ready_status(bool status)
+void Player::set_ready_status(bool ready_status)
 {
-    m_ready = status;
+    m_ready_status = ready_status;
 }
 
-const std::wstring& Player::get_name() const
+const std::wstring& Player::get_nickname() const
 {
-    return m_name;
+    return m_nickname;
 }
 
 sf::IpAddress Player::get_ip() const
@@ -42,7 +42,7 @@ unsigned short Player::get_port() const
 
 bool Player::get_ready_status() const
 {
-    return m_ready;
+    return m_ready_status;
 }
 
 bool Player::compare(sf::IpAddress ip, unsigned short port) const
@@ -57,8 +57,8 @@ bool Player::compare(sf::IpAddress ip, unsigned short port) const
 void Player::debug_show_size() const
 {
     //keep up to date!
-    std::cout << sizeof(m_name) << "\n"
+    std::cout << sizeof(m_nickname) << "\n"
               << sizeof(m_ip) << "\n"
               << sizeof(m_port) << "\n"
-              << sizeof(m_ready) << "\n";
+              << sizeof(m_ready_status) << "\n";
 }

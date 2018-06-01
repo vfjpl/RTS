@@ -21,6 +21,7 @@ public:
 
     void lobby_receive_packets();
     void lobby_logic();
+
     void game_receive_packets();
     void game_logic();
 

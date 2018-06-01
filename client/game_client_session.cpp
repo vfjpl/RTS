@@ -31,8 +31,14 @@ void Game_Client_Session::lobby_receive_packets()
                 sf::Uint8 id;
                 received_packet >> id;
                 if(players.size() < id)
+                {
                     my_id = id;
-                players.resize(id + 1);
+                    players.resize(id + 1);
+                }
+                else
+                {
+                    players.emplace_back();
+                }
                 break;
             }
             case SERVER_PLAYER_DISCONNECTED:

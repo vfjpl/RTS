@@ -9,6 +9,11 @@ Player::Player(sf::IpAddress ip, unsigned short port)
     m_port = port;
 }
 
+void Player::set_network_timeout(sf::Time network_timeout)
+{
+    m_network_timeout = network_timeout;
+}
+
 void Player::set_ip_port(sf::IpAddress ip, unsigned short port)
 {
     m_ip = ip;
@@ -25,9 +30,9 @@ void Player::set_ready_status(bool ready_status)
     m_ready_status = ready_status;
 }
 
-const std::wstring& Player::get_nickname() const
+sf::Time Player::get_network_timeout() const
 {
-    return m_nickname;
+    return m_network_timeout;
 }
 
 sf::IpAddress Player::get_ip() const
@@ -38,6 +43,11 @@ sf::IpAddress Player::get_ip() const
 unsigned short Player::get_port() const
 {
     return m_port;
+}
+
+const std::wstring& Player::get_nickname() const
+{
+    return m_nickname;
 }
 
 bool Player::get_ready_status() const
@@ -58,6 +68,7 @@ void Player::debug_show_size() const
 {
     //keep up to date!
     std::cout << sizeof(m_nickname) << "\n"
+              << sizeof(m_network_timeout) << "\n"
               << sizeof(m_ip) << "\n"
               << sizeof(m_port) << "\n"
               << sizeof(m_ready_status) << "\n";

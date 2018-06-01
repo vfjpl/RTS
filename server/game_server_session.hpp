@@ -30,6 +30,9 @@ public:
     bool get_game_loop() const;
 
     void debug_show_size() const;
+
+private:
+    sf::Uint8 get_player_id(sf::IpAddress ip, unsigned short port) const;
 };
 
 #endif // GAME_SERVER_SESSION_HPP_INCLUDED

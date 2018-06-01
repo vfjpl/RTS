@@ -12,9 +12,14 @@ void Game_Server_Session::lobby_receive_packets()
     sf::IpAddress incomming_ip;
     unsigned short incomming_port;
     sf::Uint8 opcode;
-    for(sf::Uint8 i = 0; i <= players.size(); i++)
+    sf::Uint8 local_id;
+    for(sf::Uint8 i = 0; i <= players.size(); i++)//(<=) because we are waiting for more players
     {
         socket.receive( received_packet, incomming_ip, incomming_port );
+        local_id = get_player_id(incomming_ip, incomming_port);
+        if(local_id != 255)
+            players[local_id].set_network_timeout( sf::Time::Zero );
+
         while( !received_packet.endOfPacket() )
         {
             received_packet >> opcode;
@@ -22,7 +27,9 @@ void Game_Server_Session::lobby_receive_packets()
             {
             case JOIN_GAME:
             {
-                packet_to_send<<(sf::Uint8)SERVER_PLAYER_CONNECTED<<(sf::Uint8)players.size();
+                clock.restart();//to prevent instant timeout disconnect
+                sf::Uint8 id = players.size();
+                packet_to_send<<(sf::Uint8)SERVER_PLAYER_CONNECTED<<id;
                 players.emplace_back(incomming_ip, incomming_port);
                 break;
             }
@@ -32,6 +39,12 @@ void Game_Server_Session::lobby_receive_packets()
                 received_packet >> id;
                 players.erase(players.begin() + id);
                 packet_to_send<<(sf::Uint8)SERVER_PLAYER_DISCONNECTED<<id;
+
+                for(sf::Uint8 i = 0; i < players.size(); i++)//to prevent auto starting
+                {
+                    players[i].set_ready_status(false);
+                    packet_to_send<<(sf::Uint8)SERVER_PLAYER_READY_STATUS<<i<<false;
+                }
                 break;
             }
             case SET_READY_STATUS:
@@ -74,15 +87,34 @@ void Game_Server_Session::lobby_logic()
 {
     time = clock.restart();
 
-    if(players.size() == 0)
-        return;
-
-    game_loop = true;
+    bool ready = true;
     for(sf::Uint8 i = 0; i < players.size(); i++)
-        game_loop &= players[i].get_ready_status();
+    {
+        players[i].set_network_timeout(players[i].get_network_timeout() + time);
+        if(players[i].get_network_timeout().asSeconds() >= 1)//timeout disconnect
+        {
+            players.erase(players.begin() + i);
+            packet_to_send << (sf::Uint8)SERVER_PLAYER_DISCONNECTED << i;
+            ready = false;//to prevent auto staring when last non ready player timeout disconnect
+            i--;
 
-    if( game_loop )
+            for(sf::Uint8 i = 0; i < players.size(); i++)//to prevent auto starting
+            {
+                players[i].set_ready_status(false);
+                packet_to_send<<(sf::Uint8)SERVER_PLAYER_READY_STATUS<<i<<false;
+            }
+        }
+        else
+        {
+            ready &= players[i].get_ready_status();//ready true only if all players are ready
+        }
+    }
+
+    if( ready && players.size() != 0 )//to prevent starting when there are no players in lobby
+    {
+        game_loop = true;
         packet_to_send << (sf::Uint8)SERVER_START_GAME;
+    }
 }
 
 void Game_Server_Session::game_receive_packets()
@@ -128,6 +160,15 @@ bool Game_Server_Session::get_app_loop() const
 bool Game_Server_Session::get_game_loop() const
 {
     return game_loop;
+}
+
+sf::Uint8 Game_Server_Session::get_player_id(sf::IpAddress ip, unsigned short port) const
+{
+    for(sf::Uint8 i = 0; i < players.size(); i++)
+        if(players[i].compare(ip,port))
+            return i;
+
+    return 255;//if there is no connected player with this ip and port
 }
 
 void Game_Server_Session::debug_show_size() const

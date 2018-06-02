@@ -16,6 +16,8 @@ enum: sf::Uint8
 
     SERVER_START_GAME,//serwer rozpoczął grę
 
+    SERVER_STOP_GAME,//zakonczenie gry i powrot do lobby
+
     SERVER_PLAYER_CONNECTED,//informacja o tym że dołączył ktoś do lobby
 // [sf::Uint8 ID_gracza]
 

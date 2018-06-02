@@ -3,14 +3,18 @@
 
 #include <SFML/Network.hpp>
 #include "../common/player.hpp"
+#include "../common/unit.hpp"
+#include <deque>
 
 class Game_Server_Session
 {
     //sort from largest to smallest!
+    std::deque<Unit> units;//80
     sf::Packet packet_to_send;//56
     sf::Packet received_packet;//56
     sf::UdpSocket socket;//48
     std::vector<Player> players;//24
+    std::vector<Unit> blueprints;//24
     sf::Clock clock;//8
     sf::Time time;//8
     bool app_loop = true;//1

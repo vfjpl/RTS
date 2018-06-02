@@ -33,12 +33,9 @@ void Game_Client_Session::lobby_receive_packets()
                 if(players.size() < id)
                 {
                     my_id = id;
-                    players.resize(id + 1);
+                    players.resize(id);
                 }
-                else
-                {
-                    players.emplace_back();
-                }
+                players.emplace_back();
                 break;
             }
             case SERVER_PLAYER_DISCONNECTED:
@@ -46,6 +43,8 @@ void Game_Client_Session::lobby_receive_packets()
                 sf::Uint8 id;
                 received_packet >> id;
                 players.erase(players.begin() + id);
+                if(id < my_id)
+                    my_id--;
                 break;
             }
             case SERVER_PLAYER_READY_STATUS:
@@ -61,6 +60,7 @@ void Game_Client_Session::lobby_receive_packets()
                 sf::Uint8 id;
                 std::wstring str;
                 received_packet >> id >> str;
+
                 break;
             }
             case SERVER_PLAYER_NICKNAME:
@@ -229,10 +229,12 @@ void Game_Client_Session::debug_show_size() const
 {
     //keep up to date!
     std::cout << sizeof(window) << "\n"
+              << sizeof(units) << "\n"
               << sizeof(packet_to_send) << "\n"
               << sizeof(received_packet) << "\n"
               << sizeof(socket) << "\n"
               << sizeof(players) << "\n"
+              << sizeof(blueprints) << "\n"
               << sizeof(event) << "\n"
               << sizeof(clock) << "\n"
               << sizeof(time) << "\n"

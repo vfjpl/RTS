@@ -4,19 +4,23 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Network.hpp>
 #include "../common/player.hpp"
+#include "../common/unit.hpp"
+#include <deque>
 
 class Game_Client_Session
 {
     //sort from largest to smallest!
     sf::RenderWindow window;//528
+    std::deque<Unit> units;//80
     sf::Packet packet_to_send;//56
     sf::Packet received_packet;//56
     sf::UdpSocket socket;//48
     std::vector<Player> players;//24
+    std::vector<Unit> blueprints;//24
     sf::Event event;//20
     sf::Clock clock;//8
     sf::Time time;//8
-    sf::IpAddress remote_ip = "localhost";//8
+    sf::IpAddress remote_ip = sf::IpAddress::LocalHost;//8
     unsigned short remote_port = 7000;//2
     sf::Uint8 my_id;//1
     bool app_loop = true;//1

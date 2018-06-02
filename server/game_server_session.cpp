@@ -89,7 +89,7 @@ void Game_Server_Session::lobby_logic()
     bool ready = true;
     for(sf::Uint8 i = 0; i < players.size(); i++)
     {
-        if(players[i].get_network_timeout().asSeconds() >= 1)//timeout disconnect
+        if(players[i].get_network_timeout().asSeconds() > 1)//timeout disconnect
         {
             players.erase(players.begin() + i);
             packet_to_send << (sf::Uint8)SERVER_PLAYER_DISCONNECTED << i;
@@ -99,7 +99,10 @@ void Game_Server_Session::lobby_logic()
                 packet_to_send<<(sf::Uint8)SERVER_PLAYER_READY_STATUS<<i<<false;
             }
             if(i == players.size())
+            {
+                ready = false;//to prevent auto staring when last non ready player timeout disconnect
                 break;
+            }
         }
 
         ready &= players[i].get_ready_status();//ready true only if all players are ready

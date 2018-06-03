@@ -41,8 +41,11 @@ void Game_Server_Session::lobby_receive_packets()
 
                 for(sf::Uint8 i = 0; i < players.size(); i++)//to prevent auto starting
                 {
-                    players[i].set_ready_status(false);
-                    packet_to_send<<(sf::Uint8)SERVER_PLAYER_READY_STATUS<<i<<false;
+                    if(players[i].get_ready_status())
+                    {
+                        players[i].set_ready_status(false);
+                        packet_to_send<<(sf::Uint8)SERVER_PLAYER_READY_STATUS<<i<<false;
+                    }
                 }
                 break;
             }
@@ -87,26 +90,28 @@ void Game_Server_Session::lobby_logic()
     time = clock.restart();
 
     bool ready = true;
-    for(sf::Uint8 i = 0; i < players.size(); i++)
+    for(sf::Uint8 i = 0; i < players.size(); )
     {
         if(players[i].get_network_timeout().asSeconds() > 1)//timeout disconnect
         {
+            ready = false;//to prevent auto staring when last non ready player timeout disconnect
             players.erase(players.begin() + i);
             packet_to_send << (sf::Uint8)SERVER_PLAYER_DISCONNECTED << i;
+
             for(sf::Uint8 i = 0; i < players.size(); i++)//to prevent auto starting
             {
-                players[i].set_ready_status(false);
-                packet_to_send<<(sf::Uint8)SERVER_PLAYER_READY_STATUS<<i<<false;
+                if(players[i].get_ready_status())
+                {
+                    players[i].set_ready_status(false);
+                    packet_to_send<<(sf::Uint8)SERVER_PLAYER_READY_STATUS<<i<<false;
+                }
             }
-            if(i == players.size())
-            {
-                ready = false;//to prevent auto staring when last non ready player timeout disconnect
-                break;
-            }
+            continue;
         }
 
         ready &= players[i].get_ready_status();//ready true only if all players are ready
         players[i].set_network_timeout(players[i].get_network_timeout() + time);
+        i += 1;
     }
 
     if( ready && players.size() > 0 )//to prevent starting when there are no players in lobby

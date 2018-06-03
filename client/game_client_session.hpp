@@ -22,7 +22,7 @@ class Game_Client_Session
     sf::Time time;//8
     sf::IpAddress remote_ip = sf::IpAddress::LocalHost;//8
     unsigned short remote_port = 7000;//2
-    sf::Uint8 my_id;//1
+    sf::Uint8 my_id = 255;//1
     bool app_loop = true;//1
     bool game_loop = false;//1
 

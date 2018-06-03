@@ -30,7 +30,7 @@ void Game_Client_Session::lobby_receive_packets()
             {
                 sf::Uint8 id;
                 received_packet >> id;
-                if(players.size() < id)
+                if(id > players.size())
                 {
                     my_id = id;
                     players.resize(id);
@@ -43,8 +43,9 @@ void Game_Client_Session::lobby_receive_packets()
                 sf::Uint8 id;
                 received_packet >> id;
                 players.erase(players.begin() + id);
+
                 if(id < my_id)
-                    my_id--;
+                    my_id -= 1;
                 break;
             }
             case SERVER_PLAYER_READY_STATUS:

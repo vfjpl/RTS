@@ -84,6 +84,7 @@ void Game_Client_Session::lobby_receive_packets()
 
 void Game_Client_Session::lobby_receive_inputs()
 {
+    sf::Event event;
     while( window.pollEvent(event) )
     {
         switch(event.type)
@@ -137,6 +138,7 @@ void Game_Client_Session::game_receive_packets()
 
 void Game_Client_Session::game_receive_inputs()
 {
+    sf::Event event;
     while( window.pollEvent(event) )
     {
         switch(event.type)
@@ -149,12 +151,12 @@ void Game_Client_Session::game_receive_inputs()
         }
         case sf::Event::KeyPressed:
         {
-            game_receive_inputs_keypress();
+            game_receive_inputs_keypress(event);
             break;
         }
         case sf::Event::MouseButtonPressed:
         {
-            game_receive_inputs_mousepress();
+            game_receive_inputs_mousepress(event);
             break;
         }
         default:
@@ -165,7 +167,7 @@ void Game_Client_Session::game_receive_inputs()
     }
 }
 
-void Game_Client_Session::game_receive_inputs_keypress()
+void Game_Client_Session::game_receive_inputs_keypress(const sf::Event& event)
 {
     switch(event.key.code)
     {
@@ -182,7 +184,7 @@ void Game_Client_Session::game_receive_inputs_keypress()
     }//end switch
 }
 
-void Game_Client_Session::game_receive_inputs_mousepress()
+void Game_Client_Session::game_receive_inputs_mousepress(const sf::Event& event)
 {
     switch(event.mouseButton.button)
     {
@@ -236,7 +238,6 @@ void Game_Client_Session::debug_show_size() const
               << sizeof(socket) << "\n"
               << sizeof(players) << "\n"
               << sizeof(blueprints) << "\n"
-              << sizeof(event) << "\n"
               << sizeof(clock) << "\n"
               << sizeof(time) << "\n"
               << sizeof(remote_ip) << "\n"

@@ -17,7 +17,6 @@ class Game_Client_Session
     sf::UdpSocket socket;//48
     std::vector<Player> players;//24
     std::vector<Unit> blueprints;//24
-    sf::Event event;//20
     sf::Clock clock;//8
     sf::Time time;//8
     sf::IpAddress remote_ip = sf::IpAddress::LocalHost;//8
@@ -46,8 +45,8 @@ public:
     void debug_show_size() const;
 
 private:
-    void game_receive_inputs_keypress();
-    void game_receive_inputs_mousepress();
+    void game_receive_inputs_keypress(const sf::Event& event);
+    void game_receive_inputs_mousepress(const sf::Event& event);
 };
 
 #endif // GAME_CLIENT_SESSION_HPP_INCLUDED

@@ -111,6 +111,8 @@ void Game_Server_Session::lobby_logic()
     {
         game_loop = true;
         packet_to_send << (sf::Uint8)SERVER_START_GAME;
+        for(sf::Uint8 i = 0; i < players.size(); i++)//reset ready status after game started
+            players[i].set_ready_status(false);
     }
 }
 
@@ -140,6 +142,7 @@ void Game_Server_Session::game_receive_packets()
 void Game_Server_Session::game_logic()
 {
     time = clock.restart();
+    packet_to_send<<(sf::Uint8)SERVER_STOP_GAME;
 }
 
 void Game_Server_Session::send_packets()

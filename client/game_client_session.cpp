@@ -24,6 +24,8 @@ void Game_Client_Session::lobby_receive_packets()
             case SERVER_START_GAME:
             {
                 game_loop = true;
+                for(sf::Uint8 i = 0; i < players.size(); i++)//to reset ready status after game started
+                    players[i].set_ready_status(false);
                 break;
             }
             case SERVER_PLAYER_CONNECTED:
@@ -120,6 +122,11 @@ void Game_Client_Session::game_receive_packets()
             received_packet >> opcode;
             switch( opcode )
             {
+            case SERVER_STOP_GAME:
+            {
+                game_loop = false;
+                break;
+            }
             default:
             {
                 received_packet.clear();

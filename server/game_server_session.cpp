@@ -17,9 +17,6 @@ void Game_Server_Session::lobby_receive_packets()
     {
         socket.receive( received_packet, incomming_ip, incomming_port );
         local_id = get_player_id(incomming_ip, incomming_port);
-        if(local_id < 255)
-            players[local_id].set_network_timeout( sf::Time::Zero );
-
         while( !received_packet.endOfPacket() )
         {
             received_packet >> opcode;
@@ -27,17 +24,15 @@ void Game_Server_Session::lobby_receive_packets()
             {
             case JOIN_GAME:
             {
-                sf::Uint8 id = players.size();
-                packet_to_send<<(sf::Uint8)SERVER_PLAYER_CONNECTED<<id;
+                local_id = players.size();
                 players.emplace_back(incomming_ip, incomming_port);
+                packet_to_send<<(sf::Uint8)SERVER_PLAYER_CONNECTED<<local_id;
                 break;
             }
             case DISCONNECT:
             {
-                sf::Uint8 id;
-                received_packet >> id;
-                players.erase(players.begin() + id);
-                packet_to_send<<(sf::Uint8)SERVER_PLAYER_DISCONNECTED<<id;
+                players.erase(players.begin() + local_id);
+                packet_to_send<<(sf::Uint8)SERVER_PLAYER_DISCONNECTED<<local_id;
 
                 for(sf::Uint8 i = 0; i < players.size(); i++)//to prevent auto starting
                 {
@@ -51,28 +46,25 @@ void Game_Server_Session::lobby_receive_packets()
             }
             case SET_READY_STATUS:
             {
-                sf::Uint8 id;
                 bool ready_status;
-                received_packet >> id >> ready_status;
-                players[id].set_ready_status(ready_status);
-                packet_to_send<<(sf::Uint8)SERVER_PLAYER_READY_STATUS<<id<<ready_status;
+                received_packet >> ready_status;
+                players[local_id].set_ready_status(ready_status);
+                packet_to_send<<(sf::Uint8)SERVER_PLAYER_READY_STATUS<<local_id<<ready_status;
                 break;
             }
             case SEND_MESSAGE:
             {
-                sf::Uint8 id;
                 std::wstring str;
-                received_packet >> id >> str;
-                packet_to_send<<(sf::Uint8)SERVER_PLAYER_MESSAGE<<id<<str;
+                received_packet >> str;
+                packet_to_send<<(sf::Uint8)SERVER_PLAYER_MESSAGE<<local_id<<str;
                 break;
             }
             case SET_NICKNAME:
             {
-                sf::Uint8 id;
                 std::wstring str;
-                received_packet >> id >> str;
-                players[id].set_nickname(str);
-                packet_to_send<<(sf::Uint8)SERVER_PLAYER_NICKNAME<<id<<str;
+                received_packet >> str;
+                players[local_id].set_nickname(str);
+                packet_to_send<<(sf::Uint8)SERVER_PLAYER_NICKNAME<<local_id<<str;
                 break;
             }
             default:
@@ -81,8 +73,9 @@ void Game_Server_Session::lobby_receive_packets()
                 break;
             }
             }//end switch
-        }
-    }
+        }//end while
+        players[local_id].set_network_timeout( sf::Time::Zero );
+    }//end for
 }
 
 void Game_Server_Session::lobby_logic()

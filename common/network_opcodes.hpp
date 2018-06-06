@@ -38,16 +38,15 @@ enum: sf::Uint8
     JOIN_GAME,//prosi o dołączenie do gry
 
     DISCONNECT,//rozłącza się
-// [sf::Uint8 ID_gracza]
 
     SET_READY_STATUS,//wysyła informacje o statusie gracza
-// [sf::Uint8 ID_gracza] [bool ready_status]
+// [bool ready_status]
 
     SEND_MESSAGE,//wysyła wiadomość do serwera na czat
-// [sf::Uint8 ID_gracza] [std::wstring tekst]
+// [std::wstring tekst]
 
     SET_NICKNAME,//ustawia nick gracza
-// [sf::Uint8 ID_gracza] [std::wstring nickname]
+// [std::wstring nickname]
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

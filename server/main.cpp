@@ -3,6 +3,7 @@
 int main()
 {
     Game_Server_Session session;
+    session.debug_show_size();
 
     while( session.get_app_loop() )
     {

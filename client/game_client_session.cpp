@@ -31,10 +31,7 @@ void Game_Client_Session::lobby_receive_packets()
                 sf::Uint8 id;
                 received_packet >> id;
                 if(id > players.size())
-                {
-                    my_id = id;
                     players.resize(id);
-                }
                 players.emplace_back();
                 break;
             }
@@ -43,9 +40,6 @@ void Game_Client_Session::lobby_receive_packets()
                 sf::Uint8 id;
                 received_packet >> id;
                 players.erase(players.begin() + id);
-
-                if(id < my_id)
-                    my_id -= 1;
                 break;
             }
             case SERVER_PLAYER_READY_STATUS:
@@ -78,8 +72,8 @@ void Game_Client_Session::lobby_receive_packets()
                 break;
             }
             }//end switch
-        }
-    }
+        }//end while
+    }//end while
 }
 
 void Game_Client_Session::lobby_receive_inputs()
@@ -242,7 +236,6 @@ void Game_Client_Session::debug_show_size() const
               << sizeof(time) << "\n"
               << sizeof(remote_ip) << "\n"
               << sizeof(remote_port) << "\n"
-              << sizeof(my_id) << "\n"
               << sizeof(app_loop) << "\n"
               << sizeof(game_loop) << "\n";
 }

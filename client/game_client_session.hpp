@@ -27,16 +27,15 @@ class Game_Client_Session
 public:
     Game_Client_Session();
 
-    void lobby_receive_packets();
     void lobby_receive_inputs();
     void lobby_logic();
     void lobby_draw_frame();
 
-    void game_receive_packets();
     void game_receive_inputs();
     void game_logic();
     void game_draw_frame();
 
+    void receive_packets();
     void send_packets();
     bool get_app_loop() const;
     bool get_game_loop() const;

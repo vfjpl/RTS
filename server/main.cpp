@@ -7,12 +7,12 @@ int main()
 
     while( session.get_app_loop() )
     {
-        session.lobby_receive_packets();
+        session.receive_packets();
         session.lobby_logic();
         session.send_packets();
         while( session.get_game_loop() )
         {
-            session.game_receive_packets();
+            session.receive_packets();
             session.game_logic();
             session.send_packets();
         }

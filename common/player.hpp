@@ -27,6 +27,7 @@ public:
     const std::wstring& get_nickname() const;
     bool get_ready_status() const;
 
+    void add_network_timeout(sf::Time network_timeout);
     bool compare(sf::IpAddress ip, unsigned short port) const;
 
     void debug_show_size() const;

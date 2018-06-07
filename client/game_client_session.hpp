@@ -12,6 +12,7 @@ class Game_Client_Session
     //sort from largest to smallest!
     sf::RenderWindow window;//528
     std::deque<Unit> units;//80
+    Player server;//56
     sf::Packet packet_to_send;//56
     sf::Packet received_packet;//56
     sf::UdpSocket socket;//48
@@ -19,8 +20,6 @@ class Game_Client_Session
     std::vector<Unit> blueprints;//24
     sf::Clock clock;//8
     sf::Time time;//8
-    sf::IpAddress remote_ip = sf::IpAddress::LocalHost;//8
-    unsigned short remote_port = 7000;//2
     bool app_loop = true;//1
     bool game_loop = false;//1
 

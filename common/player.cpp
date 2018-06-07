@@ -55,6 +55,11 @@ bool Player::get_ready_status() const
     return m_ready_status;
 }
 
+void Player::add_network_timeout(sf::Time network_timeout)
+{
+    m_network_timeout += network_timeout;
+}
+
 bool Player::compare(sf::IpAddress ip, unsigned short port) const
 {
     if(m_port == port)

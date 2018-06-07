@@ -4,6 +4,7 @@
 
 Game_Client_Session::Game_Client_Session()
 {
+    server.set_ip_port(sf::IpAddress::LocalHost, 7000);
     socket.setBlocking(false);
     window.create(sf::VideoMode(800, 600), "Kelajno");//sf::Style::Fullscreen
     window.setFramerateLimit(60);
@@ -33,6 +34,14 @@ void Game_Client_Session::lobby_receive_inputs()
 void Game_Client_Session::lobby_logic()
 {
     time = clock.restart();
+    if(server.get_network_timeout().asSeconds() > 1)
+    {
+        //connection to server lost, back to main menu
+        server.set_network_timeout( sf::Time::Zero );
+        players.clear();
+        return;
+    }
+    server.add_network_timeout(time);
 }
 
 void Game_Client_Session::lobby_draw_frame()
@@ -109,6 +118,16 @@ void Game_Client_Session::game_receive_inputs_mousepress(const sf::Event& event)
 void Game_Client_Session::game_logic()
 {
     time = clock.restart();
+    if(server.get_network_timeout().asSeconds() > 1)
+    {
+        //connection to server lost, back to main menu
+        game_loop = false;
+        server.set_network_timeout( sf::Time::Zero );
+        players.clear();
+        units.clear();
+        return;
+    }
+    server.add_network_timeout(time);
 }
 
 void Game_Client_Session::game_draw_frame()
@@ -124,76 +143,81 @@ void Game_Client_Session::receive_packets()
     sf::Uint8 opcode;
     while ( !socket.receive( received_packet, incomming_ip, incomming_port ) )
     {
-        while( !received_packet.endOfPacket() )
+        if(server.compare(incomming_ip, incomming_port))
         {
-            received_packet >> opcode;
-            switch( opcode )
+            server.set_network_timeout( sf::Time::Zero );
+            while( !received_packet.endOfPacket() )
             {
-            case SERVER_START_GAME:
-            {
-                game_loop = true;
-                for(sf::Uint8 i = 0; i < players.size(); ++i)//to reset ready status after game started
-                    players[i].set_ready_status(false);
-                break;
-            }
-            case SERVER_STOP_GAME:
-            {
-                game_loop = false;
-                break;
-            }
-            case SERVER_PLAYER_CONNECTED:
-            {
-                sf::Uint8 id;
-                received_packet >> id;
-                if(id > players.size())
-                    players.resize(id);
-                players.emplace_back();
-                break;
-            }
-            case SERVER_PLAYER_DISCONNECTED:
-            {
-                sf::Uint8 id;
-                received_packet >> id;
-                players.erase(players.begin() + id);
-                break;
-            }
-            case SERVER_PLAYER_READY_STATUS:
-            {
-                sf::Uint8 id;
-                bool ready_status;
-                received_packet >> id >> ready_status;
-                players[id].set_ready_status(ready_status);
-                break;
-            }
-            case SERVER_PLAYER_MESSAGE:
-            {
-                sf::Uint8 id;
-                std::wstring str;
-                received_packet >> id >> str;
+                received_packet >> opcode;
+                switch( opcode )
+                {
+                case SERVER_START_GAME:
+                {
+                    game_loop = true;
+                    for(sf::Uint8 i = 0; i < players.size(); ++i)//to reset ready status after game started
+                        players[i].set_ready_status(false);
+                    break;
+                }
+                case SERVER_STOP_GAME:
+                {
+                    game_loop = false;
+                    units.clear();
+                    break;
+                }
+                case SERVER_PLAYER_CONNECTED:
+                {
+                    sf::Uint8 id;
+                    received_packet >> id;
+                    if(id > players.size())
+                        players.resize(id);
+                    players.emplace_back();
+                    break;
+                }
+                case SERVER_PLAYER_DISCONNECTED:
+                {
+                    sf::Uint8 id;
+                    received_packet >> id;
+                    players.erase(players.begin() + id);
+                    break;
+                }
+                case SERVER_PLAYER_READY_STATUS:
+                {
+                    sf::Uint8 id;
+                    bool ready_status;
+                    received_packet >> id >> ready_status;
+                    players[id].set_ready_status(ready_status);
+                    break;
+                }
+                case SERVER_PLAYER_MESSAGE:
+                {
+                    sf::Uint8 id;
+                    std::wstring str;
+                    received_packet >> id >> str;
 
-                break;
-            }
-            case SERVER_PLAYER_NICKNAME:
-            {
-                sf::Uint8 id;
-                std::wstring str;
-                received_packet >> id >> str;
-                players[id].set_nickname(str);
-                break;
-            }
-            default:
-            {
-                received_packet.clear();
-                break;
-            }
-            }//end switch
-        }//end while
+                    break;
+                }
+                case SERVER_PLAYER_NICKNAME:
+                {
+                    sf::Uint8 id;
+                    std::wstring str;
+                    received_packet >> id >> str;
+                    players[id].set_nickname(str);
+                    break;
+                }
+                default:
+                {
+                    received_packet.clear();
+                    break;
+                }
+                }//end switch
+            }//end while
+        }//end if
     }//end while
 }
 
 void Game_Client_Session::send_packets()
 {
-    socket.send( packet_to_send, remote_ip, remote_port );
+    socket.send( packet_to_send, server.get_ip(), server.get_port() );
     packet_to_send.clear();
 }
 
@@ -212,6 +236,7 @@ void Game_Client_Session::debug_show_size() const
     //keep up to date!
     std::cout << sizeof(window) << "\n"
               << sizeof(units) << "\n"
+              << sizeof(server) << "\n"
               << sizeof(packet_to_send) << "\n"
               << sizeof(received_packet) << "\n"
               << sizeof(socket) << "\n"
@@ -219,8 +244,6 @@ void Game_Client_Session::debug_show_size() const
               << sizeof(blueprints) << "\n"
               << sizeof(clock) << "\n"
               << sizeof(time) << "\n"
-              << sizeof(remote_ip) << "\n"
-              << sizeof(remote_port) << "\n"
               << sizeof(app_loop) << "\n"
               << sizeof(game_loop) << "\n";
 }

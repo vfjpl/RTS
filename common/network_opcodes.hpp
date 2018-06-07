@@ -18,6 +18,7 @@ enum: sf::Uint8
 
     DISCONNECT,//unused
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     SET_READY_STATUS,//wysyła informacje o statusie gracza
 // [bool ready_status]
@@ -28,7 +29,7 @@ enum: sf::Uint8
     SET_NICKNAME,//ustawia nick gracza
 // [std::wstring nickname]
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
     MOVE_UNIT,//przesunięcie jednostki
 // [sf::Uint8 ID_jednostki] [sf::Uint8 pozycja_x] [sf::Uint8 pozycja_y]
@@ -68,7 +69,7 @@ enum: sf::Uint8
     SERVER_PLAYER_NICKNAME,//serwer rozsyłą nick gracza
 // [sf::Uint8 ID_gracza] [std::wstring nickname]
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
     SERVER_ADD_UNIT_TO_GAME,//dodaj jednostke do gry
 // [sf::Uint8 BP_jednostki] [sf::Uint8 pozycja_x] [sf::Uint8 pozycja_y]

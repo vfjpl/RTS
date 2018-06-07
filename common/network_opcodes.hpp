@@ -4,40 +4,20 @@
 #include <SFML/Main.hpp>
 
 // ID - oznacza, że operacja dotyczy konkretnego obiektu.
-// BP - oznacza, że operacja dotyczy możliwego okietu.
+// BP - oznacza, że operacja dotyczy szablonu okietu.
 
 // Wpisywanie rozkazów do pakietu:
-// packet << (sf::Uint8)opcode; LUB packet << sf::Uint8(opcode); LUB packet << (sf::Uint8)(opcode);
+// packet << (sf::Uint8)opcode;
 
 enum: sf::Uint8
 {
 
     UNUSED,
 
-    SERVER_START_GAME,//serwer rozpoczął grę
+    JOIN_GAME,//unused
 
-    SERVER_STOP_GAME,//zakonczenie gry i powrot do lobby
+    DISCONNECT,//unused
 
-    SERVER_PLAYER_CONNECTED,//informacja o tym że dołączył ktoś do lobby
-// [sf::Uint8 ID_gracza]
-
-    SERVER_PLAYER_DISCONNECTED,//gracz opuścił grę
-// [sf::Uint8 ID_gracza]
-
-    SERVER_PLAYER_READY_STATUS,//rozsyła informacje o statusie gracza
-// [sf::Uint8 ID_gracza] [bool ready_status]
-
-    SERVER_PLAYER_MESSAGE,//serwer rozsyłą wiadomość graczą
-// [sf::Uint8 ID_gracza] [std::wstring tekst]
-
-    SERVER_PLAYER_NICKNAME,//serwer rozsyłą nick gracza
-// [sf::Uint8 ID_gracza] [std::wstring nickname]
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    JOIN_GAME,//prosi o dołączenie do gry
-
-    DISCONNECT,//rozłącza się
 
     SET_READY_STATUS,//wysyła informacje o statusie gracza
 // [bool ready_status]
@@ -64,6 +44,29 @@ enum: sf::Uint8
 
     SPECJAL_ABILITY,//użyj umiejętności specjalnej jednostki
 // [sf::Uint8 ID_jednostki]
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    SERVER_START_GAME,//serwer rozpoczął grę
+//
+
+    SERVER_STOP_GAME,//zakonczenie gry i powrot do lobby
+//
+
+    SERVER_PLAYER_CONNECTED,//informacja o tym że dołączył ktoś do lobby
+// [sf::Uint8 ID_gracza]
+
+    SERVER_PLAYER_DISCONNECTED,//gracz opuścił grę
+// [sf::Uint8 ID_gracza]
+
+    SERVER_PLAYER_READY_STATUS,//rozsyła informacje o statusie gracza
+// [sf::Uint8 ID_gracza] [bool ready_status]
+
+    SERVER_PLAYER_MESSAGE,//serwer rozsyłą wiadomość graczą
+// [sf::Uint8 ID_gracza] [std::wstring tekst]
+
+    SERVER_PLAYER_NICKNAME,//serwer rozsyłą nick gracza
+// [sf::Uint8 ID_gracza] [std::wstring nickname]
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -16,11 +16,11 @@ void Game_Server_Session::lobby_logic()
     {
         if(players[i].get_network_timeout().asSeconds() > 1)//timeout disconnect
         {
-            ready = false;//to prevent auto staring when last non ready player timeout disconnect
+            ready = false;//prevent auto staring when last non ready player timeout disconnect
             players.erase(players.begin() + i);
             packet_to_send << (sf::Uint8)SERVER_PLAYER_DISCONNECTED << i;
 
-            for(sf::Uint8 i = 0; i < players.size(); ++i)//to prevent auto starting
+            for(sf::Uint8 i = 0; i < players.size(); ++i)//prevent auto starting
             {
                 if(players[i].get_ready_status())
                 {
@@ -32,11 +32,11 @@ void Game_Server_Session::lobby_logic()
         }
 
         ready &= players[i].get_ready_status();//ready true only if all players are ready
-        players[i].set_network_timeout(players[i].get_network_timeout() + time);
+        players[i].add_network_timeout(time);
         ++i;
     }
 
-    if( ready && players.size() > 0 )//to prevent starting when there are no players in lobby
+    if( ready && players.size() > 0 )//prevent starting when there are no players in lobby
     {
         game_loop = true;
         packet_to_send << (sf::Uint8)SERVER_START_GAME;
@@ -58,13 +58,14 @@ void Game_Server_Session::game_logic()
             continue;
         }
 
-        players[i].set_network_timeout(players[i].get_network_timeout() + time);
+        players[i].add_network_timeout(time);
         ++i;
     }
 
-    //for the test
-    packet_to_send<<(sf::Uint8)SERVER_STOP_GAME;
+    //temp, quit game as soon as it starts
     game_loop = false;
+    units.clear();
+    packet_to_send<<(sf::Uint8)SERVER_STOP_GAME;
 }
 
 void Game_Server_Session::receive_packets()
@@ -77,33 +78,21 @@ void Game_Server_Session::receive_packets()
     {
         socket.receive( received_packet, incomming_ip, incomming_port );
         local_id = get_player_id(incomming_ip, incomming_port);
+
+        if(local_id == players.size())//check if we got new player
+        {
+            if(local_id == 254 || game_loop)//max 254 players and don't allow connection when game is started
+                continue;//don't add if max players
+            players.emplace_back(incomming_ip, incomming_port);
+            packet_to_send<<(sf::Uint8)SERVER_PLAYER_CONNECTED<<local_id;
+        }
+
+        players[local_id].set_network_timeout( sf::Time::Zero );
         while( !received_packet.endOfPacket() )
         {
             received_packet >> opcode;
             switch( opcode )
             {
-            case JOIN_GAME:
-            {
-                local_id = players.size();
-                players.emplace_back(incomming_ip, incomming_port);
-                packet_to_send<<(sf::Uint8)SERVER_PLAYER_CONNECTED<<local_id;
-                break;
-            }
-            case DISCONNECT:
-            {
-                players.erase(players.begin() + local_id);
-                packet_to_send<<(sf::Uint8)SERVER_PLAYER_DISCONNECTED<<local_id;
-
-                for(sf::Uint8 i = 0; i < players.size(); ++i)//to prevent auto starting
-                {
-                    if(players[i].get_ready_status())
-                    {
-                        players[i].set_ready_status(false);
-                        packet_to_send<<(sf::Uint8)SERVER_PLAYER_READY_STATUS<<i<<false;
-                    }
-                }
-                break;
-            }
             case SET_READY_STATUS:
             {
                 bool ready_status;
@@ -134,7 +123,6 @@ void Game_Server_Session::receive_packets()
             }
             }//end switch
         }//end while
-        players[local_id].set_network_timeout( sf::Time::Zero );
     }//end for
 }
 
@@ -158,10 +146,10 @@ bool Game_Server_Session::get_game_loop() const
 sf::Uint8 Game_Server_Session::get_player_id(sf::IpAddress ip, unsigned short port) const
 {
     for(sf::Uint8 i = 0; i < players.size(); ++i)
-        if(players[i].compare(ip,port))
+        if(players[i].compare(ip, port))
             return i;
 
-    return 255;//if there is no connected player with this ip and port
+    return players.size();//return next player id
 }
 
 void Game_Server_Session::debug_show_size() const

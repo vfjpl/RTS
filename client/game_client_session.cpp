@@ -143,7 +143,7 @@ void Game_Client_Session::receive_packets()
     sf::Uint8 opcode;
     while ( !socket.receive( received_packet, incomming_ip, incomming_port ) )
     {
-        if(server.compare(incomming_ip, incomming_port))
+        if( server.compare(incomming_ip, incomming_port) )
         {
             server.set_network_timeout( sf::Time::Zero );
             while( !received_packet.endOfPacket() )
@@ -154,7 +154,7 @@ void Game_Client_Session::receive_packets()
                 case SERVER_START_GAME:
                 {
                     game_loop = true;
-                    for(sf::Uint8 i = 0; i < players.size(); ++i)//to reset ready status after game started
+                    for(sf::Uint8 i = 0; i < players.size(); ++i)//reset ready status after game started
                         players[i].set_ready_status(false);
                     break;
                 }

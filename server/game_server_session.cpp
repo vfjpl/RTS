@@ -81,8 +81,8 @@ void Game_Server_Session::receive_packets()
 
         if(local_id == players.size())//check if we got new player
         {
-            if(local_id == 254 || game_loop)//max 254 players and don't allow connection when game is started
-                continue;//don't add if max players
+            if(local_id == 128)//max 254
+                continue;//don't add new player
             players.emplace_back(incomming_ip, incomming_port);
             packet_to_send<<(sf::Uint8)SERVER_PLAYER_CONNECTED<<local_id;
         }

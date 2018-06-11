@@ -20,18 +20,9 @@ void Server_Engine::lobby_logic()
             ready = false;//prevent auto staring when last non ready player timeout disconnect
             players.erase(players.begin() + i);
             packet_to_send << (sf::Uint8)SERVER_PLAYER_DISCONNECTED << i;
-
-            for(sf::Uint8 i = 0; i < players.size(); ++i)//prevent auto starting
-            {
-                if(players[i].get_ready_status())
-                {
-                    players[i].set_ready_status(false);
-                    packet_to_send<<(sf::Uint8)SERVER_PLAYER_READY_STATUS<<i<<false;
-                }
-            }
+            set_all_players_ready_status(false);
             continue;
         }
-
         ready &= players[i].get_ready_status();//ready true only if all players are ready
         players[i].add_network_timeout(time);
         ++i;
@@ -40,8 +31,7 @@ void Server_Engine::lobby_logic()
     if( ready && players.size() > 0 )//prevent starting when there are no players in lobby
     {
         game_loop = true;
-        for(sf::Uint8 i = 0; i < players.size(); ++i)//reset ready status after game started
-            players[i].set_ready_status(false);
+        set_all_players_ready_status(false);
     }
 }
 
@@ -57,7 +47,6 @@ void Server_Engine::game_logic()
             packet_to_send << (sf::Uint8)SERVER_PLAYER_DISCONNECTED << i;
             continue;
         }
-
         players[i].add_network_timeout(time);
         ++i;
     }
@@ -140,6 +129,12 @@ bool Server_Engine::get_app_loop() const
 bool Server_Engine::get_game_loop() const
 {
     return game_loop;
+}
+
+void Server_Engine::set_all_players_ready_status(bool status)
+{
+    for(sf::Uint8 i = 0; i < players.size(); ++i)
+        players[i].set_ready_status(status);
 }
 
 sf::Uint8 Server_Engine::get_player_id(sf::IpAddress ip, unsigned short port) const

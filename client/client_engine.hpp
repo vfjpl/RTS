@@ -41,6 +41,7 @@ public:
     void debug_show_size() const;
 
 private:
+    void set_all_players_ready_status(bool status);
     void game_receive_inputs_keypress(const sf::Event& event);
     void game_receive_inputs_mousepress(const sf::Event& event);
 };

@@ -33,6 +33,7 @@ public:
     void debug_show_size() const;
 
 private:
+    void set_all_players_ready_status(bool status);
     sf::Uint8 get_player_id(sf::IpAddress ip, unsigned short port) const;
 };
 

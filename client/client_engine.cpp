@@ -51,8 +51,7 @@ void Client_Engine::lobby_logic()
     if( ready && players.size() > 0 )//prevent starting when there are no players in lobby
     {
         game_loop = true;
-        for(sf::Uint8 i = 0; i < players.size(); ++i)//reset ready status after game started
-            players[i].set_ready_status(false);
+        set_all_players_ready_status(false);
     }
 }
 
@@ -181,6 +180,7 @@ void Client_Engine::receive_packets()
                     sf::Uint8 id;
                     received_packet >> id;
                     players.erase(players.begin() + id);
+                    set_all_players_ready_status(false);
                     break;
                 }
                 case SERVER_PLAYER_READY_STATUS:
@@ -232,6 +232,12 @@ bool Client_Engine::get_app_loop() const
 bool Client_Engine::get_game_loop() const
 {
     return game_loop;
+}
+
+void Client_Engine::set_all_players_ready_status(bool status)
+{
+    for(sf::Uint8 i = 0; i < players.size(); ++i)
+        players[i].set_ready_status(status);
 }
 
 void Client_Engine::debug_show_size() const

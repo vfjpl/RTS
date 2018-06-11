@@ -3,7 +3,7 @@
 
 #include <SFML/Main.hpp>
 
-class Unit
+class Game_Unit
 {
     //sort from largest to smallest!
     sf::Uint8 m_x;//1
@@ -11,9 +11,9 @@ class Unit
     sf::Uint8 m_hp;//1
 
 public:
-    Unit();
-    Unit(sf::Uint8 x, sf::Uint8 y);
-    Unit(sf::Uint8 hp);
+    Game_Unit();
+    Game_Unit(sf::Uint8 x, sf::Uint8 y);
+    Game_Unit(sf::Uint8 hp);
 
     void set_position(sf::Uint8 x, sf::Uint8 y);
     void set_hp(sf::Uint8 hp);

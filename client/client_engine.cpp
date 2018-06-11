@@ -1,16 +1,16 @@
-#include "game_client_session.hpp"
+#include "client_engine.hpp"
 #include "../common/network_opcodes.hpp"
 #include <iostream>
 
-Game_Client_Session::Game_Client_Session()
+Client_Engine::Client_Engine()
 {
-    server.set_ip_port(sf::IpAddress::LocalHost, 7000);
     socket.setBlocking(false);
-    window.create(sf::VideoMode(800, 600), "Kelajno");//sf::Style::Fullscreen
+    server.set_ip_port(sf::IpAddress::LocalHost, 7000);
     window.setFramerateLimit(60);
+    window.create(sf::VideoMode(800, 600), "Kelajno");//sf::Style::Fullscreen
 }
 
-void Game_Client_Session::lobby_receive_inputs()
+void Client_Engine::lobby_receive_inputs()
 {
     sf::Event event;
     while( window.pollEvent(event) )
@@ -31,7 +31,7 @@ void Game_Client_Session::lobby_receive_inputs()
     }
 }
 
-void Game_Client_Session::lobby_logic()
+void Client_Engine::lobby_logic()
 {
     time = clock.restart();
     if(server.get_network_timeout().asSeconds() > 1)
@@ -42,15 +42,27 @@ void Game_Client_Session::lobby_logic()
         return;
     }
     server.add_network_timeout(time);
+
+    //check if all players are ready
+    bool ready = true;
+    for(sf::Uint8 i = 0; i < players.size(); ++i)
+        ready &= players[i].get_ready_status();//ready true only if all players are ready
+
+    if( ready && players.size() > 0 )//prevent starting when there are no players in lobby
+    {
+        game_loop = true;
+        for(sf::Uint8 i = 0; i < players.size(); ++i)//reset ready status after game started
+            players[i].set_ready_status(false);
+    }
 }
 
-void Game_Client_Session::lobby_draw_frame()
+void Client_Engine::lobby_draw_frame()
 {
     window.clear();
     window.display();
 }
 
-void Game_Client_Session::game_receive_inputs()
+void Client_Engine::game_receive_inputs()
 {
     sf::Event event;
     while( window.pollEvent(event) )
@@ -81,7 +93,7 @@ void Game_Client_Session::game_receive_inputs()
     }
 }
 
-void Game_Client_Session::game_receive_inputs_keypress(const sf::Event& event)
+void Client_Engine::game_receive_inputs_keypress(const sf::Event& event)
 {
     switch(event.key.code)
     {
@@ -98,7 +110,7 @@ void Game_Client_Session::game_receive_inputs_keypress(const sf::Event& event)
     }//end switch
 }
 
-void Game_Client_Session::game_receive_inputs_mousepress(const sf::Event& event)
+void Client_Engine::game_receive_inputs_mousepress(const sf::Event& event)
 {
     switch(event.mouseButton.button)
     {
@@ -115,7 +127,7 @@ void Game_Client_Session::game_receive_inputs_mousepress(const sf::Event& event)
     }//end switch
 }
 
-void Game_Client_Session::game_logic()
+void Client_Engine::game_logic()
 {
     time = clock.restart();
     if(server.get_network_timeout().asSeconds() > 1)
@@ -128,15 +140,19 @@ void Game_Client_Session::game_logic()
         return;
     }
     server.add_network_timeout(time);
+
+    //temp, quit game as soon as it starts
+    game_loop = false;
+    units.clear();
 }
 
-void Game_Client_Session::game_draw_frame()
+void Client_Engine::game_draw_frame()
 {
     window.clear();
     window.display();
 }
 
-void Game_Client_Session::receive_packets()
+void Client_Engine::receive_packets()
 {
     sf::IpAddress incomming_ip;
     unsigned short incomming_port;
@@ -151,19 +167,6 @@ void Game_Client_Session::receive_packets()
                 received_packet >> opcode;
                 switch( opcode )
                 {
-                case SERVER_START_GAME:
-                {
-                    game_loop = true;
-                    for(sf::Uint8 i = 0; i < players.size(); ++i)//reset ready status after game started
-                        players[i].set_ready_status(false);
-                    break;
-                }
-                case SERVER_STOP_GAME:
-                {
-                    game_loop = false;
-                    units.clear();
-                    break;
-                }
                 case SERVER_PLAYER_CONNECTED:
                 {
                     sf::Uint8 id;
@@ -215,23 +218,23 @@ void Game_Client_Session::receive_packets()
     }//end while
 }
 
-void Game_Client_Session::send_packets()
+void Client_Engine::send_packets()
 {
     socket.send( packet_to_send, server.get_ip(), server.get_port() );
     packet_to_send.clear();
 }
 
-bool Game_Client_Session::get_app_loop() const
+bool Client_Engine::get_app_loop() const
 {
     return app_loop;
 }
 
-bool Game_Client_Session::get_game_loop() const
+bool Client_Engine::get_game_loop() const
 {
     return game_loop;
 }
 
-void Game_Client_Session::debug_show_size() const
+void Client_Engine::debug_show_size() const
 {
     //keep up to date!
     std::cout << sizeof(window) << "\n"
@@ -241,7 +244,6 @@ void Game_Client_Session::debug_show_size() const
               << sizeof(received_packet) << "\n"
               << sizeof(socket) << "\n"
               << sizeof(players) << "\n"
-              << sizeof(blueprints) << "\n"
               << sizeof(clock) << "\n"
               << sizeof(time) << "\n"
               << sizeof(app_loop) << "\n"

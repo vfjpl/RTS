@@ -1,20 +1,20 @@
-#include "game_server_session.hpp"
+#include "server_engine.hpp"
 
 int main()
 {
-    Game_Server_Session session;
-    session.debug_show_size();
+    Server_Engine engine;
+    engine.debug_show_size();
 
-    while( session.get_app_loop() )
+    while( engine.get_app_loop() )
     {
-        session.receive_packets();
-        session.lobby_logic();
-        session.send_packets();
-        while( session.get_game_loop() )
+        engine.receive_packets();
+        engine.lobby_logic();
+        engine.send_packets();
+        while( engine.get_game_loop() )
         {
-            session.receive_packets();
-            session.game_logic();
-            session.send_packets();
+            engine.receive_packets();
+            engine.game_logic();
+            engine.send_packets();
         }
     }
 

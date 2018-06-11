@@ -1,16 +1,17 @@
-#include "game_server_session.hpp"
+#include "server_engine.hpp"
 #include "../common/network_opcodes.hpp"
 #include <iostream>
 
-Game_Server_Session::Game_Server_Session()
+Server_Engine::Server_Engine()
 {
     socket.bind(7000);
 }
 
-void Game_Server_Session::lobby_logic()
+void Server_Engine::lobby_logic()
 {
     time = clock.restart();
 
+    //check if all players are ready
     bool ready = true;
     for(sf::Uint8 i = 0; i < players.size(); )
     {
@@ -39,13 +40,12 @@ void Game_Server_Session::lobby_logic()
     if( ready && players.size() > 0 )//prevent starting when there are no players in lobby
     {
         game_loop = true;
-        packet_to_send << (sf::Uint8)SERVER_START_GAME;
         for(sf::Uint8 i = 0; i < players.size(); ++i)//reset ready status after game started
             players[i].set_ready_status(false);
     }
 }
 
-void Game_Server_Session::game_logic()
+void Server_Engine::game_logic()
 {
     time = clock.restart();
 
@@ -65,10 +65,9 @@ void Game_Server_Session::game_logic()
     //temp, quit game as soon as it starts
     game_loop = false;
     units.clear();
-    packet_to_send<<(sf::Uint8)SERVER_STOP_GAME;
 }
 
-void Game_Server_Session::receive_packets()
+void Server_Engine::receive_packets()
 {
     sf::IpAddress incomming_ip;
     unsigned short incomming_port;
@@ -126,24 +125,24 @@ void Game_Server_Session::receive_packets()
     }//end for
 }
 
-void Game_Server_Session::send_packets()
+void Server_Engine::send_packets()
 {
     for(sf::Uint8 i = 0; i < players.size(); ++i)
         socket.send( packet_to_send, players[i].get_ip(), players[i].get_port() );
     packet_to_send.clear();
 }
 
-bool Game_Server_Session::get_app_loop() const
+bool Server_Engine::get_app_loop() const
 {
     return app_loop;
 }
 
-bool Game_Server_Session::get_game_loop() const
+bool Server_Engine::get_game_loop() const
 {
     return game_loop;
 }
 
-sf::Uint8 Game_Server_Session::get_player_id(sf::IpAddress ip, unsigned short port) const
+sf::Uint8 Server_Engine::get_player_id(sf::IpAddress ip, unsigned short port) const
 {
     for(sf::Uint8 i = 0; i < players.size(); ++i)
         if(players[i].compare(ip, port))
@@ -152,7 +151,7 @@ sf::Uint8 Game_Server_Session::get_player_id(sf::IpAddress ip, unsigned short po
     return players.size();//return next player id
 }
 
-void Game_Server_Session::debug_show_size() const
+void Server_Engine::debug_show_size() const
 {
     //keep up to date!
     std::cout << sizeof(units) << "\n"
@@ -160,7 +159,6 @@ void Game_Server_Session::debug_show_size() const
               << sizeof(received_packet) << "\n"
               << sizeof(socket) << "\n"
               << sizeof(players) << "\n"
-              << sizeof(blueprints) << "\n"
               << sizeof(clock) << "\n"
               << sizeof(time) << "\n"
               << sizeof(app_loop) << "\n"

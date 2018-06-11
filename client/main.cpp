@@ -1,24 +1,24 @@
-#include "game_client_session.hpp"
+#include "client_engine.hpp"
 
 int main()
 {
-    Game_Client_Session session;
-    session.debug_show_size();
+    Client_Engine engine;
+    engine.debug_show_size();
 
-    while( session.get_app_loop() )
+    while( engine.get_app_loop() )
     {
-        session.receive_packets();
-        session.lobby_receive_inputs();
-        session.lobby_logic();
-        session.lobby_draw_frame();
-        session.send_packets();
-        while( session.get_game_loop() )
+        engine.receive_packets();
+        engine.lobby_receive_inputs();
+        engine.lobby_logic();
+        engine.lobby_draw_frame();
+        engine.send_packets();
+        while( engine.get_game_loop() )
         {
-            session.receive_packets();
-            session.game_receive_inputs();
-            session.game_logic();
-            session.game_draw_frame();
-            session.send_packets();
+            engine.receive_packets();
+            engine.game_receive_inputs();
+            engine.game_logic();
+            engine.game_draw_frame();
+            engine.send_packets();
         }
     }
 

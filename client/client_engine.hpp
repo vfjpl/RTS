@@ -3,28 +3,27 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Network.hpp>
-#include "../common/player.hpp"
-#include "../common/unit.hpp"
+#include "../common/network_data.hpp"
+#include "../common/game_unit.hpp"
 #include <deque>
 
-class Game_Client_Session
+class Client_Engine
 {
     //sort from largest to smallest!
     sf::RenderWindow window;//528
-    std::deque<Unit> units;//80
-    Player server;//56
+    std::deque<Game_Unit> units;//80
+    Network_Data server;//56
     sf::Packet packet_to_send;//56
     sf::Packet received_packet;//56
     sf::UdpSocket socket;//48
-    std::vector<Player> players;//24
-    std::vector<Unit> blueprints;//24
+    std::vector<Network_Data> players;//24
     sf::Clock clock;//8
     sf::Time time;//8
     bool app_loop = true;//1
     bool game_loop = false;//1
 
 public:
-    Game_Client_Session();
+    Client_Engine();
 
     void lobby_receive_inputs();
     void lobby_logic();

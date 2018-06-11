@@ -3,7 +3,7 @@
 
 #include <SFML/Network.hpp>
 
-class Player
+class Network_Data
 {
     //sort from largest to smallest!
     std::wstring m_nickname;//32
@@ -13,8 +13,8 @@ class Player
     bool m_ready_status = false;//1
 
 public:
-    Player();
-    Player(sf::IpAddress ip, unsigned short port);
+    Network_Data();
+    Network_Data(sf::IpAddress ip, unsigned short port);
 
     void set_network_timeout(sf::Time network_timeout);
     void set_ip_port(sf::IpAddress ip, unsigned short port);

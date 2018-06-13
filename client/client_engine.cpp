@@ -222,6 +222,14 @@ void Client_Engine::receive_packets()
                     players[id].set_nickname(str);
                     break;
                 }
+                case SERVER_PLAYER_TEAM:
+                {
+                    sf::Uint8 id;
+                    sf::Uint8 team;
+                    received_packet >> id >> team;
+                    players[id].set_team(team);
+                    break;
+                }
                 default:
                 {
                     received_packet.clear();

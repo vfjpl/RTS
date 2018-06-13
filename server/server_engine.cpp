@@ -104,6 +104,14 @@ void Server_Engine::receive_packets()
                 packet_to_send << (sf::Uint8)SERVER_PLAYER_NICKNAME << local_id << str;
                 break;
             }
+            case SET_TEAM:
+            {
+                sf::Uint8 team;
+                received_packet >> team;
+                players[local_id].set_team(team);
+                packet_to_send << (sf::Uint8)SERVER_PLAYER_TEAM << local_id << team;
+                break;
+            }
             default:
             {
                 received_packet.clear();

@@ -35,6 +35,11 @@ void Network_Data::set_ready_status(bool ready_status)
     m_ready_status = ready_status;
 }
 
+void Network_Data::set_team(sf::Uint8 team)
+{
+    m_team = team;
+}
+
 sf::Time Network_Data::get_network_timeout() const
 {
     return m_network_timeout;
@@ -60,6 +65,11 @@ bool Network_Data::get_ready_status() const
     return m_ready_status;
 }
 
+sf::Uint8 Network_Data::get_team() const
+{
+    return m_team;
+}
+
 void Network_Data::add_network_timeout(sf::Time network_timeout)
 {
     m_network_timeout += network_timeout;
@@ -81,5 +91,6 @@ void Network_Data::debug_show_size() const
               << sizeof(m_network_timeout) << "\n"
               << sizeof(m_ip) << "\n"
               << sizeof(m_port) << "\n"
+              << sizeof(m_team) << "\n"
               << sizeof(m_ready_status) << "\n";
 }

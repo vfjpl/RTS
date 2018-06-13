@@ -24,14 +24,17 @@ enum: sf::Uint8
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    SET_READY_STATUS,//wysyła informacje o statusie gracza
+    SET_READY_STATUS,//ustawia status gracza
 // [bool ready_status]
 
-    SEND_MESSAGE,//wysyła wiadomość do serwera na czat
+    SEND_MESSAGE,//wysyła wiadomość na czat
 // [std::wstring tekst]
 
     SET_NICKNAME,//ustawia nick gracza
 // [std::wstring nickname]
+
+    SET_TEAM,//ustawia team gracza
+// [sf::Uint8 team]
 
 
 
@@ -52,20 +55,23 @@ enum: sf::Uint8
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    SERVER_PLAYER_CONNECTED,//informacja o tym że dołączył ktoś do lobby
-// [sf::Uint8 ID_gracza] [bool ready_status_0] ... [bool ready_status_n]
+    SERVER_PLAYER_CONNECTED,//rozsyła info, że gracz dołączył oraz informacje o graczach
+// [sf::Uint8 ID_gracza] [bool ready_status_0] ... [bool ready_status_N]
 
-    SERVER_PLAYER_DISCONNECTED,//gracz opuścił grę
+    SERVER_PLAYER_DISCONNECTED,//rozsyła info, że gracz opuścił grę
 // [sf::Uint8 ID_gracza]
 
-    SERVER_PLAYER_READY_STATUS,//rozsyła informacje o statusie gracza
+    SERVER_PLAYER_READY_STATUS,//rozsyła status gracza
 // [sf::Uint8 ID_gracza] [bool ready_status]
 
-    SERVER_PLAYER_MESSAGE,//serwer rozsyłą wiadomość graczą
+    SERVER_PLAYER_MESSAGE,//rozsyłą wiadomość graczą
 // [sf::Uint8 ID_gracza] [std::wstring tekst]
 
-    SERVER_PLAYER_NICKNAME,//serwer rozsyłą nick gracza
+    SERVER_PLAYER_NICKNAME,//rozsyłą nick gracza
 // [sf::Uint8 ID_gracza] [std::wstring nickname]
+
+    SERVER_PLAYER_TEAM,//rozsyla w jakim teamie jest gracz
+// [sf::Uint8 ID_gracza] [sf::Uint8 team]
 
 
 

@@ -10,7 +10,6 @@ Server_Engine::Server_Engine()
 void Server_Engine::lobby_logic()
 {
     time = clock.restart();
-
     //check if all players are ready
     bool ready = true;
     for(sf::Uint8 i = 0; i < players.size(); )
@@ -38,7 +37,6 @@ void Server_Engine::lobby_logic()
 void Server_Engine::game_logic()
 {
     time = clock.restart();
-
     for(sf::Uint8 i = 0; i < players.size(); )
     {
         if(players[i].get_network_timeout().asSeconds() > 1)//timeout disconnect
@@ -71,8 +69,10 @@ void Server_Engine::receive_packets()
         {
             if(local_id == 128)//max 254
                 continue;//don't add new player
+            packet_to_send << (sf::Uint8)SERVER_PLAYER_CONNECTED << local_id;
+            for(sf::Uint8 i = 0; i < local_id; ++i)//put information about players
+                packet_to_send << players[i].get_ready_status();
             players.emplace_back(incomming_ip, incomming_port);
-            packet_to_send<<(sf::Uint8)SERVER_PLAYER_CONNECTED<<local_id;
         }
 
         players[local_id].set_network_timeout( sf::Time::Zero );
@@ -86,14 +86,14 @@ void Server_Engine::receive_packets()
                 bool ready_status;
                 received_packet >> ready_status;
                 players[local_id].set_ready_status(ready_status);
-                packet_to_send<<(sf::Uint8)SERVER_PLAYER_READY_STATUS<<local_id<<ready_status;
+                packet_to_send << (sf::Uint8)SERVER_PLAYER_READY_STATUS << local_id << ready_status;
                 break;
             }
             case SEND_MESSAGE:
             {
                 std::wstring str;
                 received_packet >> str;
-                packet_to_send<<(sf::Uint8)SERVER_PLAYER_MESSAGE<<local_id<<str;
+                packet_to_send << (sf::Uint8)SERVER_PLAYER_MESSAGE << local_id << str;
                 break;
             }
             case SET_NICKNAME:
@@ -101,7 +101,7 @@ void Server_Engine::receive_packets()
                 std::wstring str;
                 received_packet >> str;
                 players[local_id].set_nickname(str);
-                packet_to_send<<(sf::Uint8)SERVER_PLAYER_NICKNAME<<local_id<<str;
+                packet_to_send << (sf::Uint8)SERVER_PLAYER_NICKNAME << local_id << str;
                 break;
             }
             default:

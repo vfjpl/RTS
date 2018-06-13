@@ -53,7 +53,7 @@ enum: sf::Uint8
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     SERVER_PLAYER_CONNECTED,//informacja o tym że dołączył ktoś do lobby
-// [sf::Uint8 ID_gracza]
+// [sf::Uint8 ID_gracza] [bool ready_status_0] ... [bool ready_status_n]
 
     SERVER_PLAYER_DISCONNECTED,//gracz opuścił grę
 // [sf::Uint8 ID_gracza]

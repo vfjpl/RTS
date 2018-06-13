@@ -9,6 +9,11 @@ Network_Data::Network_Data(sf::IpAddress ip, unsigned short port)
     m_port = port;
 }
 
+Network_Data::Network_Data(bool ready_status)
+{
+    m_ready_status = ready_status;
+}
+
 void Network_Data::set_network_timeout(sf::Time network_timeout)
 {
     m_network_timeout = network_timeout;

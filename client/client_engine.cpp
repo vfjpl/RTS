@@ -169,9 +169,23 @@ void Client_Engine::receive_packets()
                 case SERVER_PLAYER_CONNECTED:
                 {
                     sf::Uint8 id;
+                    bool ready_status;
                     received_packet >> id;
                     if(id > players.size())
-                        players.resize(id);
+                    {
+                        for(sf::Uint8 i = 0; i < id; ++i)
+                        {
+                            received_packet >> ready_status;
+                            players.emplace_back(ready_status);
+                        }
+                    }
+                    else
+                    {
+                        for(sf::Uint8 i = 0; i < id; ++i)
+                        {
+                            received_packet >> ready_status;
+                        }
+                    }
                     players.emplace_back();
                     break;
                 }
@@ -180,7 +194,8 @@ void Client_Engine::receive_packets()
                     sf::Uint8 id;
                     received_packet >> id;
                     players.erase(players.begin() + id);
-                    set_all_players_ready_status(false);
+                    if(!game_loop)
+                        set_all_players_ready_status(false);
                     break;
                 }
                 case SERVER_PLAYER_READY_STATUS:

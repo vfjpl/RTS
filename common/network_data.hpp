@@ -15,6 +15,7 @@ class Network_Data
 public:
     Network_Data();
     Network_Data(sf::IpAddress ip, unsigned short port);
+    Network_Data(bool ready_status);
 
     void set_network_timeout(sf::Time network_timeout);
     void set_ip_port(sf::IpAddress ip, unsigned short port);

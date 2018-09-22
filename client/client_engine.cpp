@@ -56,6 +56,7 @@ void Client_Engine::lobby_receive_packets()
                     std::wstring str;
                     received_packet >> id >> str;
 
+                    std::wcout << str << L"\n";
                     break;
                 }
                 case SERVER_PLAYER_NICKNAME:
@@ -169,6 +170,11 @@ void Client_Engine::lobby_receive_inputs()
         {
             app_loop = false;
             game_loop = false;
+            break;
+        }
+        case sf::Event::TextEntered:
+        {
+            //TODO:handle text input
             break;
         }
         default:

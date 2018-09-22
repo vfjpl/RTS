@@ -7,12 +7,12 @@ int main()
 
     while( engine.get_app_loop() )
     {
-        engine.receive_packets();
+        engine.lobby_receive_packets();
         engine.lobby_logic();
         engine.send_packets();
         while( engine.get_game_loop() )
         {
-            engine.receive_packets();
+            engine.game_receive_packets();
             engine.game_logic();
             engine.send_packets();
         }

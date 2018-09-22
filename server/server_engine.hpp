@@ -22,10 +22,12 @@ class Server_Engine
 public:
     Server_Engine();
 
+    void lobby_receive_packets();
+    void game_receive_packets();
+
     void lobby_logic();
     void game_logic();
 
-    void receive_packets();
     void send_packets();
     bool get_app_loop() const;
     bool get_game_loop() const;

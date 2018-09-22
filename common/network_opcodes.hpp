@@ -4,7 +4,7 @@
 #include <SFML/Main.hpp>
 
 // ID - oznacza, że operacja dotyczy konkretnego obiektu.
-// BP - oznacza, że operacja dotyczy szablonu okietu.
+// BP - oznacza, że operacja dotyczy szablonu obiektu.
 
 // Wpisywanie rozkazów do pakietu:
 // packet << (sf::Uint8)opcode;
@@ -55,8 +55,8 @@ enum: sf::Uint8
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    SERVER_PLAYER_CONNECTED,//rozsyła info, że gracz dołączył oraz informacje o graczach
-// [sf::Uint8 ID_gracza] [bool ready_status_0] ... [bool ready_status_N]
+    SERVER_PLAYER_CONNECTED,//rozsyła info, że gracz dołączył
+// [sf::Uint8 ID_gracza]
 
     SERVER_PLAYER_DISCONNECTED,//rozsyła info, że gracz opuścił grę
 // [sf::Uint8 ID_gracza]

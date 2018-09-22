@@ -10,6 +10,154 @@ Client_Engine::Client_Engine()
     window.create(sf::VideoMode(800, 600), "Kelajno");//sf::Style::Fullscreen
 }
 
+void Client_Engine::lobby_receive_packets()
+{
+    sf::IpAddress incomming_ip;
+    unsigned short incomming_port;
+    sf::Uint8 opcode;
+    while ( !socket.receive( received_packet, incomming_ip, incomming_port ) )
+    {
+        if( server.compare(incomming_ip, incomming_port) )
+        {
+            server.set_network_timeout( sf::Time::Zero );
+            while( !received_packet.endOfPacket() )
+            {
+                received_packet >> opcode;
+                switch( opcode )
+                {
+                case SERVER_PLAYER_CONNECTED:
+                {
+                    sf::Uint8 id;
+                    received_packet >> id;
+                    if(id > players.size())
+                        players.resize(id);
+                    players.emplace_back();
+                    break;
+                }
+                case SERVER_PLAYER_DISCONNECTED:
+                {
+                    sf::Uint8 id;
+                    received_packet >> id;
+                    players.erase(players.begin() + id);
+                    set_all_players_ready_status(false);
+                    break;
+                }
+                case SERVER_PLAYER_READY_STATUS:
+                {
+                    sf::Uint8 id;
+                    bool ready_status;
+                    received_packet >> id >> ready_status;
+                    players[id].set_ready_status(ready_status);
+                    break;
+                }
+                case SERVER_PLAYER_MESSAGE:
+                {
+                    sf::Uint8 id;
+                    std::wstring str;
+                    received_packet >> id >> str;
+
+                    break;
+                }
+                case SERVER_PLAYER_NICKNAME:
+                {
+                    sf::Uint8 id;
+                    std::wstring str;
+                    received_packet >> id >> str;
+                    players[id].set_nickname(str);
+                    break;
+                }
+                case SERVER_PLAYER_TEAM:
+                {
+                    sf::Uint8 id;
+                    sf::Uint8 team;
+                    received_packet >> id >> team;
+                    players[id].set_team(team);
+                    break;
+                }
+                default:
+                {
+                    received_packet.clear();
+                    break;
+                }
+                }//end switch
+            }//end while
+        }//end if
+    }//end while
+}
+
+void Client_Engine::game_receive_packets()
+{
+    sf::IpAddress incomming_ip;
+    unsigned short incomming_port;
+    sf::Uint8 opcode;
+    while ( !socket.receive( received_packet, incomming_ip, incomming_port ) )
+    {
+        if( server.compare(incomming_ip, incomming_port) )
+        {
+            server.set_network_timeout( sf::Time::Zero );
+            while( !received_packet.endOfPacket() )
+            {
+                received_packet >> opcode;
+                switch( opcode )
+                {
+                case SERVER_PLAYER_CONNECTED:
+                {
+                    sf::Uint8 id;
+                    received_packet >> id;
+                    players.emplace_back();
+                    break;
+                }
+                case SERVER_PLAYER_DISCONNECTED:
+                {
+                    sf::Uint8 id;
+                    received_packet >> id;
+                    players.erase(players.begin() + id);
+                    set_all_players_ready_status(false);
+                    break;
+                }
+                case SERVER_PLAYER_READY_STATUS:
+                {
+                    sf::Uint8 id;
+                    bool ready_status;
+                    received_packet >> id >> ready_status;
+                    players[id].set_ready_status(ready_status);
+                    break;
+                }
+                case SERVER_PLAYER_MESSAGE:
+                {
+                    sf::Uint8 id;
+                    std::wstring str;
+                    received_packet >> id >> str;
+
+                    break;
+                }
+                case SERVER_PLAYER_NICKNAME:
+                {
+                    sf::Uint8 id;
+                    std::wstring str;
+                    received_packet >> id >> str;
+                    players[id].set_nickname(str);
+                    break;
+                }
+                case SERVER_PLAYER_TEAM:
+                {
+                    sf::Uint8 id;
+                    sf::Uint8 team;
+                    received_packet >> id >> team;
+                    players[id].set_team(team);
+                    break;
+                }
+                default:
+                {
+                    received_packet.clear();
+                    break;
+                }
+                }//end switch
+            }//end while
+        }//end if
+    }//end while
+}
+
 void Client_Engine::lobby_receive_inputs()
 {
     sf::Event event;
@@ -29,36 +177,6 @@ void Client_Engine::lobby_receive_inputs()
         }
         }//end switch
     }
-}
-
-void Client_Engine::lobby_logic()
-{
-    time = clock.restart();
-    if(server.get_network_timeout().asSeconds() > 1)
-    {
-        //connection to server lost, back to main menu
-        server.set_network_timeout( sf::Time::Zero );
-        players.clear();
-        return;
-    }
-    server.add_network_timeout(time);
-
-    //check if all players are ready
-    bool ready = true;
-    for(sf::Uint8 i = 0; i < players.size(); ++i)
-        ready &= players[i].get_ready_status();//ready true only if all players are ready
-
-    if( ready && players.size() > 0 )//prevent starting when there are no players in lobby
-    {
-        game_loop = true;
-        set_all_players_ready_status(false);
-    }
-}
-
-void Client_Engine::lobby_draw_frame()
-{
-    window.clear();
-    window.display();
 }
 
 void Client_Engine::game_receive_inputs()
@@ -126,6 +244,30 @@ void Client_Engine::game_receive_inputs_mousepress(const sf::Event& event)
     }//end switch
 }
 
+void Client_Engine::lobby_logic()
+{
+    time = clock.restart();
+    if(server.get_network_timeout().asSeconds() > 1)
+    {
+        //connection to server lost, back to main menu
+        server.set_network_timeout( sf::Time::Zero );
+        players.clear();
+        return;
+    }
+    server.add_network_timeout(time);
+
+    //check if all players are ready
+    bool ready = true;
+    for(sf::Uint8 i = 0; i < players.size(); ++i)
+        ready &= players[i].get_ready_status();//ready true only if all players are ready
+
+    if( ready && players.size() > 0 )//prevent starting when there are no players in lobby
+    {
+        game_loop = true;
+        set_all_players_ready_status(false);
+    }
+}
+
 void Client_Engine::game_logic()
 {
     time = clock.restart();
@@ -140,105 +282,22 @@ void Client_Engine::game_logic()
     }
     server.add_network_timeout(time);
 
-    //temp, quit game as soon as it starts
+    //TEMP: quit game as soon as it starts
     game_loop = false;
+    set_all_players_ready_status(false);
     units.clear();
+}
+
+void Client_Engine::lobby_draw_frame()
+{
+    window.clear();
+    window.display();
 }
 
 void Client_Engine::game_draw_frame()
 {
     window.clear();
     window.display();
-}
-
-void Client_Engine::receive_packets()
-{
-    sf::IpAddress incomming_ip;
-    unsigned short incomming_port;
-    sf::Uint8 opcode;
-    while ( !socket.receive( received_packet, incomming_ip, incomming_port ) )
-    {
-        if( server.compare(incomming_ip, incomming_port) )
-        {
-            server.set_network_timeout( sf::Time::Zero );
-            while( !received_packet.endOfPacket() )
-            {
-                received_packet >> opcode;
-                switch( opcode )
-                {
-                case SERVER_PLAYER_CONNECTED:
-                {
-                    sf::Uint8 id;
-                    bool ready_status;
-                    received_packet >> id;
-                    if(id > players.size())
-                    {
-                        for(sf::Uint8 i = 0; i < id; ++i)
-                        {
-                            received_packet >> ready_status;
-                            players.emplace_back(ready_status);
-                        }
-                    }
-                    else
-                    {
-                        for(sf::Uint8 i = 0; i < id; ++i)
-                        {
-                            received_packet >> ready_status;
-                        }
-                    }
-                    players.emplace_back();
-                    break;
-                }
-                case SERVER_PLAYER_DISCONNECTED:
-                {
-                    sf::Uint8 id;
-                    received_packet >> id;
-                    players.erase(players.begin() + id);
-                    if(!game_loop)
-                        set_all_players_ready_status(false);
-                    break;
-                }
-                case SERVER_PLAYER_READY_STATUS:
-                {
-                    sf::Uint8 id;
-                    bool ready_status;
-                    received_packet >> id >> ready_status;
-                    players[id].set_ready_status(ready_status);
-                    break;
-                }
-                case SERVER_PLAYER_MESSAGE:
-                {
-                    sf::Uint8 id;
-                    std::wstring str;
-                    received_packet >> id >> str;
-
-                    break;
-                }
-                case SERVER_PLAYER_NICKNAME:
-                {
-                    sf::Uint8 id;
-                    std::wstring str;
-                    received_packet >> id >> str;
-                    players[id].set_nickname(str);
-                    break;
-                }
-                case SERVER_PLAYER_TEAM:
-                {
-                    sf::Uint8 id;
-                    sf::Uint8 team;
-                    received_packet >> id >> team;
-                    players[id].set_team(team);
-                    break;
-                }
-                default:
-                {
-                    received_packet.clear();
-                    break;
-                }
-                }//end switch
-            }//end while
-        }//end if
-    }//end while
 }
 
 void Client_Engine::send_packets()

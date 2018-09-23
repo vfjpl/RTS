@@ -87,6 +87,10 @@ enum: sf::Uint8
     SERVER_SET_UNIT_HEALTH,//ustaw punkty hp jednostki
 // [sf::Uint8 ID_jednostki] [sf::Uint8 hp]
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    COUNT,
+
 };
 
 #endif // NETWORK_OPCODES_HPP_INCLUDED

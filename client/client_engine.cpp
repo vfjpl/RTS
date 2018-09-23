@@ -175,6 +175,12 @@ void Client_Engine::lobby_receive_inputs()
         case sf::Event::TextEntered:
         {
             //TODO:handle text input
+            text_buffer += event.text.unicode;
+            break;
+        }
+        case sf::Event::KeyPressed:
+        {
+            lobby_receive_inputs_keypress(event);
             break;
         }
         default:
@@ -183,6 +189,23 @@ void Client_Engine::lobby_receive_inputs()
         }
         }//end switch
     }
+}
+
+void Client_Engine::lobby_receive_inputs_keypress(const sf::Event& event)
+{
+    switch(event.key.code)
+    {
+    case sf::Keyboard::Enter:
+    {
+        packet_to_send << (sf::Uint8)SEND_MESSAGE << text_buffer;
+        text_buffer.clear();
+        break;
+    }
+    default:
+    {
+        break;
+    }
+    }//end switch
 }
 
 void Client_Engine::game_receive_inputs()
@@ -333,11 +356,12 @@ void Client_Engine::debug_show_size() const
     //keep up to date!
     std::cout << sizeof(window) << "\n"
               << sizeof(units) << "\n"
-              << sizeof(server) << "\n"
               << sizeof(packet_to_send) << "\n"
               << sizeof(received_packet) << "\n"
               << sizeof(socket) << "\n"
+              << sizeof(text_buffer) << "\n"
               << sizeof(players) << "\n"
+              << sizeof(server) << "\n"
               << sizeof(clock) << "\n"
               << sizeof(time) << "\n"
               << sizeof(app_loop) << "\n"

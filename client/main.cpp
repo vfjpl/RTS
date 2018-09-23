@@ -3,7 +3,7 @@
 int main()
 {
     Client_Engine engine;
-    engine.debug_show_size();
+    //engine.debug_show_size();
 
     while( engine.get_app_loop() )
     {

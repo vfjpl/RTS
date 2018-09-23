@@ -20,7 +20,7 @@ void Server_Engine::lobby_receive_packets()
 
         if(local_id == players.size())//check if we got new player
         {
-            if(local_id == 254)//max 254 because sf::Uint8 is max 255
+            if(local_id == 4)//max 254 because sf::Uint8 is max 255
                 continue;//don't add new player
             packet_to_send << (sf::Uint8)SERVER_PLAYER_CONNECTED << local_id;
             //TODO: inform new player about ready status of others

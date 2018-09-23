@@ -1,5 +1,5 @@
-#ifndef UNIT_HPP_INCLUDED
-#define UNIT_HPP_INCLUDED
+#ifndef GAME_UNIT_HPP_INCLUDED
+#define GAME_UNIT_HPP_INCLUDED
 
 #include <SFML/Main.hpp>
 
@@ -25,4 +25,4 @@ public:
     void debug_show_size() const;
 };
 
-#endif // UNIT_HPP_INCLUDED
+#endif // GAME_UNIT_HPP_INCLUDED

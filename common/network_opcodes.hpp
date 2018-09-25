@@ -64,13 +64,13 @@ enum: sf::Uint8
     SERVER_PLAYER_READY_STATUS,//rozsyła status gracza
 // [sf::Uint8 ID_gracza] [bool ready_status]
 
-    SERVER_PLAYER_MESSAGE,//rozsyłą wiadomość graczą
+    SERVER_PLAYER_MESSAGE,//rozsyła wiadomość graczą
 // [sf::Uint8 ID_gracza] [std::wstring tekst]
 
-    SERVER_PLAYER_NICKNAME,//rozsyłą nick gracza
+    SERVER_PLAYER_NICKNAME,//rozsyła nick gracza
 // [sf::Uint8 ID_gracza] [std::wstring nickname]
 
-    SERVER_PLAYER_TEAM,//rozsyla w jakim teamie jest gracz
+    SERVER_PLAYER_TEAM,//rozsyła w jakim teamie jest gracz
 // [sf::Uint8 ID_gracza] [sf::Uint8 team]
 
 
@@ -81,7 +81,7 @@ enum: sf::Uint8
     SERVER_REMOVE_UNIT_FROM_GAME,//usuń jednostke z gry
 // [sf::Uint8 ID_jednostki]
 
-    SERVER_SET_UNIT_POSITION,//zmien pozycje jednostki
+    SERVER_SET_UNIT_POSITION,//zmień pozycje jednostki
 // [sf::Uint8 ID_jednostki] [sf::Uint8 pozycja_x] [sf::Uint8 pozycja_y]
 
     SERVER_SET_UNIT_HEALTH,//ustaw punkty hp jednostki

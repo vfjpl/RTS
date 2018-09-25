@@ -21,21 +21,20 @@ class Server_Engine
 public:
     Server_Engine();
 
-    void lobby_receive_packets();
-    void game_receive_packets();
-
     void lobby_logic();
     void game_logic();
 
+    void receive_packets();
     void send_packets();
+
     bool get_app_loop() const;
     bool get_game_loop() const;
 
     void debug_show_size() const;
 
 private:
-    void set_all_players_ready_status(bool status);
     sf::Uint8 get_player_id(sf::IpAddress ip, unsigned short port) const;
+    void set_all_players_ready_status(bool status);
 };
 
 #endif // SERVER_ENGINE_HPP_INCLUDED

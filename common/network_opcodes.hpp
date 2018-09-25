@@ -14,14 +14,6 @@ enum: sf::Uint8
 
     UNUSED,
 
-    JOIN_GAME,//unused
-
-    DISCONNECT,//unused
-
-    SERVER_START_GAME,//unused
-
-    SERVER_STOP_GAME,//unused
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     SET_READY_STATUS,//ustawia status gracza
@@ -54,6 +46,9 @@ enum: sf::Uint8
 // [sf::Uint8 ID_jednostki]
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    SERVER_GAME_STATUS,//serwer wysyła status gry
+// [bool game_status]
 
     SERVER_PLAYER_CONNECTED,//rozsyła info, że gracz dołączył
 // [sf::Uint8 ID_gracza]

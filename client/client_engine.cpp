@@ -5,12 +5,11 @@
 Client_Engine::Client_Engine()
 {
     socket.setBlocking(false);
-    server.set_ip_port(sf::IpAddress::LocalHost, 7000);
     window.setFramerateLimit(60);
     window.create(sf::VideoMode(800, 600), "Kelajno");//sf::Style::Fullscreen
 }
 
-void Client_Engine::lobby_receive_packets()
+void Client_Engine::receive_packets()
 {
     sf::IpAddress incomming_ip;
     unsigned short incomming_port;
@@ -25,6 +24,13 @@ void Client_Engine::lobby_receive_packets()
                 received_packet >> opcode;
                 switch( opcode )
                 {
+                case SERVER_GAME_STATUS:
+                {
+                    bool game_status;
+                    received_packet >> game_status;
+                    game_loop = game_status;
+                    set_all_players_ready_status(false);
+                }
                 case SERVER_PLAYER_CONNECTED:
                 {
                     sf::Uint8 id;
@@ -39,81 +45,6 @@ void Client_Engine::lobby_receive_packets()
                     sf::Uint8 id;
                     received_packet >> id;
                     players.erase(players.begin() + id);
-                    set_all_players_ready_status(false);
-                    break;
-                }
-                case SERVER_PLAYER_READY_STATUS:
-                {
-                    sf::Uint8 id;
-                    bool ready_status;
-                    received_packet >> id >> ready_status;
-                    players[id].set_ready_status(ready_status);
-                    break;
-                }
-                case SERVER_PLAYER_MESSAGE:
-                {
-                    sf::Uint8 id;
-                    std::wstring str;
-                    received_packet >> id >> str;
-
-                    std::wcout << str << L"\n";
-                    break;
-                }
-                case SERVER_PLAYER_NICKNAME:
-                {
-                    sf::Uint8 id;
-                    std::wstring str;
-                    received_packet >> id >> str;
-                    players[id].set_nickname(str);
-                    break;
-                }
-                case SERVER_PLAYER_TEAM:
-                {
-                    sf::Uint8 id;
-                    sf::Uint8 team;
-                    received_packet >> id >> team;
-                    players[id].set_team(team);
-                    break;
-                }
-                default:
-                {
-                    received_packet.clear();
-                    break;
-                }
-                }//end switch
-            }//end while
-        }//end if
-    }//end while
-}
-
-void Client_Engine::game_receive_packets()
-{
-    sf::IpAddress incomming_ip;
-    unsigned short incomming_port;
-    sf::Uint8 opcode;
-    while ( !socket.receive( received_packet, incomming_ip, incomming_port ) )
-    {
-        if( server.compare(incomming_ip, incomming_port) )
-        {
-            server.set_network_timeout( sf::Time::Zero );
-            while( !received_packet.endOfPacket() )
-            {
-                received_packet >> opcode;
-                switch( opcode )
-                {
-                case SERVER_PLAYER_CONNECTED:
-                {
-                    sf::Uint8 id;
-                    received_packet >> id;
-                    players.emplace_back();
-                    break;
-                }
-                case SERVER_PLAYER_DISCONNECTED:
-                {
-                    sf::Uint8 id;
-                    received_packet >> id;
-                    players.erase(players.begin() + id);
-                    set_all_players_ready_status(false);
                     break;
                 }
                 case SERVER_PLAYER_READY_STATUS:
@@ -159,7 +90,7 @@ void Client_Engine::game_receive_packets()
     }//end while
 }
 
-void Client_Engine::lobby_receive_inputs()
+void Client_Engine::receive_inputs()
 {
     sf::Event event;
     while( window.pollEvent(event) )
@@ -169,66 +100,24 @@ void Client_Engine::lobby_receive_inputs()
         case sf::Event::Closed:
         {
             app_loop = false;
+            lobby_loop = false;
             game_loop = false;
             break;
         }
         case sf::Event::TextEntered:
         {
-            //TODO:handle text input
+            //TODO: handle text input
             text_buffer += event.text.unicode;
             break;
         }
         case sf::Event::KeyPressed:
         {
-            lobby_receive_inputs_keypress(event);
-            break;
-        }
-        default:
-        {
-            break;
-        }
-        }//end switch
-    }
-}
-
-void Client_Engine::lobby_receive_inputs_keypress(const sf::Event& event)
-{
-    switch(event.key.code)
-    {
-    case sf::Keyboard::Enter:
-    {
-        packet_to_send << (sf::Uint8)SEND_MESSAGE << text_buffer;
-        text_buffer.clear();
-        break;
-    }
-    default:
-    {
-        break;
-    }
-    }//end switch
-}
-
-void Client_Engine::game_receive_inputs()
-{
-    sf::Event event;
-    while( window.pollEvent(event) )
-    {
-        switch(event.type)
-        {
-        case sf::Event::Closed:
-        {
-            app_loop = false;
-            game_loop = false;
-            break;
-        }
-        case sf::Event::KeyPressed:
-        {
-            game_receive_inputs_keypress(event);
+            receive_inputs_keypress(event);
             break;
         }
         case sf::Event::MouseButtonPressed:
         {
-            game_receive_inputs_mousepress(event);
+            receive_inputs_mousepress(event);
             break;
         }
         default:
@@ -239,14 +128,19 @@ void Client_Engine::game_receive_inputs()
     }
 }
 
-void Client_Engine::game_receive_inputs_keypress(const sf::Event& event)
+void Client_Engine::receive_inputs_keypress(const sf::Event& event)
 {
     switch(event.key.code)
     {
     case sf::Keyboard::Escape:
     {
         app_loop = false;
+        lobby_loop = false;
         game_loop = false;
+        break;
+    }
+    case sf::Keyboard::Enter:
+    {
         break;
     }
     default:
@@ -256,13 +150,14 @@ void Client_Engine::game_receive_inputs_keypress(const sf::Event& event)
     }//end switch
 }
 
-void Client_Engine::game_receive_inputs_mousepress(const sf::Event& event)
+void Client_Engine::receive_inputs_mousepress(const sf::Event& event)
 {
     switch(event.mouseButton.button)
     {
     case sf::Mouse::Middle:
     {
         app_loop = false;
+        lobby_loop = false;
         game_loop = false;
         break;
     }
@@ -273,57 +168,7 @@ void Client_Engine::game_receive_inputs_mousepress(const sf::Event& event)
     }//end switch
 }
 
-void Client_Engine::lobby_logic()
-{
-    time = clock.restart();
-    if(server.get_network_timeout().asSeconds() > 1)
-    {
-        //connection to server lost, back to main menu
-        server.set_network_timeout( sf::Time::Zero );
-        players.clear();
-        return;
-    }
-    server.add_network_timeout(time);
-
-    //check if all players are ready
-    bool ready = true;
-    for(sf::Uint8 i = 0; i < players.size(); ++i)
-        ready &= players[i].get_ready_status();//ready true only if all players are ready
-
-    if( ready && players.size() > 0 )//prevent starting when there are no players in lobby
-    {
-        game_loop = true;
-        set_all_players_ready_status(false);
-    }
-}
-
-void Client_Engine::game_logic()
-{
-    time = clock.restart();
-    if(server.get_network_timeout().asSeconds() > 1)
-    {
-        //connection to server lost, back to main menu
-        game_loop = false;
-        server.set_network_timeout( sf::Time::Zero );
-        players.clear();
-        units.clear();
-        return;
-    }
-    server.add_network_timeout(time);
-
-    //TEMP: quit game as soon as it starts
-    game_loop = false;
-    set_all_players_ready_status(false);
-    units.clear();
-}
-
-void Client_Engine::lobby_draw_frame()
-{
-    window.clear();
-    window.display();
-}
-
-void Client_Engine::game_draw_frame()
+void Client_Engine::draw_frame()
 {
     window.clear();
     window.display();
@@ -338,6 +183,11 @@ void Client_Engine::send_packets()
 bool Client_Engine::get_app_loop() const
 {
     return app_loop;
+}
+
+bool Client_Engine::get_lobby_loop() const
+{
+    return lobby_loop;
 }
 
 bool Client_Engine::get_game_loop() const
@@ -365,5 +215,6 @@ void Client_Engine::debug_show_size() const
               << sizeof(clock) << "\n"
               << sizeof(time) << "\n"
               << sizeof(app_loop) << "\n"
+              << sizeof(lobby_loop) << "\n"
               << sizeof(game_loop) << "\n";
 }

@@ -172,6 +172,8 @@ void Client_Engine::receive_inputs_mousepress(const sf::Event& event)
 void Client_Engine::draw_frame()
 {
     window.clear();
+    for(sf::Uint8 i = 0; i < text_to_draw.size(); ++i)
+        window.draw(text_to_draw[i]);
     window.display();
 }
 
@@ -213,6 +215,7 @@ void Client_Engine::debug_show_size() const
               << sizeof(socket) << "\n"
               << sizeof(text_buffer) << "\n"
               << sizeof(players) << "\n"
+              << sizeof(text_to_draw) << "\n"
               << sizeof(server) << "\n"
               << sizeof(clock) << "\n"
               << sizeof(time) << "\n"

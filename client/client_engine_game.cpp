@@ -14,9 +14,4 @@ void Client_Engine::game_logic()
         return;
     }
     server.add_network_timeout(time);
-
-    //TEMP: quit game as soon as it starts
-    game_loop = false;
-    set_all_players_ready_status(false);
-    units.clear();
 }

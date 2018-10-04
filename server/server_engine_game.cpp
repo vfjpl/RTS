@@ -20,5 +20,4 @@ void Server_Engine::game_logic()
     game_loop = false;
     packet_to_send << (sf::Uint8)SERVER_GAME_STATUS << false;
     set_all_players_ready_status(false);
-    units.clear();
 }

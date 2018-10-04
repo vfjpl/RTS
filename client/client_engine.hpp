@@ -19,6 +19,7 @@ class Client_Engine
     sf::UdpSocket socket;//48
     std::wstring text_buffer;//32
     std::vector <Network_Player> players;//24
+    std::vector <sf::Text> text_to_draw;//24
     Client_Network_Data server;//24
     sf::Clock clock;//8
     sf::Time time;//8

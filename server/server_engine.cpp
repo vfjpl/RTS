@@ -81,9 +81,9 @@ void Server_Engine::send_packets()
     packet_to_send.clear();
 }
 
-bool Server_Engine::get_app_loop() const
+bool Server_Engine::get_lobby_loop() const
 {
-    return app_loop;
+    return lobby_loop;
 }
 
 bool Server_Engine::get_game_loop() const
@@ -116,6 +116,6 @@ void Server_Engine::debug_show_size() const
               << sizeof(players) << "\n"
               << sizeof(clock) << "\n"
               << sizeof(time) << "\n"
-              << sizeof(app_loop) << "\n"
+              << sizeof(lobby_loop) << "\n"
               << sizeof(game_loop) << "\n";
 }

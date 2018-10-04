@@ -30,6 +30,7 @@ void Client_Engine::receive_packets()
                     received_packet >> game_status;
                     game_loop = game_status;
                     set_all_players_ready_status(false);
+                    break;
                 }
                 case SERVER_PLAYER_CONNECTED:
                 {
@@ -205,6 +206,7 @@ void Client_Engine::debug_show_size() const
 {
     //keep up to date!
     std::cout << sizeof(window) << "\n"
+              << sizeof(resources_manager) << "\n"
               << sizeof(units) << "\n"
               << sizeof(packet_to_send) << "\n"
               << sizeof(received_packet) << "\n"

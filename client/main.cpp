@@ -7,8 +7,7 @@ int main()
 
     while( engine.get_app_loop())
     {
-        engine.receive_inputs();
-        engine.draw_frame();
+        engine.main_menu();
         while( engine.get_lobby_loop() )
         {
             engine.receive_packets();

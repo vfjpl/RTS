@@ -7,6 +7,7 @@ Client_Engine::Client_Engine()
     socket.setBlocking(false);
     window.setFramerateLimit(60);
     window.create(sf::VideoMode(800, 600), "Kelajno");//sf::Style::Fullscreen
+    resources_manager.load_resources();
 }
 
 void Client_Engine::receive_packets()
@@ -101,6 +102,7 @@ void Client_Engine::receive_inputs()
         case sf::Event::Closed:
         {
             app_loop = false;
+            menu_loop = false;
             lobby_loop = false;
             game_loop = false;
             break;
@@ -136,6 +138,7 @@ void Client_Engine::receive_inputs_keypress(const sf::Event& event)
     case sf::Keyboard::Escape:
     {
         app_loop = false;
+        menu_loop = false;
         lobby_loop = false;
         game_loop = false;
         break;
@@ -158,6 +161,7 @@ void Client_Engine::receive_inputs_mousepress(const sf::Event& event)
     case sf::Mouse::Middle:
     {
         app_loop = false;
+        menu_loop = false;
         lobby_loop = false;
         game_loop = false;
         break;
@@ -186,6 +190,11 @@ void Client_Engine::send_packets()
 bool Client_Engine::get_app_loop() const
 {
     return app_loop;
+}
+
+bool Client_Engine::get_menu_loop() const
+{
+    return menu_loop;
 }
 
 bool Client_Engine::get_lobby_loop() const
@@ -220,6 +229,7 @@ void Client_Engine::debug_show_size() const
               << sizeof(clock) << "\n"
               << sizeof(time) << "\n"
               << sizeof(app_loop) << "\n"
+              << sizeof(menu_loop) << "\n"
               << sizeof(lobby_loop) << "\n"
               << sizeof(game_loop) << "\n";
 }

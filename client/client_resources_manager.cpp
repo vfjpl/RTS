@@ -1,7 +1,9 @@
 #include "client_resources_manager.hpp"
 #include <iostream>
 
-Resources_Manager::Resources_Manager()
+Resources_Manager::Resources_Manager() {}
+
+void Resources_Manager::load_resources()
 {
     m_font.loadFromFile("Fonts/font.ttf");
     //TODO: load rest of the files

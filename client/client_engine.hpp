@@ -24,6 +24,7 @@ class Client_Engine
     sf::Clock clock;//8
     sf::Time time;//8
     bool app_loop = true;//1
+    bool menu_loop = true;//1
     bool lobby_loop = false;//1
     bool game_loop = false;//1
 
@@ -41,6 +42,7 @@ public:
     void send_packets();
 
     bool get_app_loop() const;
+    bool get_menu_loop() const;
     bool get_lobby_loop() const;
     bool get_game_loop() const;
 

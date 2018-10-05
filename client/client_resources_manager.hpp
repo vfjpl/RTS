@@ -20,6 +20,8 @@ class Resources_Manager
 public:
     Resources_Manager();
 
+    void load_resources();
+
     const sf::Font& get_font() const;
 
     void debug_show_size() const;

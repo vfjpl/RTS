@@ -7,15 +7,7 @@ class Resources_Manager
 {
     //sort from largest to smallest!
     sf::Font m_font;//144
-    sf::Texture m_czolg;//40
-    sf::Texture m_drzewko;//40
-    sf::Texture m_drzewko2;//40
-    sf::Texture m_grunt;//40
-    sf::Texture m_grunt2;//40
-    sf::Texture m_test;//40
-    sf::Texture m_trawa1;//40
-    sf::Texture m_trawa2;//40
-    sf::Texture m_trawa3;//40
+    std::vector <sf::Texture> textures;//24
 
 public:
     Resources_Manager();
@@ -23,6 +15,7 @@ public:
     void load_resources();
 
     const sf::Font& get_font() const;
+    const sf::Texture& get_texture(sf::Uint8 id) const;
 
     void debug_show_size() const;
 };

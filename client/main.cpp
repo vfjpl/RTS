@@ -5,20 +5,22 @@ int main()
     Client_Engine engine;
     //engine.debug_show_size();
 
-    while( engine.get_app_loop())
+    while( engine.get_menu_loop())
     {
-        engine.main_menu();
+        engine.menu_receive_inputs();
+        engine.menu_logic();
+        engine.draw_frame();
         while( engine.get_lobby_loop() )
         {
             engine.receive_packets();
-            engine.receive_inputs();
+            engine.lobby_receive_inputs();
             engine.lobby_logic();
             engine.draw_frame();
             engine.send_packets();
             while( engine.get_game_loop() )
             {
                 engine.receive_packets();
-                engine.receive_inputs();
+                engine.game_receive_inputs();
                 engine.game_logic();
                 engine.draw_frame();
                 engine.send_packets();

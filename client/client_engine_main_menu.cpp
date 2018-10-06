@@ -13,8 +13,6 @@ void Client_Engine::menu_chose_options(sf::Uint8 id)
     {
     case 0://CONNECT
     {
-        //TEMP
-        //server.set_ip_port(sf::IpAddress::LocalHost, 7000);
         lobby_loop = true;
         texts_to_draw.clear();
         break;

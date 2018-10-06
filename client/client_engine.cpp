@@ -7,6 +7,7 @@ Client_Engine::Client_Engine()
     socket.setBlocking(false);
     window.setFramerateLimit(60);
     window.create(sf::VideoMode(800, 600), "Kelajno");//sf::Style::Fullscreen
+    server.set_ip_port(sf::IpAddress::LocalHost, 7000);
     resources_manager.load_resources();
     setup_menu();
 }

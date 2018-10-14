@@ -1,5 +1,5 @@
-#ifndef SERVER_ENGINE_HPP_INCLUDED
-#define SERVER_ENGINE_HPP_INCLUDED
+#ifndef ENGINE_HPP_INCLUDED
+#define ENGINE_HPP_INCLUDED
 
 #include "../common/network_player.hpp"
 #include "../common/game_unit.hpp"
@@ -37,4 +37,4 @@ private:
     void set_all_players_ready_status(bool status);
 };
 
-#endif // SERVER_ENGINE_HPP_INCLUDED
+#endif // ENGINE_HPP_INCLUDED

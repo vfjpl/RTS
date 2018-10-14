@@ -1,8 +1,9 @@
-#include "server_engine.hpp"
+#include "engine.hpp"
+
+Server_Engine engine;
 
 int main()
 {
-    Server_Engine engine;
     //engine.debug_show_size();
 
     while( engine.get_lobby_loop() )

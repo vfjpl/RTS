@@ -4,6 +4,7 @@ Server_Engine engine;
 
 int main()
 {
+    engine.init();
     //engine.debug_show_size();
 
     while( engine.get_lobby_loop() )

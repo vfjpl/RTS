@@ -14,6 +14,11 @@ Network_Player::Network_Player(bool ready_status)
     m_ready_status = ready_status;
 }
 
+void Network_Player::set_nickname(const std::wstring& nickname)
+{
+    m_nickname = nickname;
+}
+
 void Network_Player::set_network_timeout(sf::Time network_timeout)
 {
     m_network_timeout = network_timeout;
@@ -25,9 +30,9 @@ void Network_Player::set_ip_port(sf::IpAddress ip, unsigned short port)
     m_port = port;
 }
 
-void Network_Player::set_nickname(const std::wstring& nickname)
+void Network_Player::set_team(sf::Uint8 team)
 {
-    m_nickname = nickname;
+    m_team = team;
 }
 
 void Network_Player::set_ready_status(bool ready_status)
@@ -35,9 +40,9 @@ void Network_Player::set_ready_status(bool ready_status)
     m_ready_status = ready_status;
 }
 
-void Network_Player::set_team(sf::Uint8 team)
+const std::wstring& Network_Player::get_nickname() const
 {
-    m_team = team;
+    return m_nickname;
 }
 
 sf::Time Network_Player::get_network_timeout() const
@@ -55,19 +60,14 @@ unsigned short Network_Player::get_port() const
     return m_port;
 }
 
-const std::wstring& Network_Player::get_nickname() const
+sf::Uint8 Network_Player::get_team() const
 {
-    return m_nickname;
+    return m_team;
 }
 
 bool Network_Player::get_ready_status() const
 {
     return m_ready_status;
-}
-
-sf::Uint8 Network_Player::get_team() const
-{
-    return m_team;
 }
 
 void Network_Player::add_network_timeout(sf::Time network_timeout)

@@ -19,7 +19,7 @@ class Server_Engine
     bool game_loop = false;//1
 
 public:
-    Server_Engine();
+    void init();
 
     void lobby_logic();
     void game_logic();

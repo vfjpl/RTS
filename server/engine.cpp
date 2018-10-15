@@ -2,7 +2,7 @@
 #include "../common/network_opcodes.hpp"
 #include <iostream>
 
-Server_Engine::Server_Engine()
+void Server_Engine::init()
 {
     socket.bind(7000);
 }

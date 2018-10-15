@@ -2,12 +2,13 @@
 #define RESOURCES_MANAGER_HPP_INCLUDED
 
 #include "SFML/Graphics.hpp"
+#include <deque>
 
 class Resources_Manager
 {
     //sort from largest to smallest!
     sf::Font m_font;//144
-    std::vector <sf::Texture> m_textures;//24
+    std::deque <sf::Texture> m_textures;//80
 
 public:
     void load_resources();

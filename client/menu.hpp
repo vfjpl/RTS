@@ -2,10 +2,12 @@
 #define MENU_HPP_INCLUDED
 
 #include "SFML/Graphics.hpp"
+#include <deque>
 
 class Menu
 {
-    std::vector <sf::Text> m_texts;//24
+    //sort from largest to smallest!
+    std::deque <sf::Text> m_texts;//80
     sf::Uint8 m_state;//1
 
 public:

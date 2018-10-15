@@ -9,10 +9,10 @@ class Server_Engine
 {
     //sort from largest to smallest!
     std::deque <Game_Unit> units;//80
+    std::deque <Network_Player> players;//80
     sf::Packet packet_to_send;//56
     sf::Packet received_packet;//56
     sf::UdpSocket socket;//48
-    std::vector <Network_Player> players;//24
     sf::Clock clock;//8
     sf::Time time;//8
     bool lobby_loop = true;//1

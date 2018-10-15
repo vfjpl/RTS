@@ -146,10 +146,10 @@ void Client_Engine::debug_show_size() const
     //keep up to date!
     std::wcout << sizeof(window) << L"\n"
                << sizeof(units) << L"\n"
+               << sizeof(players) << L"\n"
                << sizeof(packet_to_send) << L"\n"
                << sizeof(received_packet) << L"\n"
                << sizeof(socket) << L"\n"
-               << sizeof(players) << L"\n"
                << sizeof(server) << L"\n"
                << sizeof(clock) << L"\n"
                << sizeof(time) << L"\n"

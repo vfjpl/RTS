@@ -1,7 +1,5 @@
-#include "client_resources_manager.hpp"
+#include "resources_manager.hpp"
 #include <iostream>
-
-Resources_Manager::Resources_Manager() {}
 
 void Resources_Manager::load_resources()
 {

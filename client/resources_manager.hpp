@@ -1,5 +1,5 @@
-#ifndef CLIENT_RESOURCES_MANAGER_HPP_INCLUDED
-#define CLIENT_RESOURCES_MANAGER_HPP_INCLUDED
+#ifndef RESOURCES_MANAGER_HPP_INCLUDED
+#define RESOURCES_MANAGER_HPP_INCLUDED
 
 #include "SFML/Graphics.hpp"
 
@@ -10,8 +10,6 @@ class Resources_Manager
     std::vector <sf::Texture> textures;//24
 
 public:
-    Resources_Manager();
-
     void load_resources();
 
     const sf::Font& get_font() const;
@@ -20,4 +18,4 @@ public:
     void debug_show_size() const;
 };
 
-#endif // CLIENT_RESOURCES_MANAGER_HPP_INCLUDED
+#endif // RESOURCES_MANAGER_HPP_INCLUDED

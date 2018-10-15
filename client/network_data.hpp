@@ -1,9 +1,9 @@
-#ifndef CLIENT_NETWORK_DATA_HPP_INCLUDED
-#define CLIENT_NETWORK_DATA_HPP_INCLUDED
+#ifndef NETWORK_DATA_HPP_INCLUDED
+#define NETWORK_DATA_HPP_INCLUDED
 
 #include <SFML/Network.hpp>
 
-class Client_Network_Data
+class Network_Data
 {
     //sort from largest to smallest!
     sf::Time m_network_timeout;//8
@@ -11,8 +11,8 @@ class Client_Network_Data
     unsigned short m_port;//2
 
 public:
-    Client_Network_Data();
-    Client_Network_Data(sf::IpAddress ip, unsigned short port);
+    Network_Data();
+    Network_Data(sf::IpAddress ip, unsigned short port);
 
     void set_network_timeout(sf::Time network_timeout);
     void set_ip_port(sf::IpAddress ip, unsigned short port);
@@ -27,4 +27,4 @@ public:
     void debug_show_size() const;
 };
 
-#endif // CLIENT_NETWORK_DATA_HPP_INCLUDED
+#endif // NETWORK_DATA_HPP_INCLUDED

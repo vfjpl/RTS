@@ -1,4 +1,4 @@
-#include "client_engine.hpp"
+#include "engine.hpp"
 
 void Client_Engine::lobby_receive_inputs()
 {
@@ -28,7 +28,6 @@ void Client_Engine::lobby_logic()
         //connection to server lost, back to main menu
         lobby_loop = false;
         server.set_network_timeout( sf::Time::Zero );
-        setup_menu();
         players.clear();
         return;
     }

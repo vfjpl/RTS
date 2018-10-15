@@ -1,15 +1,15 @@
-#include "client_engine.hpp"
+#include "engine.hpp"
+#include "global_variables.hpp"
 #include "../common/network_opcodes.hpp"
 #include <iostream>
 
-Client_Engine::Client_Engine()
+void Client_Engine::init()
 {
     socket.setBlocking(false);
     window.setFramerateLimit(60);
     window.create(sf::VideoMode(800, 600), "Kelajno");//sf::Style::Fullscreen
     server.set_ip_port(sf::IpAddress::LocalHost, 7000);
     resources_manager.load_resources();
-    setup_menu();
 }
 
 void Client_Engine::quit_engine()
@@ -39,7 +39,13 @@ void Client_Engine::receive_packets()
                     bool game_status;
                     received_packet >> game_status;
                     game_loop = game_status;
-                    set_all_players_ready_status(false);
+                    break;
+                }
+                case SERVER_SET_ALL_PLAYERS_READY_STATUS:
+                {
+                    bool ready_status;
+                    received_packet >> ready_status;
+                    set_all_players_ready_status(ready_status);
                     break;
                 }
                 case SERVER_PLAYER_CONNECTED:
@@ -104,8 +110,6 @@ void Client_Engine::receive_packets()
 void Client_Engine::draw_frame()
 {
     window.clear();
-    for(sf::Uint8 i = 0; i < texts_to_draw.size(); ++i)
-        window.draw(texts_to_draw[i]);
     window.display();
 }
 
@@ -130,15 +134,6 @@ bool Client_Engine::get_game_loop() const
     return game_loop;
 }
 
-sf::Uint8 Client_Engine::get_text_id_from_mousepress(const sf::Event& event) const
-{
-    for(sf::Uint8 i = 0; i < texts_to_draw.size(); ++i)
-        if(texts_to_draw[i].getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y))
-            return i;
-
-    return texts_to_draw.size();
-}
-
 void Client_Engine::set_all_players_ready_status(bool status)
 {
     for(sf::Uint8 i = 0; i < players.size(); ++i)
@@ -149,14 +144,11 @@ void Client_Engine::debug_show_size() const
 {
     //keep up to date!
     std::cout << sizeof(window) << "\n"
-              << sizeof(resources_manager) << "\n"
               << sizeof(units) << "\n"
               << sizeof(packet_to_send) << "\n"
               << sizeof(received_packet) << "\n"
               << sizeof(socket) << "\n"
-              << sizeof(text_buffer) << "\n"
               << sizeof(players) << "\n"
-              << sizeof(texts_to_draw) << "\n"
               << sizeof(server) << "\n"
               << sizeof(clock) << "\n"
               << sizeof(time) << "\n"

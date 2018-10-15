@@ -1,4 +1,4 @@
-#include "client_engine.hpp"
+#include "engine.hpp"
 
 void Client_Engine::game_receive_inputs()
 {
@@ -29,7 +29,6 @@ void Client_Engine::game_logic()
         lobby_loop = false;
         game_loop = false;
         server.set_network_timeout( sf::Time::Zero );
-        setup_menu();
         players.clear();
         units.clear();
         return;

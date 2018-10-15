@@ -33,7 +33,7 @@ void Server_Engine::receive_packets()
             received_packet >> opcode;
             switch( opcode )
             {
-            case SET_READY_STATUS:
+            case CLIENT_SET_READY_STATUS:
             {
                 bool ready_status;
                 received_packet >> ready_status;
@@ -41,14 +41,14 @@ void Server_Engine::receive_packets()
                 packet_to_send << (sf::Uint8)SERVER_PLAYER_READY_STATUS << local_id << ready_status;
                 break;
             }
-            case SEND_MESSAGE:
+            case CLIENT_SEND_MESSAGE:
             {
                 std::wstring str;
                 received_packet >> str;
                 packet_to_send << (sf::Uint8)SERVER_PLAYER_MESSAGE << local_id << str;
                 break;
             }
-            case SET_NICKNAME:
+            case CLIENT_SET_NICKNAME:
             {
                 std::wstring str;
                 received_packet >> str;
@@ -56,7 +56,7 @@ void Server_Engine::receive_packets()
                 packet_to_send << (sf::Uint8)SERVER_PLAYER_NICKNAME << local_id << str;
                 break;
             }
-            case SET_TEAM:
+            case CLIENT_SET_TEAM:
             {
                 sf::Uint8 team;
                 received_packet >> team;
@@ -102,6 +102,7 @@ sf::Uint8 Server_Engine::get_player_id(sf::IpAddress ip, unsigned short port) co
 
 void Server_Engine::set_all_players_ready_status(bool status)
 {
+    packet_to_send << (sf::Uint8)SERVER_SET_ALL_PLAYERS_READY_STATUS << status;
     for(sf::Uint8 i = 0; i < players.size(); ++i)
         players[i].set_ready_status(status);
 }

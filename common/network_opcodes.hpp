@@ -6,6 +6,9 @@
 // ID - oznacza, że operacja dotyczy konkretnego obiektu.
 // BP - oznacza, że operacja dotyczy szablonu obiektu.
 
+// SERVER - oznacza, że opcode wysyłany jest przez server
+// CLIENT - oznacza, że opcode wysyłany jest przez clienta
+
 // Wpisywanie rozkazów do pakietu:
 // packet << (sf::Uint8)opcode;
 
@@ -16,39 +19,42 @@ enum: sf::Uint8
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    SET_READY_STATUS,//ustawia status gracza
+    CLIENT_SET_READY_STATUS,//ustawia status gracza
 // [bool ready_status]
 
-    SEND_MESSAGE,//wysyła wiadomość na czat
+    CLIENT_SEND_MESSAGE,//wysyła wiadomość na czat
 // [std::wstring tekst]
 
-    SET_NICKNAME,//ustawia nick gracza
+    CLIENT_SET_NICKNAME,//ustawia nick gracza
 // [std::wstring nickname]
 
-    SET_TEAM,//ustawia team gracza
+    CLIENT_SET_TEAM,//ustawia team gracza
 // [sf::Uint8 team]
 
 
 
-    MOVE_UNIT,//przesunięcie jednostki
+    CLIENT_MOVE_UNIT,//przesunięcie jednostki
 // [sf::Uint8 ID_jednostki] [sf::Uint8 pozycja_x] [sf::Uint8 pozycja_y]
 
-    ATTACK,//atakuj
+    CLIENT_ATTACK,//atakuj
 // [sf::Uint8 ID_jednostki_naszej] [sf::Uint8 ID_jedostki_atakowanej]
 
-    CREATE_UNIT,//stwórz jednostkę
+    CLIENT_CREATE_UNIT,//stwórz jednostkę
 // [sf::Uint8 ID_budynku_z_którego_budujemy] [sf::Uint8 BP_jednostki]
 
-    CREATE_BUILDING,//wybudowanie budynku
+    CLIENT_CREATE_BUILDING,//wybudowanie budynku
 // [sf::Uint8 BP_budynku] [sf::Uint8 pozycja_x] [sf::Uint8 pozycja_y]
 
-    SPECJAL_ABILITY,//użyj umiejętności specjalnej jednostki
+    CLIENT_SPECJAL_ABILITY,//użyj umiejętności specjalnej jednostki
 // [sf::Uint8 ID_jednostki]
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     SERVER_GAME_STATUS,//serwer wysyła status gry
 // [bool game_status]
+
+    SERVER_SET_ALL_PLAYERS_READY_STATUS,//ustawia, status graczy u klienta
+// [bool status]
 
     SERVER_PLAYER_CONNECTED,//rozsyła info, że gracz dołączył
 // [sf::Uint8 ID_gracza]

@@ -12,6 +12,10 @@ void Client_Engine::menu_receive_inputs()
             quit_engine();
             break;
         }
+        case sf::Event::MouseButtonPressed:
+        {
+            break;
+        }
         default:
         {
             break;

@@ -7,7 +7,7 @@ void Client_Engine::init()
 {
     socket.setBlocking(false);
     window.setFramerateLimit(60);
-    window.create(sf::VideoMode(800, 600), "Kelajno");//sf::Style::Fullscreen
+    window.create(sf::VideoMode(800, 600), L"Kelajno");//sf::Style::Fullscreen
     server.set_ip_port(sf::IpAddress::LocalHost, 7000);
     resources_manager.load_resources();
 }
@@ -144,16 +144,16 @@ void Client_Engine::set_all_players_ready_status(bool status)
 void Client_Engine::debug_show_size() const
 {
     //keep up to date!
-    std::cout << sizeof(window) << "\n"
-              << sizeof(units) << "\n"
-              << sizeof(packet_to_send) << "\n"
-              << sizeof(received_packet) << "\n"
-              << sizeof(socket) << "\n"
-              << sizeof(players) << "\n"
-              << sizeof(server) << "\n"
-              << sizeof(clock) << "\n"
-              << sizeof(time) << "\n"
-              << sizeof(menu_loop) << "\n"
-              << sizeof(lobby_loop) << "\n"
-              << sizeof(game_loop) << "\n";
+    std::wcout << sizeof(window) << L"\n"
+               << sizeof(units) << L"\n"
+               << sizeof(packet_to_send) << L"\n"
+               << sizeof(received_packet) << L"\n"
+               << sizeof(socket) << L"\n"
+               << sizeof(players) << L"\n"
+               << sizeof(server) << L"\n"
+               << sizeof(clock) << L"\n"
+               << sizeof(time) << L"\n"
+               << sizeof(menu_loop) << L"\n"
+               << sizeof(lobby_loop) << L"\n"
+               << sizeof(game_loop) << L"\n";
 }

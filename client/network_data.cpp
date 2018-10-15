@@ -52,7 +52,7 @@ bool Network_Data::compare(sf::IpAddress ip, unsigned short port) const
 void Network_Data::debug_show_size() const
 {
     //keep up to date!
-    std::cout << sizeof(m_network_timeout) << "\n"
-              << sizeof(m_ip) << "\n"
-              << sizeof(m_port) << "\n";
+    std::wcout << sizeof(m_network_timeout) << L"\n"
+               << sizeof(m_ip) << L"\n"
+               << sizeof(m_port) << L"\n";
 }

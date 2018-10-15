@@ -87,10 +87,10 @@ bool Network_Player::compare(sf::IpAddress ip, unsigned short port) const
 void Network_Player::debug_show_size() const
 {
     //keep up to date!
-    std::cout << sizeof(m_nickname) << "\n"
-              << sizeof(m_network_timeout) << "\n"
-              << sizeof(m_ip) << "\n"
-              << sizeof(m_port) << "\n"
-              << sizeof(m_team) << "\n"
-              << sizeof(m_ready_status) << "\n";
+    std::wcout << sizeof(m_nickname) << L"\n"
+               << sizeof(m_network_timeout) << L"\n"
+               << sizeof(m_ip) << L"\n"
+               << sizeof(m_port) << L"\n"
+               << sizeof(m_team) << L"\n"
+               << sizeof(m_ready_status) << L"\n";
 }

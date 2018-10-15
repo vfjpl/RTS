@@ -22,6 +22,6 @@ const sf::Texture& Resources_Manager::get_texture(sf::Uint8 id) const
 void Resources_Manager::debug_show_size() const
 {
     //keep up to date!
-    std::cout << sizeof(m_font)<< "\n"
-              << sizeof(m_textures) << "\n";
+    std::wcout << sizeof(m_font)<< L"\n"
+               << sizeof(m_textures) << L"\n";
 }

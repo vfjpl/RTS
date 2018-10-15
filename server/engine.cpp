@@ -110,13 +110,13 @@ void Server_Engine::set_all_players_ready_status(bool status)
 void Server_Engine::debug_show_size() const
 {
     //keep up to date!
-    std::cout << sizeof(units) << "\n"
-              << sizeof(packet_to_send) << "\n"
-              << sizeof(received_packet) << "\n"
-              << sizeof(socket) << "\n"
-              << sizeof(players) << "\n"
-              << sizeof(clock) << "\n"
-              << sizeof(time) << "\n"
-              << sizeof(lobby_loop) << "\n"
-              << sizeof(game_loop) << "\n";
+    std::wcout << sizeof(units) << L"\n"
+               << sizeof(packet_to_send) << L"\n"
+               << sizeof(received_packet) << L"\n"
+               << sizeof(socket) << L"\n"
+               << sizeof(players) << L"\n"
+               << sizeof(clock) << L"\n"
+               << sizeof(time) << L"\n"
+               << sizeof(lobby_loop) << L"\n"
+               << sizeof(game_loop) << L"\n";
 }

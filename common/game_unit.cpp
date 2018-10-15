@@ -42,7 +42,7 @@ sf::Uint8 Game_Unit::get_hp() const
 
 void Game_Unit::debug_show_size() const
 {
-    std::cout << sizeof(m_x) << "\n"
-              << sizeof(m_y) << "\n"
-              << sizeof(m_hp) << "\n";
+    std::wcout << sizeof(m_x) << L"\n"
+               << sizeof(m_y) << L"\n"
+               << sizeof(m_hp) << L"\n";
 }

@@ -109,8 +109,6 @@ void Client_Engine::receive_packets()
 
 void Client_Engine::draw_frame()
 {
-    window.clear();
-    //menu.draw(window);
     window.display();
 }
 

@@ -11,7 +11,11 @@ class Menu
     sf::Uint8 m_state;//1
 
 public:
+    void clear();
+
     void main_menu();
+    void connect_menu();
+    void authors_menu();
 
     void draw(sf::RenderWindow& window);
 

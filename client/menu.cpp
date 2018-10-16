@@ -2,14 +2,41 @@
 #include "global_variables.hpp"
 #include <iostream>
 
-void Menu::main_menu()
+void Menu::clear()
 {
     m_state = 0;
+    m_texts.clear();
+}
+
+void Menu::main_menu()
+{
+    m_state = 1;
+    m_texts.clear();
     m_texts.emplace_back(L"CONNECT", resources_manager.get_font());
     m_texts.emplace_back(L"AUTHORS", resources_manager.get_font());
     m_texts[1].move(0, 30);
     m_texts.emplace_back(L"QUIT", resources_manager.get_font());
     m_texts[2].move(0, 60);
+}
+
+void Menu::connect_menu()
+{
+    m_state = 2;
+    m_texts.clear();
+    //m_texts.emplace_back(server.get_ip().toString(), resources_manager.get_font());
+    m_texts.emplace_back(L"CONNECT", resources_manager.get_font());
+    m_texts[1].move(0, 30);
+    m_texts.emplace_back(L"BACK", resources_manager.get_font());
+    m_texts[2].move(0, 60);
+}
+
+void Menu::authors_menu()
+{
+    m_state = 3;
+    m_texts.clear();
+    m_texts.emplace_back(L"Kacper Piwiński", resources_manager.get_font());
+    m_texts.emplace_back(L"BACK", resources_manager.get_font());
+    m_texts[1].move(0, 30);
 }
 
 void Menu::draw(sf::RenderWindow& window)

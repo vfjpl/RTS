@@ -12,6 +12,10 @@ void Client_Engine::menu_receive_inputs()
             quit_engine();
             break;
         }
+        case sf::Event::TextEntered:
+        {
+            break;
+        }
         case sf::Event::MouseButtonPressed:
         {
             break;
@@ -27,4 +31,11 @@ void Client_Engine::menu_receive_inputs()
 void Client_Engine::menu_logic()
 {
     time = clock.restart();
+}
+
+void Client_Engine::menu_draw_frame()
+{
+    window.clear();
+    //menu.draw(window);
+    window.display();
 }

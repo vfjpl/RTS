@@ -34,6 +34,8 @@ public:
     void lobby_logic();
     void game_logic();
 
+    void menu_draw_frame();
+
     void receive_packets();
     void draw_frame();
     void send_packets();

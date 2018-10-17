@@ -1,9 +1,8 @@
 #include "engine.hpp"
 
-Client_Engine engine;
-
 int main()
 {
+    Client_Engine engine;
     engine.init();
     //engine.debug_show_size();
 

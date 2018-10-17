@@ -18,6 +18,15 @@ void Client_Engine::menu_receive_inputs()
         }
         case sf::Event::MouseButtonPressed:
         {
+            menu.click(event);
+            if (menu.isStarting())
+            {
+                lobby_loop = true;
+            }
+            if (menu.isExiting())
+            {
+                quit_engine();
+            }
             break;
         }
         default:
@@ -36,6 +45,6 @@ void Client_Engine::menu_logic()
 void Client_Engine::menu_draw_frame()
 {
     window.clear();
-    //menu.draw(window);
+    menu.draw(window);
     window.display();
 }

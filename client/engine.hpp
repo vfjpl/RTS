@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "network_data.hpp"
+#include "menu.hpp"
 #include "../common/network_player.hpp"
 #include "../common/game_unit.hpp"
 #include <deque>
@@ -11,6 +12,7 @@ class Client_Engine
 {
     //sort from largest to smallest!
     sf::RenderWindow window;//528
+    Menu menu;
     std::deque <Game_Unit> units;//80
     std::deque <Network_Player> players;//80
     sf::Packet packet_to_send;//56

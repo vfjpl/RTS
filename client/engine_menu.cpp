@@ -40,5 +40,5 @@ void Client_Engine::menu_receive_inputs()
 void Client_Engine::menu_logic()
 {
     time = clock.restart();
-    menu.logic();
+    menu.logic(sf::Mouse::getPosition(window));
 }

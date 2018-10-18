@@ -24,7 +24,7 @@ void Menu::main_menu()
     m_state = 1;
     m_texts.clear();
     m_texts.emplace_back(L"CONNECT", resources_manager.get_font());
-    m_texts.emplace_back(L"AUTHORS", resources_manager.get_font());
+    m_texts.emplace_back(L"AUTHORS", resources_manager.get_font());//dziwny bug
     m_texts[1].move(0, 30);
     m_texts.emplace_back(L"QUIT", resources_manager.get_font());
     m_texts[2].move(0, 60);
@@ -111,12 +111,16 @@ void Menu::mouse_click(const sf::Event& event)
 
 void Menu::mouse_move(const sf::Event& event)
 {
-
+    get_text_id_from_move(event);
 }
 
-void Menu::logic()
+void Menu::logic(sf::Vector2i vec)
 {
-
+    for(sf::Uint8 i = 0; i < m_texts.size(); ++i)
+        if(m_texts[i].getGlobalBounds().contains(vec.x, vec.y))
+            m_texts[i].setFillColor(sf::Color::Red);
+        else
+            m_texts[i].setFillColor(sf::Color::White);
 }
 
 void Menu::draw(sf::RenderWindow& window)

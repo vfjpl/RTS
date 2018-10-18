@@ -16,7 +16,7 @@ public:
 
     void mouse_click(const sf::Event& event);
     void mouse_move(const sf::Event& event);
-    void logic();
+    void logic(sf::Vector2i vec);
     void draw(sf::RenderWindow& window);
 
     void debug_show_size() const;

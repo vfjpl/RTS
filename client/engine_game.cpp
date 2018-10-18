@@ -31,6 +31,7 @@ void Client_Engine::game_logic()
         server.set_network_timeout( sf::Time::Zero );
         players.clear();
         units.clear();
+        menu.init();
         return;
     }
     server.add_network_timeout(time);

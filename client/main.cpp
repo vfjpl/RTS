@@ -11,7 +11,7 @@ int main()
     {
         engine.menu_receive_inputs();
         engine.menu_logic();
-        engine.menu_draw_frame();
+        engine.draw_frame();
         while( engine.get_lobby_loop() )
         {
             engine.receive_packets();

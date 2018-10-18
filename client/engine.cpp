@@ -1,5 +1,4 @@
 #include "engine.hpp"
-#include "global_variables.hpp"
 #include "../common/network_opcodes.hpp"
 #include <iostream>
 
@@ -10,6 +9,7 @@ void Client_Engine::init()
     window.create(sf::VideoMode(800, 600), L"Kelajno");//sf::Style::Fullscreen
     server.set_ip_port(sf::IpAddress::LocalHost, 7000);
     resources_manager.load_resources();
+    menu.init();
 }
 
 void Client_Engine::quit_engine()
@@ -109,6 +109,8 @@ void Client_Engine::receive_packets()
 
 void Client_Engine::draw_frame()
 {
+    window.clear();
+    menu.draw(window);
     window.display();
 }
 
@@ -148,7 +150,6 @@ void Client_Engine::debug_show_size() const
                << sizeof(packet_to_send) << L"\n"
                << sizeof(received_packet) << L"\n"
                << sizeof(socket) << L"\n"
-               << sizeof(server) << L"\n"
                << sizeof(clock) << L"\n"
                << sizeof(time) << L"\n"
                << sizeof(menu_loop) << L"\n"

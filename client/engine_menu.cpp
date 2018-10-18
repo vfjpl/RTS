@@ -18,6 +18,20 @@ void Client_Engine::menu_receive_inputs()
         }
         case sf::Event::MouseButtonPressed:
         {
+            switch(menu.click(event))
+            {
+            case 1://quit
+            {
+                quit_engine();
+                break;
+            }
+            case 2://connect
+            {
+                menu.clear();
+                lobby_loop = true;
+                break;
+            }
+            }//end switch
             break;
         }
         default:
@@ -31,11 +45,4 @@ void Client_Engine::menu_receive_inputs()
 void Client_Engine::menu_logic()
 {
     time = clock.restart();
-}
-
-void Client_Engine::menu_draw_frame()
-{
-    window.clear();
-    //menu.draw(window);
-    window.display();
 }

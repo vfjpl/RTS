@@ -29,6 +29,7 @@ void Client_Engine::lobby_logic()
         lobby_loop = false;
         server.set_network_timeout( sf::Time::Zero );
         players.clear();
+        menu.init();
         return;
     }
     server.add_network_timeout(time);

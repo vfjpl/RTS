@@ -3,9 +3,15 @@
 
 #include <SFML/Graphics.hpp>
 #include "network_data.hpp"
+#include "resources_manager.hpp"
+#include "menu.hpp"
 #include "../common/network_player.hpp"
 #include "../common/game_unit.hpp"
 #include <deque>
+
+extern Network_Data server;
+extern Resources_Manager resources_manager;
+extern Menu menu;
 
 class Client_Engine
 {
@@ -16,7 +22,6 @@ class Client_Engine
     sf::Packet packet_to_send;//56
     sf::Packet received_packet;//56
     sf::UdpSocket socket;//48
-    Network_Data server;//24
     sf::Clock clock;//8
     sf::Time time;//8
     bool menu_loop = true;//1
@@ -33,8 +38,6 @@ public:
     void menu_logic();
     void lobby_logic();
     void game_logic();
-
-    void menu_draw_frame();
 
     void receive_packets();
     void draw_frame();

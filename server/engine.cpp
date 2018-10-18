@@ -27,7 +27,7 @@ void Server_Engine::receive_packets()
             players.emplace_back(incomming_ip, incomming_port);
         }
 
-        players[local_id].set_network_timeout( sf::Time::Zero );
+        players[local_id].reset_network_timeout();
         while( !received_packet.endOfPacket() )
         {
             received_packet >> opcode;

@@ -22,6 +22,7 @@ void Client_Engine::menu_receive_inputs()
         }
         case sf::Event::TextEntered:
         {
+            menu.text_entered(event);
             break;
         }
         case sf::Event::MouseButtonPressed:

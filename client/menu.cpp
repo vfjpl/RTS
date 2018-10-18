@@ -82,8 +82,16 @@ void Menu::mouse_click(const sf::Event& event)
     {
         switch(get_text_id_from_press(event))
         {
+        case 0:
+        {
+            m_texts[0].setString(L"");
+            break;
+        }
         case 1://connect
         {
+            sf::IpAddress ip(m_texts[0].getString());
+            server.set_ip(ip);
+            engine.connect_to_lobby();
             break;
         }
         case 2://back
@@ -112,6 +120,16 @@ void Menu::mouse_click(const sf::Event& event)
 void Menu::mouse_move(const sf::Event& event)
 {
     get_text_id_from_move(event);
+}
+
+void Menu::text_entered(const sf::Event& event)
+{
+    if(m_state == 2)
+    {
+        std::wstring str(m_texts[0].getString());
+        str.push_back(event.text.unicode);
+        m_texts[0].setString(str);
+    }
 }
 
 void Menu::logic(sf::Vector2i vec)

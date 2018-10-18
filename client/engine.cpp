@@ -23,10 +23,16 @@ void Client_Engine::return_to_menu()
 {
     lobby_loop = false;
     game_loop = false;
-    server.set_network_timeout( sf::Time::Zero );
+    server.reset_network_timeout();
     players.clear();
     units.clear();
     menu.init();
+}
+
+void Client_Engine::connect_to_lobby()
+{
+    lobby_loop = true;
+    menu.clear();
 }
 
 void Client_Engine::quit_engine()
@@ -45,7 +51,7 @@ void Client_Engine::receive_packets()
     {
         if( server.compare(incomming_ip, incomming_port) )
         {
-            server.set_network_timeout( sf::Time::Zero );
+            server.reset_network_timeout();
             while( !received_packet.endOfPacket() )
             {
                 received_packet >> opcode;

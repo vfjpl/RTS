@@ -14,13 +14,15 @@ public:
     Network_Data();
     Network_Data(sf::IpAddress ip, unsigned short port);
 
-    void set_network_timeout(sf::Time network_timeout);
     void set_ip_port(sf::IpAddress ip, unsigned short port);
+    void set_ip(sf::IpAddress ip);
+    void set_port(unsigned short port);
 
     sf::Time get_network_timeout() const;
     sf::IpAddress get_ip() const;
     unsigned short get_port() const;
 
+    void reset_network_timeout();
     void add_network_timeout(sf::Time network_timeout);
     bool compare(sf::IpAddress ip, unsigned short port) const;
 

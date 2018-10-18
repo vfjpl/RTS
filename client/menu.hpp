@@ -14,6 +14,7 @@ public:
     void init();
     void clear();
 
+    void text_entered(const sf::Event& event);
     void mouse_click(const sf::Event& event);
     void mouse_move(const sf::Event& event);
     void logic(sf::Vector2i vec);

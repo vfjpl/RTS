@@ -24,6 +24,7 @@ class Client_Engine
 public:
     void init();
     void return_to_menu();
+    void connect_to_lobby();
     void quit_engine();
 
     void menu_receive_inputs();

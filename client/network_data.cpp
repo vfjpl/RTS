@@ -9,14 +9,19 @@ Network_Data::Network_Data(sf::IpAddress ip, unsigned short port)
     m_port = port;
 }
 
-void Network_Data::set_network_timeout(sf::Time network_timeout)
-{
-    m_network_timeout = network_timeout;
-}
-
 void Network_Data::set_ip_port(sf::IpAddress ip, unsigned short port)
 {
     m_ip = ip;
+    m_port = port;
+}
+
+void Network_Data::set_ip(sf::IpAddress ip)
+{
+    m_ip = ip;
+}
+
+void Network_Data::set_port(unsigned short port)
+{
     m_port = port;
 }
 
@@ -33,6 +38,11 @@ sf::IpAddress Network_Data::get_ip() const
 unsigned short Network_Data::get_port() const
 {
     return m_port;
+}
+
+void Network_Data::reset_network_timeout()
+{
+    m_network_timeout = sf::Time::Zero;
 }
 
 void Network_Data::add_network_timeout(sf::Time network_timeout)

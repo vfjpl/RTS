@@ -19,7 +19,6 @@ public:
     Network_Player(bool ready_status);
 
     void set_nickname(const std::wstring& nickname);
-    void set_network_timeout(sf::Time network_timeout);
     void set_ip_port(sf::IpAddress ip, unsigned short port);
     void set_team(sf::Uint8 team);
     void set_ready_status(bool ready_status);
@@ -31,6 +30,7 @@ public:
     sf::Uint8 get_team() const;
     bool get_ready_status() const;
 
+    void reset_network_timeout();
     void add_network_timeout(sf::Time network_timeout);
     bool compare(sf::IpAddress ip, unsigned short port) const;
 

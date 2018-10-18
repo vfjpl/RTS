@@ -89,8 +89,7 @@ void Menu::mouse_click(const sf::Event& event)
         }
         case 1://connect
         {
-            sf::IpAddress ip(m_texts[0].getString());
-            server.set_ip(ip);
+            server.set_ip(sf::IpAddress(m_texts[0].getString()));
             engine.connect_to_lobby();
             break;
         }
@@ -119,7 +118,7 @@ void Menu::mouse_click(const sf::Event& event)
 
 void Menu::mouse_move(const sf::Event& event)
 {
-    get_text_id_from_move(event);
+
 }
 
 void Menu::text_entered(const sf::Event& event)

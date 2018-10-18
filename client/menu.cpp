@@ -51,7 +51,7 @@ sf::Uint8 Menu::click(const sf::Event& event)
     {
     case 1://main menu
     {
-        switch(get_text_id_from_mousepress(event))
+        switch(get_text_id_from_press(event))
         {
         case 0://connect
         {
@@ -72,7 +72,7 @@ sf::Uint8 Menu::click(const sf::Event& event)
     }
     case 2://connect menu
     {
-        switch(get_text_id_from_mousepress(event))
+        switch(get_text_id_from_press(event))
         {
         case 1://connect
         {
@@ -88,7 +88,7 @@ sf::Uint8 Menu::click(const sf::Event& event)
     }
     case 3://authors menu
     {
-        switch(get_text_id_from_mousepress(event))
+        switch(get_text_id_from_press(event))
         {
         case 2://back
         {
@@ -103,16 +103,30 @@ sf::Uint8 Menu::click(const sf::Event& event)
     return 0;
 }
 
+void Menu::move(const sf::Event& event)
+{
+    get_text_id_from_move(event);
+}
+
 void Menu::draw(sf::RenderWindow& window)
 {
     for(sf::Uint8 i = 0; i < m_texts.size(); ++i)
         window.draw(m_texts[i]);
 }
 
-sf::Uint8 Menu::get_text_id_from_mousepress(const sf::Event& event) const
+sf::Uint8 Menu::get_text_id_from_press(const sf::Event& event) const
 {
     for(sf::Uint8 i = 0; i < m_texts.size(); ++i)
         if(m_texts[i].getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y))
+            return i;
+
+    return m_texts.size();
+}
+
+sf::Uint8 Menu::get_text_id_from_move(const sf::Event& event) const
+{
+    for(sf::Uint8 i = 0; i < m_texts.size(); ++i)
+        if(m_texts[i].getGlobalBounds().contains(event.mouseMove.x, event.mouseMove.y))
             return i;
 
     return m_texts.size();

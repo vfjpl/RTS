@@ -34,6 +34,11 @@ void Client_Engine::menu_receive_inputs()
             }//end switch
             break;
         }
+        case sf::Event::MouseMoved:
+        {
+            menu.move(event);
+            break;
+        }
         default:
         {
             break;

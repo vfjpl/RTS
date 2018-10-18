@@ -19,13 +19,15 @@ public:
     void init();
     void clear();
 
-    void draw(sf::RenderWindow& window);
     sf::Uint8 click(const sf::Event& event);
+    void move(const sf::Event& event);
+    void draw(sf::RenderWindow& window);
 
     void debug_show_size() const;
 
 private:
-    sf::Uint8 get_text_id_from_mousepress(const sf::Event& event) const;
+    sf::Uint8 get_text_id_from_press(const sf::Event& event) const;
+    sf::Uint8 get_text_id_from_move(const sf::Event& event) const;
 
     void main_menu();
     void connect_menu();

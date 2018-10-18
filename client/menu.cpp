@@ -1,5 +1,12 @@
 #include "menu.hpp"
+#include "engine.hpp"
+#include "resources_manager.hpp"
+#include "network_data.hpp"
 #include <iostream>
+
+extern Client_Engine engine;
+extern Resources_Manager resources_manager;
+extern Network_Data server;
 
 void Menu::init()
 {
@@ -45,7 +52,7 @@ void Menu::authors_menu()
     m_texts[2].move(0, 60);
 }
 
-sf::Uint8 Menu::click(const sf::Event& event)
+void Menu::mouse_click(const sf::Event& event)
 {
     switch(m_state)
     {
@@ -65,7 +72,8 @@ sf::Uint8 Menu::click(const sf::Event& event)
         }
         case 2://quit
         {
-            return 1;
+            engine.quit_engine();
+            break;
         }
         }//end switch
         break;
@@ -76,7 +84,7 @@ sf::Uint8 Menu::click(const sf::Event& event)
         {
         case 1://connect
         {
-            return 2;
+            break;
         }
         case 2://back
         {
@@ -99,13 +107,16 @@ sf::Uint8 Menu::click(const sf::Event& event)
         break;
     }
     }//end switch
-
-    return 0;
 }
 
-void Menu::move(const sf::Event& event)
+void Menu::mouse_move(const sf::Event& event)
 {
-    get_text_id_from_move(event);
+
+}
+
+void Menu::logic()
+{
+
 }
 
 void Menu::draw(sf::RenderWindow& window)

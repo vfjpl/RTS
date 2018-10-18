@@ -2,12 +2,7 @@
 #define MENU_HPP_INCLUDED
 
 #include "SFML/Graphics.hpp"
-#include "resources_manager.hpp"
-#include "network_data.hpp"
 #include <deque>
-
-extern Resources_Manager resources_manager;
-extern Network_Data server;
 
 class Menu
 {
@@ -19,8 +14,9 @@ public:
     void init();
     void clear();
 
-    sf::Uint8 click(const sf::Event& event);
-    void move(const sf::Event& event);
+    void mouse_click(const sf::Event& event);
+    void mouse_move(const sf::Event& event);
+    void logic();
     void draw(sf::RenderWindow& window);
 
     void debug_show_size() const;

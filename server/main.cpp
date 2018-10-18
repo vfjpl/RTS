@@ -1,11 +1,18 @@
 #include "engine.hpp"
+#include "iostream"
 
+//sort from largest to smallest!
 Server_Engine engine;
+
+void debug_show_size()
+{
+    //keep up to date!
+    std::wcout << sizeof(engine) << L"\n";
+}
 
 int main()
 {
     engine.init();
-    //engine.debug_show_size();
 
     while( engine.get_lobby_loop() )
     {

@@ -1,6 +1,13 @@
 #include "engine.hpp"
+#include "resources_manager.hpp"
+#include "menu.hpp"
+#include "network_data.hpp"
 #include "../common/network_opcodes.hpp"
 #include <iostream>
+
+extern Resources_Manager resources_manager;
+extern Menu menu;
+extern Network_Data server;
 
 void Client_Engine::init()
 {
@@ -9,6 +16,16 @@ void Client_Engine::init()
     window.create(sf::VideoMode(800, 600), L"Kelajno");//sf::Style::Fullscreen
     server.set_ip_port(sf::IpAddress::LocalHost, 7000);
     resources_manager.load_resources();
+    menu.init();
+}
+
+void Client_Engine::return_to_menu()
+{
+    lobby_loop = false;
+    game_loop = false;
+    server.set_network_timeout( sf::Time::Zero );
+    players.clear();
+    units.clear();
     menu.init();
 }
 

@@ -2,16 +2,9 @@
 #define ENGINE_HPP_INCLUDED
 
 #include <SFML/Graphics.hpp>
-#include "network_data.hpp"
-#include "resources_manager.hpp"
-#include "menu.hpp"
 #include "../common/network_player.hpp"
 #include "../common/game_unit.hpp"
 #include <deque>
-
-extern Network_Data server;
-extern Resources_Manager resources_manager;
-extern Menu menu;
 
 class Client_Engine
 {
@@ -30,6 +23,8 @@ class Client_Engine
 
 public:
     void init();
+    void return_to_menu();
+    void quit_engine();
 
     void menu_receive_inputs();
     void lobby_receive_inputs();
@@ -50,8 +45,6 @@ public:
     void debug_show_size() const;
 
 private:
-    void quit_engine();
-
     void set_all_players_ready_status(bool status);
 };
 

@@ -1,4 +1,7 @@
 #include "engine.hpp"
+#include "menu.hpp"
+
+extern Menu menu;
 
 void Client_Engine::menu_receive_inputs()
 {
@@ -18,25 +21,12 @@ void Client_Engine::menu_receive_inputs()
         }
         case sf::Event::MouseButtonPressed:
         {
-            switch(menu.click(event))
-            {
-            case 1://quit
-            {
-                quit_engine();
-                break;
-            }
-            case 2://connect
-            {
-                menu.clear();
-                lobby_loop = true;
-                break;
-            }
-            }//end switch
+            menu.mouse_click(event);
             break;
         }
         case sf::Event::MouseMoved:
         {
-            menu.move(event);
+            menu.mouse_move(event);
             break;
         }
         default:
@@ -50,4 +40,5 @@ void Client_Engine::menu_receive_inputs()
 void Client_Engine::menu_logic()
 {
     time = clock.restart();
+    menu.logic();
 }

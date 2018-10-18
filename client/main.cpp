@@ -1,11 +1,27 @@
 #include "engine.hpp"
+#include "resources_manager.hpp"
+#include "menu.hpp"
+#include "network_data.hpp"
+#include "iostream"
 
+//sort from largest to smallest!
 Client_Engine engine;
+Resources_Manager resources_manager;
+Menu menu;
+Network_Data server;
+
+void debug_show_size()
+{
+    //keep up to date!
+    std::wcout << sizeof(engine) << L"\n"
+               << sizeof(resources_manager) << L"\n"
+               << sizeof(menu) << L"\n"
+               << sizeof(server) << L"\n";
+}
 
 int main()
 {
     engine.init();
-    //engine.debug_show_size();
 
     while( engine.get_menu_loop())
     {

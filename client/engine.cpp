@@ -13,10 +13,10 @@ void Client_Engine::init()
 {
     socket.setBlocking(false);
     window.setFramerateLimit(60);
-    fullscreen();
     server.set_ip_port(sf::IpAddress::LocalHost, 7000);
     resources_manager.load_resources();
     menu.init();
+    fullscreen();
 }
 
 void Client_Engine::fullscreen()
@@ -180,15 +180,15 @@ void Client_Engine::set_all_players_ready_status(bool status)
 void Client_Engine::debug_show_size() const
 {
     //keep up to date!
-    std::wcout << sizeof(window) << L"\n"
-               << sizeof(units) << L"\n"
-               << sizeof(players) << L"\n"
-               << sizeof(packet_to_send) << L"\n"
-               << sizeof(received_packet) << L"\n"
-               << sizeof(socket) << L"\n"
-               << sizeof(clock) << L"\n"
-               << sizeof(time) << L"\n"
-               << sizeof(menu_loop) << L"\n"
-               << sizeof(lobby_loop) << L"\n"
-               << sizeof(game_loop) << L"\n";
+    std::wcout << sizeof(window) << L'\n'
+               << sizeof(units) << L'\n'
+               << sizeof(players) << L'\n'
+               << sizeof(packet_to_send) << L'\n'
+               << sizeof(received_packet) << L'\n'
+               << sizeof(socket) << L'\n'
+               << sizeof(clock) << L'\n'
+               << sizeof(time) << L'\n'
+               << sizeof(menu_loop) << L'\n'
+               << sizeof(lobby_loop) << L'\n'
+               << sizeof(game_loop) << L'\n';
 }

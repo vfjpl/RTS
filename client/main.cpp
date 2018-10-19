@@ -5,18 +5,18 @@
 #include "iostream"
 
 //sort from largest to smallest!
-Client_Engine engine;
-Resources_Manager resources_manager;
-Menu menu;
-Network_Data server;
+Client_Engine engine;//872
+Resources_Manager resources_manager;//224
+Menu menu;//88
+Network_Data server;//24
 
 void debug_show_size()
 {
     //keep up to date!
-    std::wcout << sizeof(engine) << L"\n"
-               << sizeof(resources_manager) << L"\n"
-               << sizeof(menu) << L"\n"
-               << sizeof(server) << L"\n";
+    std::wcout << sizeof(engine) << L'\n'
+               << sizeof(resources_manager) << L'\n'
+               << sizeof(menu) << L'\n'
+               << sizeof(server) << L'\n';
 }
 
 int main()

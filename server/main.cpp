@@ -2,12 +2,12 @@
 #include "iostream"
 
 //sort from largest to smallest!
-Server_Engine engine;
+Server_Engine engine;//344
 
 void debug_show_size()
 {
     //keep up to date!
-    std::wcout << sizeof(engine) << L"\n";
+    std::wcout << sizeof(engine) << L'\n';
 }
 
 int main()

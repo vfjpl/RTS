@@ -21,7 +21,7 @@ void Server_Engine::lobby_logic()
     if(ready)
     {
         game_loop = true;
-        packet_to_send << (sf::Uint8)SERVER_GAME_STATUS << true;
         set_all_players_ready_status(false);
+        packet_to_send << (sf::Uint8)SERVER_GAME_STATUS << true;
     }
 }

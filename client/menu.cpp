@@ -168,10 +168,10 @@ void Menu::text_entered(const sf::Event& event)
     }
 }
 
-void Menu::logic(sf::Vector2i vec)
+void Menu::logic(sf::Vector2i mouse_position)
 {
     for(sf::Uint8 i = 0; i < m_texts.size(); ++i)
-        if(m_texts[i].getGlobalBounds().contains(vec.x, vec.y))
+        if(m_texts[i].getGlobalBounds().contains(mouse_position.x, mouse_position.y))
             m_texts[i].setFillColor(sf::Color::Red);
         else
             m_texts[i].setFillColor(sf::Color::White);
@@ -204,6 +204,6 @@ sf::Uint8 Menu::get_text_id_from_move(const sf::Event& event) const
 void Menu::debug_show_size() const
 {
     //keep up to date!
-    std::wcout << sizeof(m_texts)<< L"\n"
-               << sizeof(m_state) << L"\n";
+    std::wcout << sizeof(m_texts)<< L'\n'
+               << sizeof(m_state) << L'\n';
 }

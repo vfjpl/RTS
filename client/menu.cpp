@@ -82,9 +82,9 @@ void Menu::mouse_click(const sf::Event& event)
     {
         switch(get_text_id_from_press(event))
         {
-        case 0:
+        case 0://IpAddress
         {
-            m_texts[0].setString(L"");
+            m_texts[0].setString(std::wstring());
             break;
         }
         case 1://connect
@@ -116,10 +116,7 @@ void Menu::mouse_click(const sf::Event& event)
     }//end switch
 }
 
-void Menu::mouse_move(const sf::Event& event)
-{
-
-}
+void Menu::mouse_move(const sf::Event& event) {}
 
 void Menu::text_entered(const sf::Event& event)
 {

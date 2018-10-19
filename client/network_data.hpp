@@ -11,9 +11,6 @@ class Network_Data
     unsigned short m_port;//2
 
 public:
-    Network_Data();
-    Network_Data(sf::IpAddress ip, unsigned short port);
-
     void set_ip_port(sf::IpAddress ip, unsigned short port);
     void set_ip(sf::IpAddress ip);
     void set_port(unsigned short port);

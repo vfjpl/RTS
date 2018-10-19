@@ -11,11 +11,11 @@ void Server_Engine::receive_packets()
 {
     sf::IpAddress incomming_ip;
     unsigned short incomming_port;
-    sf::Uint8 opcode;
     sf::Uint8 local_id;
+    sf::Uint8 opcode;
     for(sf::Uint8 i = 0; i <= players.size(); ++i)//[ <= ]because we are waiting for more players
     {
-        socket.receive( received_packet, incomming_ip, incomming_port );
+        socket.receive(received_packet, incomming_ip, incomming_port);
         local_id = get_player_id(incomming_ip, incomming_port);
 
         if(local_id == players.size())//check if we got new player
@@ -31,7 +31,7 @@ void Server_Engine::receive_packets()
         while( !received_packet.endOfPacket() )
         {
             received_packet >> opcode;
-            switch( opcode )
+            switch(opcode)
             {
             case CLIENT_SET_READY_STATUS:
             {

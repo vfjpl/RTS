@@ -2,7 +2,7 @@
 #include "resources_manager.hpp"
 #include "menu.hpp"
 #include "network_data.hpp"
-#include "iostream"
+#include <iostream>
 
 //sort from largest to smallest!
 Client_Engine engine;//872
@@ -23,7 +23,7 @@ int main()
 {
     engine.init();
 
-    while( engine.get_menu_loop())
+    while( engine.get_menu_loop() )
     {
         engine.menu_receive_inputs();
         engine.menu_logic();

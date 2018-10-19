@@ -1,14 +1,6 @@
 #include "network_data.hpp"
 #include <iostream>
 
-Network_Data::Network_Data() {}
-
-Network_Data::Network_Data(sf::IpAddress ip, unsigned short port)
-{
-    m_ip = ip;
-    m_port = port;
-}
-
 void Network_Data::set_ip_port(sf::IpAddress ip, unsigned short port)
 {
     m_ip = ip;

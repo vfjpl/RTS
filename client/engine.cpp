@@ -12,7 +12,6 @@ extern Network_Data server;
 void Client_Engine::init()
 {
     socket.setBlocking(false);
-    window.setFramerateLimit(60);
     server.set_ip_port(sf::IpAddress::LocalHost, 7000);
     resources_manager.load_resources();
     menu.init();
@@ -22,6 +21,7 @@ void Client_Engine::init()
 void Client_Engine::fullscreen()
 {
     window.create(sf::VideoMode::getDesktopMode(), L"Kelajno", sf::Style::Fullscreen);
+    window.setFramerateLimit(60);
 }
 
 void Client_Engine::windowed()
@@ -30,6 +30,7 @@ void Client_Engine::windowed()
     mode.width = (mode.width*2)/3;
     mode.height = (mode.height*2)/3;
     window.create(mode, L"Kelajno");
+    window.setFramerateLimit(60);
 }
 
 void Client_Engine::return_to_menu()
@@ -60,15 +61,15 @@ void Client_Engine::receive_packets()
     sf::IpAddress incomming_ip;
     unsigned short incomming_port;
     sf::Uint8 opcode;
-    while ( !socket.receive( received_packet, incomming_ip, incomming_port ) )
+    while ( !socket.receive(received_packet, incomming_ip, incomming_port) )
     {
-        if( server.compare(incomming_ip, incomming_port) )
+        if(server.compare(incomming_ip, incomming_port))
         {
             server.reset_network_timeout();
             while( !received_packet.endOfPacket() )
             {
                 received_packet >> opcode;
-                switch( opcode )
+                switch(opcode)
                 {
                 case SERVER_GAME_STATUS:
                 {

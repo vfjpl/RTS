@@ -31,7 +31,7 @@ void Client_Engine::lobby_receive_inputs()
 void Client_Engine::lobby_logic()
 {
     time = clock.restart();
-    if(server.get_network_timeout().asSeconds() > 1)
+    if(server.get_network_timeout() > sf::seconds(1))
     {
         return_to_menu();
         return;

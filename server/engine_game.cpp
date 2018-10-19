@@ -6,7 +6,7 @@ void Server_Engine::game_logic()
     time = clock.restart();
     for(sf::Uint8 i = 0; i < players.size(); )
     {
-        if(players[i].get_network_timeout().asSeconds() > 1)//timeout disconnect
+        if(players[i].get_network_timeout() > sf::seconds(1))//timeout disconnect
         {
             players.erase(players.begin() + i);
             packet_to_send << (sf::Uint8)SERVER_PLAYER_DISCONNECTED << i;

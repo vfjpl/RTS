@@ -30,6 +30,11 @@ void Client_Engine::menu_receive_inputs()
             menu.mouse_click(event);
             break;
         }
+        case sf::Event::MouseMoved:
+        {
+            menu.mouse_move(event);
+            break;
+        }
         default:
         {
             break;
@@ -41,5 +46,4 @@ void Client_Engine::menu_receive_inputs()
 void Client_Engine::menu_logic()
 {
     time = clock.restart();
-    menu.logic(sf::Mouse::getPosition(window));
 }

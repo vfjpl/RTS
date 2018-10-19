@@ -156,7 +156,14 @@ void Menu::mouse_click(const sf::Event& event)
     }//end switch
 }
 
-void Menu::mouse_move(const sf::Event& event) {}
+void Menu::mouse_move(const sf::Event& event)
+{
+    for(sf::Uint8 i = 0; i < m_texts.size(); ++i)
+        if(m_texts[i].getGlobalBounds().contains(event.mouseMove.x, event.mouseMove.y))
+            m_texts[i].setFillColor(sf::Color::Red);
+        else
+            m_texts[i].setFillColor(sf::Color::White);
+}
 
 void Menu::text_entered(const sf::Event& event)
 {
@@ -187,15 +194,6 @@ sf::Uint8 Menu::get_text_id_from_press(const sf::Event& event) const
 {
     for(sf::Uint8 i = 0; i < m_texts.size(); ++i)
         if(m_texts[i].getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y))
-            return i;
-
-    return m_texts.size();
-}
-
-sf::Uint8 Menu::get_text_id_from_move(const sf::Event& event) const
-{
-    for(sf::Uint8 i = 0; i < m_texts.size(); ++i)
-        if(m_texts[i].getGlobalBounds().contains(event.mouseMove.x, event.mouseMove.y))
             return i;
 
     return m_texts.size();

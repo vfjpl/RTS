@@ -24,7 +24,6 @@ public:
 
 private:
     sf::Uint8 get_text_id_from_press(const sf::Event& event) const;
-    sf::Uint8 get_text_id_from_move(const sf::Event& event) const;
 
     void main_menu();
     void connect_menu();

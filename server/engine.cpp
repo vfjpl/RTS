@@ -23,8 +23,8 @@ void Server_Engine::receive_packets()
             if(local_id == 6)//max 254 because sf::Uint8 is max 255
                 continue;//don't add new player
 
-            packet_to_send << (sf::Uint8)SERVER_PLAYER_CONNECTED << local_id;
             players.emplace_back(incomming_ip, incomming_port);
+            packet_to_send << (sf::Uint8)SERVER_PLAYER_CONNECTED << local_id;
         }
 
         players[local_id].reset_network_timeout();
@@ -102,9 +102,9 @@ sf::Uint8 Server_Engine::get_player_id(sf::IpAddress ip, unsigned short port) co
 
 void Server_Engine::set_all_players_ready_status(bool status)
 {
-    packet_to_send << (sf::Uint8)SERVER_SET_ALL_PLAYERS_READY_STATUS << status;
     for(sf::Uint8 i = 0; i < players.size(); ++i)
         players[i].set_ready_status(status);
+    packet_to_send << (sf::Uint8)SERVER_SET_ALL_PLAYERS_READY_STATUS << status;
 }
 
 void Server_Engine::debug_show_size() const

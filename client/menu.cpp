@@ -133,7 +133,7 @@ void Menu::mouse_click(const sf::Event& event)
             engine.windowed();
             break;
         }
-        case 2:
+        case 2://back
         {
             main_menu();
             break;

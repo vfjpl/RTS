@@ -18,7 +18,7 @@ void Server_Engine::lobby_logic()
         ++i;
     }
 
-    if( ready && players.size() > 0 )//prevent starting when there are no players in lobby
+    if(ready)
     {
         game_loop = true;
         packet_to_send << (sf::Uint8)SERVER_GAME_STATUS << true;

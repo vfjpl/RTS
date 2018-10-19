@@ -24,10 +24,12 @@ void Menu::main_menu()
     m_state = 1;
     m_texts.clear();
     m_texts.emplace_back(L"CONNECT", resources_manager.get_font());
-    m_texts.emplace_back(L"AUTHORS", resources_manager.get_font());//dziwny bug
+    m_texts.emplace_back(L"OPTIONS", resources_manager.get_font());
     m_texts[1].move(0, 30);
-    m_texts.emplace_back(L"QUIT", resources_manager.get_font());
+    m_texts.emplace_back(L"AUTHORS", resources_manager.get_font());
     m_texts[2].move(0, 60);
+    m_texts.emplace_back(L"QUIT", resources_manager.get_font());
+    m_texts[3].move(0, 90);
 }
 
 void Menu::connect_menu()
@@ -41,9 +43,20 @@ void Menu::connect_menu()
     m_texts[2].move(0, 60);
 }
 
-void Menu::authors_menu()
+void Menu::options_menu()
 {
     m_state = 3;
+    m_texts.clear();
+    m_texts.emplace_back(L"FULLSCREEN", resources_manager.get_font());
+    m_texts.emplace_back(L"WINDOWED", resources_manager.get_font());
+    m_texts[1].move(0, 30);
+    m_texts.emplace_back(L"BACK", resources_manager.get_font());
+    m_texts[2].move(0, 60);
+}
+
+void Menu::authors_menu()
+{
+    m_state = 4;
     m_texts.clear();
     m_texts.emplace_back(L"Kacper Piwiński", resources_manager.get_font());
     m_texts.emplace_back(L"Radosław Wojdak", resources_manager.get_font());
@@ -65,12 +78,17 @@ void Menu::mouse_click(const sf::Event& event)
             connect_menu();
             break;
         }
-        case 1://authors
+        case 1://options
+        {
+            options_menu();
+            break;
+        }
+        case 2://authors
         {
             authors_menu();
             break;
         }
-        case 2://quit
+        case 3://quit
         {
             engine.quit_engine();
             break;
@@ -101,7 +119,29 @@ void Menu::mouse_click(const sf::Event& event)
         }//end switch
         break;
     }
-    case 3://authors menu
+    case 3://options
+    {
+        switch(get_text_id_from_press(event))
+        {
+        case 0://fullscreen
+        {
+            engine.fullscreen();
+            break;
+        }
+        case 1://windowed
+        {
+            engine.windowed();
+            break;
+        }
+        case 2:
+        {
+            main_menu();
+            break;
+        }
+        }//end switch
+        break;
+    }
+    case 4://authors menu
     {
         switch(get_text_id_from_press(event))
         {

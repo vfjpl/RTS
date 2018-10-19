@@ -28,6 +28,7 @@ private:
 
     void main_menu();
     void connect_menu();
+    void options_menu();
     void authors_menu();
 };
 

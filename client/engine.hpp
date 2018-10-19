@@ -23,6 +23,8 @@ class Client_Engine
 
 public:
     void init();
+    void fullscreen();
+    void windowed();
     void return_to_menu();
     void connect_to_lobby();
     void quit_engine();

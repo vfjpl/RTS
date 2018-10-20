@@ -5,6 +5,7 @@
 #include "../common/network_opcodes.hpp"
 #include <iostream>
 
+extern sf::RenderWindow window;
 extern Resources_Manager resources_manager;
 extern Menu menu;
 extern Network_Data server;
@@ -15,21 +16,22 @@ void Client_Engine::init()
     server.set_ip_port(sf::IpAddress::LocalHost, 7000);
     resources_manager.load_resources();
     menu.init();
-    fullscreen();
+    setup_window(false);
 }
 
-void Client_Engine::fullscreen()
-{
-    window.create(sf::VideoMode::getDesktopMode(), L"Kelajno", sf::Style::Fullscreen);
-    window.setFramerateLimit(60);
-}
-
-void Client_Engine::windowed()
+void Client_Engine::setup_window(bool fullscreen)
 {
     sf::VideoMode mode = sf::VideoMode::getDesktopMode();
-    mode.width = (mode.width*2)/3;
-    mode.height = (mode.height*2)/3;
-    window.create(mode, L"Kelajno");
+    if(fullscreen)
+    {
+        window.create(mode, L"Kelajno", sf::Style::Fullscreen);
+    }
+    else
+    {
+        mode.width = (mode.width*2)/3;
+        mode.height = (mode.height*2)/3;
+        window.create(mode, L"Kelajno");
+    }
     window.setFramerateLimit(60);
 }
 
@@ -144,13 +146,6 @@ void Client_Engine::receive_packets()
     }//end while
 }
 
-void Client_Engine::draw_frame()
-{
-    window.clear();
-    menu.draw(window);
-    window.display();
-}
-
 void Client_Engine::send_packets()
 {
     socket.send(packet_to_send, server.get_ip(), server.get_port());
@@ -181,8 +176,7 @@ void Client_Engine::set_all_players_ready_status(bool status)
 void Client_Engine::debug_show_size() const
 {
     //keep up to date!
-    std::wcout << sizeof(window) << L'\n'
-               << sizeof(units) << L'\n'
+    std::wcout << sizeof(units) << L'\n'
                << sizeof(players) << L'\n'
                << sizeof(packet_to_send) << L'\n'
                << sizeof(received_packet) << L'\n'

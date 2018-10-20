@@ -1,6 +1,8 @@
+#include <SFML/Graphics.hpp>
 #include "engine.hpp"
 #include "network_data.hpp"
 
+extern sf::RenderWindow window;
 extern Network_Data server;
 
 void Client_Engine::game_receive_inputs()
@@ -37,4 +39,9 @@ void Client_Engine::game_logic()
         return;
     }
     server.add_network_timeout(time);
+}
+
+void Client_Engine::game_draw_frame()
+{
+    window.display();
 }

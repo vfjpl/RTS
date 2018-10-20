@@ -125,12 +125,12 @@ void Menu::mouse_click(const sf::Event& event)
         {
         case 0://fullscreen
         {
-            engine.fullscreen();
+            engine.setup_window(true);
             break;
         }
         case 1://windowed
         {
-            engine.windowed();
+            engine.setup_window(false);
             break;
         }
         case 2://back

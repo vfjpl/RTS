@@ -1,7 +1,6 @@
 #ifndef ENGINE_HPP_INCLUDED
 #define ENGINE_HPP_INCLUDED
 
-#include <SFML/Graphics.hpp>
 #include "../common/network_player.hpp"
 #include "../common/game_unit.hpp"
 #include <deque>
@@ -9,7 +8,6 @@
 class Client_Engine
 {
     //sort from largest to smallest!
-    sf::RenderWindow window;//528
     std::deque <Game_Unit> units;//80
     std::deque <Network_Player> players;//80
     sf::Packet packet_to_send;//56
@@ -23,8 +21,7 @@ class Client_Engine
 
 public:
     void init();
-    void fullscreen();
-    void windowed();
+    void setup_window(bool fullscreen);
     void return_to_menu();
     void connect_to_lobby();
     void quit_engine();
@@ -37,8 +34,11 @@ public:
     void lobby_logic();
     void game_logic();
 
+    void menu_draw_frame();
+    void lobby_draw_frame();
+    void game_draw_frame();
+
     void receive_packets();
-    void draw_frame();
     void send_packets();
 
     bool get_menu_loop() const;

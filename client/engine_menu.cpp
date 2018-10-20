@@ -1,6 +1,7 @@
 #include "engine.hpp"
 #include "menu.hpp"
 
+extern sf::RenderWindow window;
 extern Menu menu;
 
 void Client_Engine::menu_receive_inputs()
@@ -46,4 +47,11 @@ void Client_Engine::menu_receive_inputs()
 void Client_Engine::menu_logic()
 {
     time = clock.restart();
+}
+
+void Client_Engine::menu_draw_frame()
+{
+    window.clear();
+    menu.draw(window);
+    window.display();
 }

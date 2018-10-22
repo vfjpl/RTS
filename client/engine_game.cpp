@@ -33,6 +33,7 @@ void Client_Engine::game_receive_inputs()
 void Client_Engine::game_logic()
 {
     time = clock.restart();
+
     if(server.get_network_timeout() > sf::seconds(1))
     {
         return_to_menu();

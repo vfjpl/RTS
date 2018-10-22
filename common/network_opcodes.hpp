@@ -6,8 +6,8 @@
 // ID - oznacza, że operacja dotyczy konkretnego obiektu.
 // BP - oznacza, że operacja dotyczy szablonu obiektu.
 
-// SERVER - oznacza, że opcode wysyłany jest przez server
-// CLIENT - oznacza, że opcode wysyłany jest przez clienta
+// SERVER - oznacza, że opcode wysyłany jest przez server.
+// CLIENT - oznacza, że opcode wysyłany jest przez clienta.
 
 // Wpisywanie rozkazów do pakietu:
 // packet << (sf::Uint8)opcode;
@@ -65,7 +65,7 @@ enum: sf::Uint8
     SERVER_PLAYER_READY_STATUS,//rozsyła status gracza
 // [sf::Uint8 ID_gracza] [bool ready_status]
 
-    SERVER_PLAYER_MESSAGE,//rozsyła wiadomość graczą
+    SERVER_PLAYER_MESSAGE,//rozsyła wiadomość gracza
 // [sf::Uint8 ID_gracza] [std::wstring tekst]
 
     SERVER_PLAYER_NICKNAME,//rozsyła nick gracza
@@ -76,10 +76,10 @@ enum: sf::Uint8
 
 
 
-    SERVER_ADD_UNIT_TO_GAME,//dodaj jednostke do gry
+    SERVER_ADD_UNIT_TO_GAME,//dodaj jednostkę do gry
 // [sf::Uint8 BP_jednostki] [sf::Uint8 pozycja_x] [sf::Uint8 pozycja_y]
 
-    SERVER_REMOVE_UNIT_FROM_GAME,//usuń jednostke z gry
+    SERVER_REMOVE_UNIT_FROM_GAME,//usuń jednostkę z gry
 // [sf::Uint8 ID_jednostki]
 
     SERVER_SET_UNIT_POSITION,//zmień pozycje jednostki

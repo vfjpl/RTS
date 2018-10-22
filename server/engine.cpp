@@ -13,14 +13,14 @@ void Server_Engine::receive_packets()
     unsigned short incomming_port;
     sf::Uint8 local_id;
     sf::Uint8 opcode;
-    for(sf::Uint8 i = 0; i <= players.size(); ++i)//[ <= ]because we are waiting for more players
+    for(sf::Uint8 i = 0; i <= players.size(); ++i)// <= because we are waiting for more players
     {
         socket.receive(received_packet, incomming_ip, incomming_port);
         local_id = get_player_id(incomming_ip, incomming_port);
 
         if(local_id == players.size())//check if we got new player
         {
-            if(local_id == 6)//max 254 because sf::Uint8 is max 255
+            if(local_id == 6)//max 254
                 continue;//don't add new player
 
             players.emplace_back(incomming_ip, incomming_port);
@@ -97,7 +97,7 @@ sf::Uint8 Server_Engine::get_player_id(sf::IpAddress ip, unsigned short port) co
         if(players[i].compare(ip, port))
             return i;
 
-    return players.size();//return next player id
+    return players.size();
 }
 
 void Server_Engine::set_all_players_ready_status(bool status)

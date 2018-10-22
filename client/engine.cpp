@@ -91,9 +91,7 @@ void Client_Engine::receive_packets()
                 {
                     sf::Uint8 id;
                     received_packet >> id;
-                    if(id > players.size())
-                        players.resize(id);
-                    players.emplace_back();
+                    players.resize(id + 1);
                     break;
                 }
                 case SERVER_PLAYER_DISCONNECTED:

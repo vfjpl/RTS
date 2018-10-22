@@ -4,11 +4,12 @@
 void Server_Engine::lobby_logic()
 {
     time = clock.restart();
+
     bool ready = true;
     for(sf::Uint8 i = 0; i < players.size(); )
     {
-        ready &= players[i].get_ready_status();//ready true only if all players are ready
-        if(players[i].get_network_timeout() > sf::seconds(1))//timeout disconnect
+        ready &= players[i].get_ready_status();
+        if(players[i].get_network_timeout() > sf::seconds(1))
         {
             players.erase(players.begin() + i);
             packet_to_send << (sf::Uint8)SERVER_PLAYER_DISCONNECTED << i;

@@ -21,6 +21,7 @@ class Client_Engine
 
 public:
     void init();
+
     void setup_window(bool fullscreen);
     void return_to_menu();
     void connect_to_lobby();

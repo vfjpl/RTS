@@ -67,11 +67,12 @@ void Menu::authors_menu()
 
 void Menu::mouse_click(const sf::Event& event)
 {
+    sf::Uint8 button_id = get_text_id_from_press(event);
     switch(m_state)
     {
     case 1://main menu
     {
-        switch(get_text_id_from_press(event))
+        switch(button_id)
         {
         case 0://connect
         {
@@ -98,7 +99,7 @@ void Menu::mouse_click(const sf::Event& event)
     }
     case 2://connect menu
     {
-        switch(get_text_id_from_press(event))
+        switch(button_id)
         {
         case 0://IpAddress
         {
@@ -121,7 +122,7 @@ void Menu::mouse_click(const sf::Event& event)
     }
     case 3://options
     {
-        switch(get_text_id_from_press(event))
+        switch(button_id)
         {
         case 0://fullscreen
         {
@@ -143,7 +144,7 @@ void Menu::mouse_click(const sf::Event& event)
     }
     case 4://authors menu
     {
-        switch(get_text_id_from_press(event))
+        switch(button_id)
         {
         case 2://back
         {

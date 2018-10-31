@@ -77,7 +77,7 @@ void Server_Engine::receive_packets()
 void Server_Engine::send_packets()
 {
     for(sf::Uint8 i = 0; i < players.size(); ++i)
-        socket.send( packet_to_send, players[i].get_ip(), players[i].get_port() );
+        socket.send(packet_to_send, players[i].get_ip(), players[i].get_port());
     packet_to_send.clear();
 }
 

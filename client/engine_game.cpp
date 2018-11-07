@@ -1,4 +1,9 @@
+#include <SFML/Graphics.hpp>
 #include "engine.hpp"
+#include "network_data.hpp"
+
+extern sf::RenderWindow window;
+extern Network_Data server;
 
 void Client_Engine::game_receive_inputs()
 {
@@ -12,6 +17,11 @@ void Client_Engine::game_receive_inputs()
             quit_engine();
             break;
         }
+        case sf::Event::Resized:
+        {
+            window.setView(sf::View(sf::FloatRect(0, 0, event.size.width, event.size.height)));
+            break;
+        }
         default:
         {
             break;
@@ -23,15 +33,16 @@ void Client_Engine::game_receive_inputs()
 void Client_Engine::game_logic()
 {
     time = clock.restart();
-    if(server.get_network_timeout().asSeconds() > 1)
+
+    if(server.get_network_timeout() > sf::seconds(1))
     {
-        //connection to server lost, back to main menu
-        lobby_loop = false;
-        game_loop = false;
-        server.set_network_timeout( sf::Time::Zero );
-        players.clear();
-        units.clear();
+        return_to_menu();
         return;
     }
     server.add_network_timeout(time);
+}
+
+void Client_Engine::game_draw_frame()
+{
+    window.display();
 }

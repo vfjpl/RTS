@@ -19,11 +19,6 @@ void Network_Player::set_nickname(const std::wstring& nickname)
     m_nickname = nickname;
 }
 
-void Network_Player::set_network_timeout(sf::Time network_timeout)
-{
-    m_network_timeout = network_timeout;
-}
-
 void Network_Player::set_ip_port(sf::IpAddress ip, unsigned short port)
 {
     m_ip = ip;
@@ -70,6 +65,11 @@ bool Network_Player::get_ready_status() const
     return m_ready_status;
 }
 
+void Network_Player::reset_network_timeout()
+{
+    m_network_timeout = sf::Time::Zero;
+}
+
 void Network_Player::add_network_timeout(sf::Time network_timeout)
 {
     m_network_timeout += network_timeout;
@@ -87,10 +87,10 @@ bool Network_Player::compare(sf::IpAddress ip, unsigned short port) const
 void Network_Player::debug_show_size() const
 {
     //keep up to date!
-    std::wcout << sizeof(m_nickname) << L"\n"
-               << sizeof(m_network_timeout) << L"\n"
-               << sizeof(m_ip) << L"\n"
-               << sizeof(m_port) << L"\n"
-               << sizeof(m_team) << L"\n"
-               << sizeof(m_ready_status) << L"\n";
+    std::wcout << sizeof(m_nickname) << L'\n'
+               << sizeof(m_network_timeout) << L'\n'
+               << sizeof(m_ip) << L'\n'
+               << sizeof(m_port) << L'\n'
+               << sizeof(m_team) << L'\n'
+               << sizeof(m_ready_status) << L'\n';
 }

@@ -1,16 +1,54 @@
 #include "engine.hpp"
-#include "global_variables.hpp"
+#include "resources_manager.hpp"
+#include "menu.hpp"
+#include "network_data.hpp"
 #include "../common/network_opcodes.hpp"
 #include <iostream>
+
+extern sf::RenderWindow window;
+extern Resources_Manager resources_manager;
+extern Menu menu;
+extern Network_Data server;
 
 void Client_Engine::init()
 {
     socket.setBlocking(false);
-    window.setFramerateLimit(60);
-    window.create(sf::VideoMode(800, 600), L"Kelajno");//sf::Style::Fullscreen
     server.set_ip_port(sf::IpAddress::LocalHost, 7000);
     resources_manager.load_resources();
-    menu.main_menu();
+    menu.init();
+    setup_window(false);
+}
+
+void Client_Engine::setup_window(bool fullscreen)
+{
+    sf::VideoMode mode = sf::VideoMode::getDesktopMode();
+    if(fullscreen)
+    {
+        window.create(mode, L"Kelajno", sf::Style::Fullscreen);
+    }
+    else
+    {
+        mode.width = (mode.width*2)/3;
+        mode.height = (mode.height*2)/3;
+        window.create(mode, L"Kelajno");
+    }
+    window.setFramerateLimit(60);
+}
+
+void Client_Engine::return_to_menu()
+{
+    lobby_loop = false;
+    game_loop = false;
+    server.reset_network_timeout();
+    players.clear();
+    units.clear();
+    menu.init();
+}
+
+void Client_Engine::connect_to_lobby()
+{
+    lobby_loop = true;
+    menu.clear();
 }
 
 void Client_Engine::quit_engine()
@@ -25,15 +63,15 @@ void Client_Engine::receive_packets()
     sf::IpAddress incomming_ip;
     unsigned short incomming_port;
     sf::Uint8 opcode;
-    while ( !socket.receive( received_packet, incomming_ip, incomming_port ) )
+    while ( !socket.receive(received_packet, incomming_ip, incomming_port) )
     {
-        if( server.compare(incomming_ip, incomming_port) )
+        if(server.compare(incomming_ip, incomming_port))
         {
-            server.set_network_timeout( sf::Time::Zero );
+            server.reset_network_timeout();
             while( !received_packet.endOfPacket() )
             {
                 received_packet >> opcode;
-                switch( opcode )
+                switch(opcode)
                 {
                 case SERVER_GAME_STATUS:
                 {
@@ -53,9 +91,7 @@ void Client_Engine::receive_packets()
                 {
                     sf::Uint8 id;
                     received_packet >> id;
-                    if(id > players.size())
-                        players.resize(id);
-                    players.emplace_back();
+                    players.resize(id + 1);
                     break;
                 }
                 case SERVER_PLAYER_DISCONNECTED:
@@ -108,11 +144,6 @@ void Client_Engine::receive_packets()
     }//end while
 }
 
-void Client_Engine::draw_frame()
-{
-    window.display();
-}
-
 void Client_Engine::send_packets()
 {
     socket.send(packet_to_send, server.get_ip(), server.get_port());
@@ -143,16 +174,14 @@ void Client_Engine::set_all_players_ready_status(bool status)
 void Client_Engine::debug_show_size() const
 {
     //keep up to date!
-    std::wcout << sizeof(window) << L"\n"
-               << sizeof(units) << L"\n"
-               << sizeof(players) << L"\n"
-               << sizeof(packet_to_send) << L"\n"
-               << sizeof(received_packet) << L"\n"
-               << sizeof(socket) << L"\n"
-               << sizeof(server) << L"\n"
-               << sizeof(clock) << L"\n"
-               << sizeof(time) << L"\n"
-               << sizeof(menu_loop) << L"\n"
-               << sizeof(lobby_loop) << L"\n"
-               << sizeof(game_loop) << L"\n";
+    std::wcout << sizeof(units) << L'\n'
+               << sizeof(players) << L'\n'
+               << sizeof(packet_to_send) << L'\n'
+               << sizeof(received_packet) << L'\n'
+               << sizeof(socket) << L'\n'
+               << sizeof(clock) << L'\n'
+               << sizeof(time) << L'\n'
+               << sizeof(menu_loop) << L'\n'
+               << sizeof(lobby_loop) << L'\n'
+               << sizeof(game_loop) << L'\n';
 }

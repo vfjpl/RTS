@@ -11,27 +11,27 @@ void Server_Engine::receive_packets()
 {
     sf::IpAddress incomming_ip;
     unsigned short incomming_port;
-    sf::Uint8 opcode;
     sf::Uint8 local_id;
-    for(sf::Uint8 i = 0; i <= players.size(); ++i)//[ <= ]because we are waiting for more players
+    sf::Uint8 opcode;
+    for(sf::Uint8 i = 0; i <= players.size(); ++i)// <= because we are waiting for more players
     {
-        socket.receive( received_packet, incomming_ip, incomming_port );
+        socket.receive(received_packet, incomming_ip, incomming_port);
         local_id = get_player_id(incomming_ip, incomming_port);
 
         if(local_id == players.size())//check if we got new player
         {
-            if(local_id == 6)//max 254 because sf::Uint8 is max 255
+            if(local_id == 6)//max 254
                 continue;//don't add new player
 
-            packet_to_send << (sf::Uint8)SERVER_PLAYER_CONNECTED << local_id;
             players.emplace_back(incomming_ip, incomming_port);
+            packet_to_send << (sf::Uint8)SERVER_PLAYER_CONNECTED << local_id;
         }
 
-        players[local_id].set_network_timeout( sf::Time::Zero );
+        players[local_id].reset_network_timeout();
         while( !received_packet.endOfPacket() )
         {
             received_packet >> opcode;
-            switch( opcode )
+            switch(opcode)
             {
             case CLIENT_SET_READY_STATUS:
             {
@@ -77,7 +77,7 @@ void Server_Engine::receive_packets()
 void Server_Engine::send_packets()
 {
     for(sf::Uint8 i = 0; i < players.size(); ++i)
-        socket.send( packet_to_send, players[i].get_ip(), players[i].get_port() );
+        socket.send(packet_to_send, players[i].get_ip(), players[i].get_port());
     packet_to_send.clear();
 }
 
@@ -97,26 +97,26 @@ sf::Uint8 Server_Engine::get_player_id(sf::IpAddress ip, unsigned short port) co
         if(players[i].compare(ip, port))
             return i;
 
-    return players.size();//return next player id
+    return players.size();
 }
 
 void Server_Engine::set_all_players_ready_status(bool status)
 {
-    packet_to_send << (sf::Uint8)SERVER_SET_ALL_PLAYERS_READY_STATUS << status;
     for(sf::Uint8 i = 0; i < players.size(); ++i)
         players[i].set_ready_status(status);
+    packet_to_send << (sf::Uint8)SERVER_SET_ALL_PLAYERS_READY_STATUS << status;
 }
 
 void Server_Engine::debug_show_size() const
 {
     //keep up to date!
-    std::wcout << sizeof(units) << L"\n"
-               << sizeof(players) << L"\n"
-               << sizeof(packet_to_send) << L"\n"
-               << sizeof(received_packet) << L"\n"
-               << sizeof(socket) << L"\n"
-               << sizeof(clock) << L"\n"
-               << sizeof(time) << L"\n"
-               << sizeof(lobby_loop) << L"\n"
-               << sizeof(game_loop) << L"\n";
+    std::wcout << sizeof(units) << L'\n'
+               << sizeof(players) << L'\n'
+               << sizeof(packet_to_send) << L'\n'
+               << sizeof(received_packet) << L'\n'
+               << sizeof(socket) << L'\n'
+               << sizeof(clock) << L'\n'
+               << sizeof(time) << L'\n'
+               << sizeof(lobby_loop) << L'\n'
+               << sizeof(game_loop) << L'\n';
 }

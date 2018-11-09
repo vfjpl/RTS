@@ -233,6 +233,24 @@ void Menu::mouse_move(const sf::RenderWindow& window)
     }
 }
 
+void Menu::add_lobby_message(const sf::String& message, sf::Color message_color)
+{
+    const int TEXT_CHAT_MARGIN = 4;
+    const int SPACE_FOR_MESSAGE = 18;
+
+    m_texts.emplace_back(message, resources_manager.get_font());
+    sf::Text* text_ptr = &m_texts[m_texts.size() - 1];
+
+    text_ptr->setFillColor(message_color);
+    text_ptr->setCharacterSize(14U);
+
+    text_ptr->setPosition(m_rectangles[0].getPosition());
+    text_ptr->move(
+        TEXT_CHAT_MARGIN,
+        TEXT_CHAT_MARGIN + (m_texts.size() - 1) * SPACE_FOR_MESSAGE
+    );
+}
+
 void Menu::text_entered(const sf::Event& event)
 {
     if(m_state == 2)
@@ -245,23 +263,10 @@ void Menu::text_entered(const sf::Event& event)
     if(m_state == 5)
     {
         const int RETURN_CODE = 13;
-        const int TEXT_CHAT_MARGIN = 4;
-        const int SPACE_FOR_MESSAGE = 16;
 
         if(m_textboxes[0].is_marked() && event.text.unicode == RETURN_CODE)
         {
-            m_texts.emplace_back(m_textboxes[0].get_string(), resources_manager.get_font());
-            sf::Text* text_ptr = &m_texts[m_texts.size() - 1];
-
-            text_ptr->setFillColor(sf::Color::Black);
-            text_ptr->setCharacterSize(14U);
-
-            text_ptr->setPosition(m_rectangles[0].getPosition());
-            text_ptr->move(
-                TEXT_CHAT_MARGIN,
-                TEXT_CHAT_MARGIN + (m_texts.size() - 1) * SPACE_FOR_MESSAGE
-            );
-            
+            add_lobby_message(m_textboxes[0].get_string());
             m_textboxes[0].set_string("");
         }
     }

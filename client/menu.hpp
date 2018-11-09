@@ -34,6 +34,8 @@ private:
     void options_menu(const sf::RenderWindow& window);
     void authors_menu(const sf::RenderWindow& window);
     void lobby_menu(const sf::RenderWindow& window);
+
+    void add_lobby_message(const sf::String& message, sf::Color message_color = sf::Color::Black);
 };
 
 #endif // MENU_HPP_INCLUDED

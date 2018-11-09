@@ -14,11 +14,15 @@ TextBox::TextBox(const sf::Vector2f& pos, const sf::Vector2f& size, const sf::St
     setOutlineColor(sf::Color::Black);
     setPosition(pos);
 
+    m_text.setString("|");  //Example high text for set origin
+
     const int TEXT_ORIGIN_X = 0;
     const int TEXT_ORIGIN_Y = m_text.getGlobalBounds().height / 2;
     const int TEXT_MARGIN_LEFT = 4;
     const int TEXT_POS_X = getPosition().x + TEXT_MARGIN_LEFT;
     const int TEXT_POS_Y = getPosition().y + getSize().y / 2;
+
+    m_text.setString(text);
 
     m_text.setFillColor(sf::Color::Black);
     m_text.setOrigin(TEXT_ORIGIN_X, TEXT_ORIGIN_Y);

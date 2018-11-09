@@ -8,66 +8,72 @@ extern Client_Engine engine;
 extern Resources_Manager resources_manager;
 extern Network_Data server;
 
-void Menu::init()
+void Menu::init(const sf::RenderWindow& window)
 {
-    main_menu();
+    main_menu(window);
 }
 
 void Menu::clear()
 {
     m_state = 0;
     m_texts.clear();
+    m_buttons.clear();
 }
 
-void Menu::main_menu()
+void Menu::main_menu(const sf::RenderWindow& window)
 {
+    clear();
     m_state = 1;
-    m_texts.clear();
-    m_texts.emplace_back(L"CONNECT", resources_manager.get_font());
-    m_texts.emplace_back(L"OPTIONS", resources_manager.get_font());
-    m_texts[1].move(0, 30);
-    m_texts.emplace_back(L"AUTHORS", resources_manager.get_font());
-    m_texts[2].move(0, 60);
-    m_texts.emplace_back(L"QUIT", resources_manager.get_font());
-    m_texts[3].move(0, 90);
+    
+    const int BUTTONS_POSITION_X = window.getSize().x / 2 - STANDARD_BUTTON_SIZE.x / 2;
+
+    m_buttons.emplace_back(sf::Vector2f(BUTTONS_POSITION_X, 64.0f),  L"CONNECT");
+    m_buttons.emplace_back(sf::Vector2f(BUTTONS_POSITION_X, 128.0f), L"OPTIONS");
+    m_buttons.emplace_back(sf::Vector2f(BUTTONS_POSITION_X, 192.0f), L"AUTHORS");
+    m_buttons.emplace_back(sf::Vector2f(BUTTONS_POSITION_X, 256.0f), L"QUIT");
 }
 
-void Menu::connect_menu()
+void Menu::connect_menu(const sf::RenderWindow& window)
 {
+    clear();
     m_state = 2;
-    m_texts.clear();
-    m_texts.emplace_back(server.get_ip().toString(), resources_manager.get_font());
-    m_texts.emplace_back(L"CONNECT", resources_manager.get_font());
-    m_texts[1].move(0, 30);
-    m_texts.emplace_back(L"BACK", resources_manager.get_font());
-    m_texts[2].move(0, 60);
+    
+    const int BUTTONS_POSITION_X = window.getSize().x / 2 - STANDARD_BUTTON_SIZE.x / 2;
+
+    m_buttons.emplace_back(sf::Vector2f(BUTTONS_POSITION_X, 64.0f),  server.get_ip().toString());
+    m_buttons.emplace_back(sf::Vector2f(BUTTONS_POSITION_X, 128.0f), L"OPTIONS");
+    m_buttons.emplace_back(sf::Vector2f(BUTTONS_POSITION_X, 192.0f), L"BACK");
 }
 
-void Menu::options_menu()
+void Menu::options_menu(const sf::RenderWindow& window)
 {
+    clear();
     m_state = 3;
-    m_texts.clear();
-    m_texts.emplace_back(L"FULLSCREEN", resources_manager.get_font());
-    m_texts.emplace_back(L"WINDOWED", resources_manager.get_font());
-    m_texts[1].move(0, 30);
-    m_texts.emplace_back(L"BACK", resources_manager.get_font());
-    m_texts[2].move(0, 60);
+    
+    const int BUTTONS_POSITION_X = window.getSize().x / 2 - STANDARD_BUTTON_SIZE.x / 2;
+
+    m_buttons.emplace_back(sf::Vector2f(BUTTONS_POSITION_X, 64.0f),  L"FULLSCREEN");
+    m_buttons.emplace_back(sf::Vector2f(BUTTONS_POSITION_X, 128.0f), L"WINDOWED");
+    m_buttons.emplace_back(sf::Vector2f(BUTTONS_POSITION_X, 192.0f), L"BACK");
 }
 
-void Menu::authors_menu()
+void Menu::authors_menu(const sf::RenderWindow& window)
 {
+    clear();
     m_state = 4;
-    m_texts.clear();
+
     m_texts.emplace_back(L"Kacper Piwiński", resources_manager.get_font());
     m_texts.emplace_back(L"Radosław Wojdak", resources_manager.get_font());
     m_texts[1].move(0, 30);
-    m_texts.emplace_back(L"BACK", resources_manager.get_font());
-    m_texts[2].move(0, 60);
+    
+    const int BUTTONS_POSITION_X = window.getSize().x / 2 - STANDARD_BUTTON_SIZE.x / 2;
+
+    m_buttons.emplace_back(sf::Vector2f(BUTTONS_POSITION_X, 192.0f), L"BACK");
 }
 
-void Menu::mouse_click(const sf::Event& event)
+void Menu::mouse_click(const sf::RenderWindow& window)
 {
-    sf::Uint8 button_id = get_text_id_from_press(event);
+    sf::Uint8 button_id = get_button_id_from_press(window);
     switch(m_state)
     {
     case 1://main menu
@@ -76,17 +82,17 @@ void Menu::mouse_click(const sf::Event& event)
         {
         case 0://connect
         {
-            connect_menu();
+            connect_menu(window);
             break;
         }
         case 1://options
         {
-            options_menu();
+            options_menu(window);
             break;
         }
         case 2://authors
         {
-            authors_menu();
+            authors_menu(window);
             break;
         }
         case 3://quit
@@ -103,18 +109,18 @@ void Menu::mouse_click(const sf::Event& event)
         {
         case 0://IpAddress
         {
-            m_texts[0].setString(std::wstring());
+            m_buttons[0].set_string(std::wstring());
             break;
         }
         case 1://connect
         {
-            server.set_ip(sf::IpAddress(m_texts[0].getString()));
+            server.set_ip(sf::IpAddress(m_buttons[0].get_string()));
             engine.connect_to_lobby();
             break;
         }
         case 2://back
         {
-            main_menu();
+            main_menu(window);
             break;
         }
         }//end switch
@@ -136,7 +142,7 @@ void Menu::mouse_click(const sf::Event& event)
         }
         case 2://back
         {
-            main_menu();
+            main_menu(window);
             break;
         }
         }//end switch
@@ -146,9 +152,9 @@ void Menu::mouse_click(const sf::Event& event)
     {
         switch(button_id)
         {
-        case 2://back
+        case 0://back
         {
-            main_menu();
+            main_menu(window);
             break;
         }
         }//end switch
@@ -157,13 +163,15 @@ void Menu::mouse_click(const sf::Event& event)
     }//end switch
 }
 
-void Menu::mouse_move(const sf::Event& event)
+void Menu::mouse_move(const sf::RenderWindow& window)
 {
-    for(sf::Uint8 i = 0; i < m_texts.size(); ++i)
-        if(m_texts[i].getGlobalBounds().contains(event.mouseMove.x, event.mouseMove.y))
-            m_texts[i].setFillColor(sf::Color::Red);
+    for(Button& button : m_buttons)
+    {
+        if (button.is_mouse_on(window))
+            button.mark();
         else
-            m_texts[i].setFillColor(sf::Color::White);
+            button.unmark();
+    }
 }
 
 void Menu::text_entered(const sf::Event& event)
@@ -176,33 +184,28 @@ void Menu::text_entered(const sf::Event& event)
     }
 }
 
-void Menu::logic(sf::Vector2i mouse_position)
-{
-    for(sf::Uint8 i = 0; i < m_texts.size(); ++i)
-        if(m_texts[i].getGlobalBounds().contains(mouse_position.x, mouse_position.y))
-            m_texts[i].setFillColor(sf::Color::Red);
-        else
-            m_texts[i].setFillColor(sf::Color::White);
-}
-
 void Menu::draw(sf::RenderWindow& window)
 {
-    for(sf::Uint8 i = 0; i < m_texts.size(); ++i)
-        window.draw(m_texts[i]);
+    for(sf::Text& text : m_texts)
+        window.draw(text);
+
+    for(Button& button : m_buttons)
+        button.display(window);
 }
 
-sf::Uint8 Menu::get_text_id_from_press(const sf::Event& event) const
+sf::Uint8 Menu::get_button_id_from_press(const sf::RenderWindow& window) const
 {
-    for(sf::Uint8 i = 0; i < m_texts.size(); ++i)
-        if(m_texts[i].getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y))
+    for(sf::Uint8 i = 0; i < m_buttons.size(); ++i)
+        if(m_buttons[i].is_pressed(window))
             return i;
 
-    return m_texts.size();
+    return m_buttons.size();
 }
 
 void Menu::debug_show_size() const
 {
     //keep up to date!
-    std::wcout << sizeof(m_texts)<< L'\n'
-               << sizeof(m_state) << L'\n';
+    std::wcout << sizeof(m_buttons) << L'\n'
+               << sizeof(m_texts)   << L'\n'
+               << sizeof(m_state)   << L'\n';
 }

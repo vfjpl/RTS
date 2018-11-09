@@ -28,12 +28,12 @@ void Client_Engine::menu_receive_inputs()
         }
         case sf::Event::MouseButtonPressed:
         {
-            menu.mouse_click(event);
+            menu.mouse_click(window);
             break;
         }
         case sf::Event::MouseMoved:
         {
-            menu.mouse_move(event);
+            menu.mouse_move(window);
             break;
         }
         default:

@@ -15,8 +15,8 @@ void Client_Engine::init()
     socket.setBlocking(false);
     server.set_ip_port(sf::IpAddress::LocalHost, 7000);
     resources_manager.load_resources();
-    menu.init();
     setup_window(false);
+    menu.init(window);
 }
 
 void Client_Engine::setup_window(bool fullscreen)
@@ -42,7 +42,7 @@ void Client_Engine::return_to_menu()
     server.reset_network_timeout();
     players.clear();
     units.clear();
-    menu.init();
+    menu.init(window);
 }
 
 void Client_Engine::connect_to_lobby()

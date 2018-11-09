@@ -29,10 +29,10 @@ void Menu::main_menu(const sf::RenderWindow& window)
     
     const int BUTTONS_POSITION_X = window.getSize().x / 2 - STANDARD_BUTTON_SIZE.x / 2;
 
-    m_buttons.emplace_back(sf::Vector2f(BUTTONS_POSITION_X, 64.0f),  L"CONNECT");
-    m_buttons.emplace_back(sf::Vector2f(BUTTONS_POSITION_X, 128.0f), L"OPTIONS");
-    m_buttons.emplace_back(sf::Vector2f(BUTTONS_POSITION_X, 192.0f), L"AUTHORS");
-    m_buttons.emplace_back(sf::Vector2f(BUTTONS_POSITION_X, 256.0f), L"QUIT");
+    m_buttons.emplace_back(sf::Vector2f(BUTTONS_POSITION_X, 256.0f),  L"CONNECT");
+    m_buttons.emplace_back(sf::Vector2f(BUTTONS_POSITION_X, 320.0f), L"OPTIONS");
+    m_buttons.emplace_back(sf::Vector2f(BUTTONS_POSITION_X, 384.0f), L"AUTHORS");
+    m_buttons.emplace_back(sf::Vector2f(BUTTONS_POSITION_X, 448.0f), L"QUIT");
 }
 
 void Menu::connect_menu(const sf::RenderWindow& window)
@@ -42,9 +42,9 @@ void Menu::connect_menu(const sf::RenderWindow& window)
     
     const int BUTTONS_POSITION_X = window.getSize().x / 2 - STANDARD_BUTTON_SIZE.x / 2;
 
-    m_buttons.emplace_back(sf::Vector2f(BUTTONS_POSITION_X, 64.0f),  server.get_ip().toString());
-    m_buttons.emplace_back(sf::Vector2f(BUTTONS_POSITION_X, 128.0f), L"OPTIONS");
-    m_buttons.emplace_back(sf::Vector2f(BUTTONS_POSITION_X, 192.0f), L"BACK");
+    m_buttons.emplace_back(sf::Vector2f(BUTTONS_POSITION_X, 256.0f),  server.get_ip().toString());
+    m_buttons.emplace_back(sf::Vector2f(BUTTONS_POSITION_X, 320.0f), L"OPTIONS");
+    m_buttons.emplace_back(sf::Vector2f(BUTTONS_POSITION_X, 384.0f), L"BACK");
 }
 
 void Menu::options_menu(const sf::RenderWindow& window)
@@ -54,9 +54,9 @@ void Menu::options_menu(const sf::RenderWindow& window)
     
     const int BUTTONS_POSITION_X = window.getSize().x / 2 - STANDARD_BUTTON_SIZE.x / 2;
 
-    m_buttons.emplace_back(sf::Vector2f(BUTTONS_POSITION_X, 64.0f),  L"FULLSCREEN");
-    m_buttons.emplace_back(sf::Vector2f(BUTTONS_POSITION_X, 128.0f), L"WINDOWED");
-    m_buttons.emplace_back(sf::Vector2f(BUTTONS_POSITION_X, 192.0f), L"BACK");
+    m_buttons.emplace_back(sf::Vector2f(BUTTONS_POSITION_X, 256.0f),  L"FULLSCREEN");
+    m_buttons.emplace_back(sf::Vector2f(BUTTONS_POSITION_X, 320.0f), L"WINDOWED");
+    m_buttons.emplace_back(sf::Vector2f(BUTTONS_POSITION_X, 384.0f), L"BACK");
 }
 
 void Menu::authors_menu(const sf::RenderWindow& window)
@@ -64,13 +64,19 @@ void Menu::authors_menu(const sf::RenderWindow& window)
     clear();
     m_state = 4;
 
-    m_texts.emplace_back(L"Kacper Piwiński", resources_manager.get_font());
-    m_texts.emplace_back(L"Radosław Wojdak", resources_manager.get_font());
-    m_texts[1].move(0, 30);
-    
-    const int BUTTONS_POSITION_X = window.getSize().x / 2 - STANDARD_BUTTON_SIZE.x / 2;
+    const sf::String AUTHORS[] = {
+        L"Kacper Piwiński",
+        L"Radosław Wojdak"
+    };
 
-    m_buttons.emplace_back(sf::Vector2f(BUTTONS_POSITION_X, 192.0f), L"BACK");
+    for(const sf::String& author: AUTHORS)
+        add_author(window, author);
+
+    const int BUTTON_WINDOW_MARGIN = 48;
+    const int BUTTONS_POSITION_X = window.getSize().x / 2 - STANDARD_BUTTON_SIZE.x / 2;
+    const int BACK_BUTTON_POSITION_Y = window.getSize().y - STANDARD_BUTTON_SIZE.y - BUTTON_WINDOW_MARGIN;
+
+    m_buttons.emplace_back(sf::Vector2f(BUTTONS_POSITION_X, BACK_BUTTON_POSITION_Y), L"BACK");
 }
 
 void Menu::lobby_menu(const sf::RenderWindow& window)
@@ -233,22 +239,47 @@ void Menu::mouse_move(const sf::RenderWindow& window)
     }
 }
 
+void Menu::add_author(const sf::RenderWindow& window, const sf::String& author)
+{
+    m_texts.emplace_back(author, resources_manager.get_font());
+    
+    const int AUTHOR_NUMBER = m_texts.size();
+    const int AUTHOR_WINDOW_MARGIN = 64;
+    const int SPACE_FOR_AUTHOR = 40;
+    const sf::Vector2i TEXT_POSITION(
+        window.getSize().x / 2 - m_texts[AUTHOR_NUMBER - 1].getGlobalBounds().width / 2,
+        AUTHOR_WINDOW_MARGIN + (AUTHOR_NUMBER - 1) * SPACE_FOR_AUTHOR
+    );
+
+    m_texts[AUTHOR_NUMBER - 1].setPosition(sf::Vector2f(TEXT_POSITION));
+}
+
 void Menu::add_lobby_message(const sf::String& message, sf::Color message_color)
 {
-    const int TEXT_CHAT_MARGIN = 4;
-    const int SPACE_FOR_MESSAGE = 18;
+    if(m_state == 5)
+    {
+        const int TEXT_CHAT_MARGIN = 4;
+        const int SPACE_FOR_MESSAGE = 18;
 
-    m_texts.emplace_back(message, resources_manager.get_font());
-    sf::Text* text_ptr = &m_texts[m_texts.size() - 1];
+        m_texts.emplace_back(message, resources_manager.get_font());
+        sf::Text* text_ptr = &m_texts[m_texts.size() - 1];
 
-    text_ptr->setFillColor(message_color);
-    text_ptr->setCharacterSize(14U);
+        text_ptr->setFillColor(message_color);
+        text_ptr->setCharacterSize(14U);
 
-    text_ptr->setPosition(m_rectangles[0].getPosition());
-    text_ptr->move(
-        TEXT_CHAT_MARGIN,
-        TEXT_CHAT_MARGIN + (m_texts.size() - 1) * SPACE_FOR_MESSAGE
-    );
+        text_ptr->setPosition(m_rectangles[0].getPosition());
+        text_ptr->move(
+            TEXT_CHAT_MARGIN,
+            TEXT_CHAT_MARGIN + (m_texts.size() - 1) * SPACE_FOR_MESSAGE
+        );
+    }
+}
+
+void Menu::send_message(const sf::String& message)
+{
+    /*
+    The service for sending messages should be added here
+    */
 }
 
 void Menu::text_entered(const sf::Event& event)
@@ -259,14 +290,16 @@ void Menu::text_entered(const sf::Event& event)
         str.push_back(event.text.unicode);
         m_texts[0].setString(str);
     }
-
-    if(m_state == 5)
+    else if(m_state == 5)
     {
         const int RETURN_CODE = 13;
 
         if(m_textboxes[0].is_marked() && event.text.unicode == RETURN_CODE)
         {
-            add_lobby_message(m_textboxes[0].get_string());
+            sf::String message = m_textboxes[0].get_string();
+
+            send_message(message);
+            add_lobby_message("Me: " + message);
             m_textboxes[0].set_string("");
         }
     }

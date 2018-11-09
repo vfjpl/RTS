@@ -7,8 +7,6 @@
 
 class Button : protected sf::RectangleShape
 {
-    //static const sf::Vector2f STANDARD_BUTTON_SIZE;
-
     sf::Text m_text;
 
 public:

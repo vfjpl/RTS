@@ -12,6 +12,7 @@ class Menu
     std::deque <Button> m_buttons;
     std::deque <TextBox> m_textboxes;
     std::deque <sf::RectangleShape> m_rectangles;
+    sf::Sprite background;
     std::deque <sf::Text> m_texts;//80
     sf::Uint8 m_state;//1
 

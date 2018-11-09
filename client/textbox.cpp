@@ -76,15 +76,14 @@ void TextBox::enter_text(sf::Uint32 unicode)
     sf::String new_string(get_string());
 
     const sf::Uint32 BACKSPACE_CODE = 8;
-    const sf::Uint32 FIRST_LETTER_OF_ALPHABET_CODE = 65;
-    const sf::Uint32 LAST_LETTER_OF_ALPHABET_CODE  = 122;
+    const sf::Uint32 RETURN_CODE = 13;
 
     if(unicode == BACKSPACE_CODE)
     {
         if(new_string.getSize() > 0)
             new_string.erase(new_string.getSize() - 1);
     }
-    else if(unicode >= FIRST_LETTER_OF_ALPHABET_CODE && unicode <= LAST_LETTER_OF_ALPHABET_CODE)
+    else if(unicode != RETURN_CODE)
         new_string += unicode;
 
     set_string(new_string);
@@ -101,8 +100,18 @@ sf::String TextBox::get_string()
 {
     sf::String string_without_marker(m_text.getString());
     
-    if (is_marked() && string_without_marker.getSize() > 0)
+    if(is_marked() && string_without_marker.getSize() > 0)
         string_without_marker.erase(string_without_marker.getSize() - 1);
 
     return string_without_marker;
+}
+
+void TextBox::set_fill_color(const sf::Color& color)
+{
+    setFillColor(color);
+}
+
+void TextBox::set_text_color(const sf::Color& color)
+{
+    m_text.setFillColor(color);
 }

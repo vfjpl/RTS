@@ -24,6 +24,8 @@ public:
     void enter_text(sf::Uint32 unicode);
     void set_string(sf::String string);
     sf::String get_string();
+    void set_fill_color(const sf::Color& color);
+    void set_text_color(const sf::Color& color);
 };
 
 #endif // TEXTBOX_HPP_INCLUDED

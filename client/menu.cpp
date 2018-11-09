@@ -10,6 +10,7 @@ extern Network_Data server;
 
 void Menu::init(const sf::RenderWindow& window)
 {
+    background.setTexture(resources_manager.get_texture(10));
     main_menu(window);
 }
 
@@ -98,11 +99,13 @@ void Menu::lobby_menu(const sf::RenderWindow& window)
 
     m_rectangles.emplace_back(sf::Vector2f(CHAT_SIZE));
     m_rectangles[0].setPosition(CHAT_POSITION);
+    m_rectangles[0].setFillColor(sf::Color(255, 255, 255, 191));
 
     m_textboxes.emplace_back(
         sf::Vector2f(CHAT_POSITION.x, CHAT_POSITION.y + CHAT_SIZE.y + SPACE_BETWEEN_CHAT_AND_TEXTBOX), 
         sf::Vector2f(CHAT_SIZE.x, STANDARD_TEXTBOX_SIZE.y)
     );
+    m_textboxes[0].set_fill_color(sf::Color(255, 255, 255, 191));
 
     //BUTTONS
     const sf::Vector2f BACK_BUTTON_POSITION(
@@ -294,7 +297,7 @@ void Menu::text_entered(const sf::Event& event)
     {
         const int RETURN_CODE = 13;
 
-        if(m_textboxes[0].is_marked() && event.text.unicode == RETURN_CODE)
+        if(m_textboxes[0].is_marked() && event.text.unicode == RETURN_CODE && m_textboxes[0].get_string().getSize() > 0)
         {
             sf::String message = m_textboxes[0].get_string();
 
@@ -314,6 +317,8 @@ void Menu::text_entered(const sf::Event& event)
 
 void Menu::draw(sf::RenderWindow& window)
 {
+    window.draw(background);
+
     for(sf::RectangleShape& rect: m_rectangles)
         window.draw(rect);
 
@@ -339,7 +344,9 @@ sf::Uint8 Menu::get_button_id_from_press(const sf::RenderWindow& window) const
 void Menu::debug_show_size() const
 {
     //keep up to date!
-    std::wcout << sizeof(m_buttons) << L'\n'
-               << sizeof(m_texts)   << L'\n'
-               << sizeof(m_state)   << L'\n';
+    std::wcout << sizeof(m_buttons)    << L'\n'
+               << sizeof(m_textboxes)  << L'\n'
+               << sizeof(m_rectangles) << L'\n'
+               << sizeof(m_texts)      << L'\n'
+               << sizeof(m_state)      << L'\n';
 }

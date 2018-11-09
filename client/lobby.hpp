@@ -3,12 +3,15 @@
 
 #include "SFML/Graphics.hpp"
 #include <deque>
+#include <map>
 #include "button.hpp"
 #include "textbox.hpp"
 
 class Lobby
 {
     std::deque <Button> m_buttons;
+    std::map <uint, sf::Text> m_players;
+    std::deque <uint> m_players_id;
     std::deque <sf::Text> m_texts;
     TextBox m_textbox;
     sf::Sprite background;
@@ -32,6 +35,9 @@ private:
 
     void add_lobby_message(const sf::String& message, sf::Color message_color = sf::Color::Black);
     void send_message(const sf::String& message);
+    void refresh_players();
+    void join_player(uint id, const sf::String& player_name);
+    void disconnect_player(uint id);
 };
 
 #endif // LOBBY_HPP_INCLUDED

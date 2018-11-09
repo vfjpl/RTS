@@ -10,11 +10,17 @@ void Lobby::init(const sf::RenderWindow& window)
 {
     background.setTexture(resources_manager.get_texture(10));
     create_gui(window);
+
+    const int TEMPORARY_EXAMPLE_PLAYER_ID = 42;
+    const sf::String TEMPORARY_EXAMPLE_PLAYER_NAME = L"Me";
+    join_player(TEMPORARY_EXAMPLE_PLAYER_ID, TEMPORARY_EXAMPLE_PLAYER_NAME);
 }
 
 void Lobby::clear()
 {
     m_buttons.clear();
+    m_players.clear();
+    m_players_id.clear();
     m_texts.clear();
 }
 
@@ -49,7 +55,7 @@ void Lobby::create_gui(const sf::RenderWindow& window)
         BUTTONS_WINDOW_MARGIN,
         window.getSize().y - STANDARD_BUTTON_SIZE.y - BUTTONS_WINDOW_MARGIN
     );
-    
+
     m_buttons.emplace_back(BACK_BUTTON_POSITION, L"DISCONNECT");
 }
 
@@ -123,6 +129,45 @@ void Lobby::text_entered(const sf::Event& event)
         m_textbox.enter_text(event.text.unicode);
 }
 
+void Lobby::refresh_players()
+{
+    const int SPACE_FOR_PLAYER = 40;
+    const int PLAYER_WINDOW_MARGIN = 32;
+    int position = 0;
+    for (std::map<uint, sf::Text>::iterator player = m_players.begin(); player != m_players.end(); ++player, ++position)
+        player->second.setPosition(PLAYER_WINDOW_MARGIN, PLAYER_WINDOW_MARGIN + position * SPACE_FOR_PLAYER);
+}
+
+void Lobby::join_player(uint id, const sf::String& player_name)
+{
+    add_lobby_message(player_name + " has joined the lobby", sf::Color(64, 160, 64));
+
+    m_players_id.emplace_back(id);
+
+    sf::Text player_text_name(player_name, resources_manager.get_font());
+    player_text_name.setCharacterSize(22U);
+    m_players.emplace(id, player_text_name);
+
+    refresh_players();
+}
+
+void Lobby::disconnect_player(uint id)
+{
+    add_lobby_message(m_players.at(id).getString() + " has left the lobby", sf::Color(160, 64, 64));
+
+    for(sf::Uint8 i = 0; i < m_players_id.size(); ++i)
+    {
+        if (m_players_id[i] == id)
+        {
+            m_players_id.erase(m_players_id.begin() + i);
+            break;
+        }
+    }
+
+    m_players.erase(id);
+    refresh_players();
+}
+
 void Lobby::draw(sf::RenderWindow& window)
 {
     window.draw(background);;
@@ -136,6 +181,9 @@ void Lobby::draw(sf::RenderWindow& window)
 
     for(Button& button: m_buttons)
         button.display(window);
+
+    for(std::map<uint, sf::Text>::iterator player = m_players.begin(); player != m_players.end(); ++player)
+        window.draw(player->second);
 }
 
 sf::Uint8 Lobby::get_button_id_from_press(const sf::RenderWindow& window) const
@@ -151,5 +199,7 @@ void Lobby::debug_show_size() const
 {
     //keep up to date!
     std::wcout << sizeof(m_buttons)    << L'\n'
-               << sizeof(m_texts)      << L'\n';
+               << sizeof(m_texts)      << L'\n'
+               << sizeof(m_players)    << L'\n'
+               << sizeof(m_players_id) << L'\n';
 }

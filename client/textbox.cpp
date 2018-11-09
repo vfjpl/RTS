@@ -110,11 +110,12 @@ sf::Vector2f TextBox::get_position() const
 
 void TextBox::set_position(const sf::Vector2f& pos)
 {
+    setPosition(pos);
+
     const int TEXT_MARGIN_LEFT = 4;
     const int TEXT_POS_X = getPosition().x + TEXT_MARGIN_LEFT;
     const int TEXT_POS_Y = getPosition().y + getSize().y / 2;
-    
-    setPosition(pos);
+
     m_text.setPosition(TEXT_POS_X, TEXT_POS_Y);
 }
 

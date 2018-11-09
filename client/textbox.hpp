@@ -11,7 +11,7 @@ class TextBox : protected sf::RectangleShape
     bool marked;
 
 public:
-    TextBox(const sf::Vector2f& pos, const sf::String& text, const sf::Vector2f& size = STANDARD_TEXTBOX_SIZE);
+    TextBox(const sf::Vector2f& pos, const sf::Vector2f& size = STANDARD_TEXTBOX_SIZE, const sf::String& text = "");
 
     void display(sf::RenderWindow& window) const;
 
@@ -21,8 +21,8 @@ public:
 
     void mark();
     void unmark();
-    void set_string(sf::String string);
     void enter_text(sf::Uint32 unicode);
+    void set_string(sf::String string);
     sf::String get_string();
 };
 

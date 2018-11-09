@@ -4,11 +4,14 @@
 #include "SFML/Graphics.hpp"
 #include <deque>
 #include "button.hpp"
+#include "textbox.hpp"
 
 class Menu
 {
     //sort from largest to smallest!
     std::deque <Button> m_buttons;
+    std::deque <TextBox> m_textboxes;
+    std::deque <sf::RectangleShape> m_rectangles;
     std::deque <sf::Text> m_texts;//80
     sf::Uint8 m_state;//1
 
@@ -30,6 +33,7 @@ private:
     void connect_menu(const sf::RenderWindow& window);
     void options_menu(const sf::RenderWindow& window);
     void authors_menu(const sf::RenderWindow& window);
+    void lobby_menu(const sf::RenderWindow& window);
 };
 
 #endif // MENU_HPP_INCLUDED

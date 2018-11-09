@@ -16,8 +16,10 @@ void Menu::init(const sf::RenderWindow& window)
 void Menu::clear()
 {
     m_state = 0;
-    m_texts.clear();
     m_buttons.clear();
+    m_textboxes.clear();
+    m_rectangles.clear();
+    m_texts.clear();
 }
 
 void Menu::main_menu(const sf::RenderWindow& window)
@@ -71,8 +73,52 @@ void Menu::authors_menu(const sf::RenderWindow& window)
     m_buttons.emplace_back(sf::Vector2f(BUTTONS_POSITION_X, 192.0f), L"BACK");
 }
 
+void Menu::lobby_menu(const sf::RenderWindow& window)
+{
+    clear();
+    m_state = 5;
+
+    const int CHAT_WINDOW_MARGIN = 32;
+    const int BUTTONS_WINDOW_MARGIN = 32;
+    const int SPACE_BETWEEN_CHAT_AND_TEXTBOX = 16;
+    const int SPACE_BETWEEN_CHAT_AND_BUTTONS = 32;
+
+    //CHAT
+    const sf::Vector2i CHAT_SIZE(
+        window.getSize().x - SPACE_BETWEEN_CHAT_AND_BUTTONS - STANDARD_BUTTON_SIZE.x - CHAT_WINDOW_MARGIN - BUTTONS_WINDOW_MARGIN,
+        window.getSize().y - CHAT_WINDOW_MARGIN * 2 - SPACE_BETWEEN_CHAT_AND_TEXTBOX - STANDARD_TEXTBOX_SIZE.y
+    );
+    const sf::Vector2f CHAT_POSITION(window.getSize().x - CHAT_SIZE.x - CHAT_WINDOW_MARGIN, CHAT_WINDOW_MARGIN);
+
+    m_rectangles.emplace_back(sf::Vector2f(CHAT_SIZE));
+    m_rectangles[0].setPosition(CHAT_POSITION);
+
+    m_textboxes.emplace_back(
+        sf::Vector2f(CHAT_POSITION.x, CHAT_POSITION.y + CHAT_SIZE.y + SPACE_BETWEEN_CHAT_AND_TEXTBOX), 
+        sf::Vector2f(CHAT_SIZE.x, STANDARD_TEXTBOX_SIZE.y)
+    );
+
+    //BUTTONS
+    const sf::Vector2f BACK_BUTTON_POSITION(
+        BUTTONS_WINDOW_MARGIN,
+        window.getSize().y - STANDARD_BUTTON_SIZE.y - BUTTONS_WINDOW_MARGIN
+    );
+    
+    m_buttons.emplace_back(BACK_BUTTON_POSITION, L"BACK");
+}
+
 void Menu::mouse_click(const sf::RenderWindow& window)
 {
+    //TEXTBOXES
+    for(TextBox& tb: m_textboxes)
+    {
+        if(tb.is_pressed(window))
+            tb.mark();
+        else
+            tb.unmark();
+    }
+
+    //BUTTONS
     sf::Uint8 button_id = get_button_id_from_press(window);
     switch(m_state)
     {
@@ -114,8 +160,9 @@ void Menu::mouse_click(const sf::RenderWindow& window)
         }
         case 1://connect
         {
-            server.set_ip(sf::IpAddress(m_buttons[0].get_string()));
-            engine.connect_to_lobby();
+            //server.set_ip(sf::IpAddress(m_buttons[0].get_string()));
+            //engine.connect_to_lobby();
+            lobby_menu(window);
             break;
         }
         case 2://back
@@ -160,6 +207,18 @@ void Menu::mouse_click(const sf::RenderWindow& window)
         }//end switch
         break;
     }
+    case 5://lobby menu
+    {
+        switch(button_id)
+        {
+        case 0://back
+        {
+            connect_menu(window);
+            break;
+        }
+        }
+        break;
+    }
     }//end switch
 }
 
@@ -182,14 +241,51 @@ void Menu::text_entered(const sf::Event& event)
         str.push_back(event.text.unicode);
         m_texts[0].setString(str);
     }
+
+    if(m_state == 5)
+    {
+        const int RETURN_CODE = 13;
+        const int TEXT_CHAT_MARGIN = 4;
+        const int SPACE_FOR_MESSAGE = 16;
+
+        if(m_textboxes[0].is_marked() && event.text.unicode == RETURN_CODE)
+        {
+            m_texts.emplace_back(m_textboxes[0].get_string(), resources_manager.get_font());
+            sf::Text* text_ptr = &m_texts[m_texts.size() - 1];
+
+            text_ptr->setFillColor(sf::Color::Black);
+            text_ptr->setCharacterSize(14U);
+
+            text_ptr->setPosition(m_rectangles[0].getPosition());
+            text_ptr->move(
+                TEXT_CHAT_MARGIN,
+                TEXT_CHAT_MARGIN + (m_texts.size() - 1) * SPACE_FOR_MESSAGE
+            );
+            
+            m_textboxes[0].set_string("");
+        }
+    }
+
+    //TEXTBOXES
+    for(TextBox& tb: m_textboxes)
+    {
+        if(tb.is_marked())
+            tb.enter_text(event.text.unicode);
+    }
 }
 
 void Menu::draw(sf::RenderWindow& window)
 {
-    for(sf::Text& text : m_texts)
+    for(sf::RectangleShape& rect: m_rectangles)
+        window.draw(rect);
+
+    for(sf::Text& text: m_texts)
         window.draw(text);
 
-    for(Button& button : m_buttons)
+    for (TextBox& tb: m_textboxes)
+        tb.display(window);
+
+    for(Button& button: m_buttons)
         button.display(window);
 }
 

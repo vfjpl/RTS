@@ -5,7 +5,7 @@
 
 extern Resources_Manager resources_manager;
 
-TextBox::TextBox(const sf::Vector2f& pos, const sf::String& text, const sf::Vector2f& size)
+TextBox::TextBox(const sf::Vector2f& pos, const sf::Vector2f& size, const sf::String& text)
     : sf::RectangleShape(size),
       m_text(text, resources_manager.get_font(), 14U),
       marked(false)
@@ -49,27 +49,26 @@ bool TextBox::is_marked()
 
 void TextBox::mark()
 {
-    marked = true;
-    set_string(m_text.getString());
+    if(!marked)
+    {
+        set_string(get_string() + "|");
+        marked = true;
+    }
 }
 
 void TextBox::unmark()
 {
-    marked = false;
-
-    sf::String unmarked_string(m_text.getString());
-    unmarked_string.erase(unmarked_string.getSize() - 1);
-
-    set_string(unmarked_string);
-}
-
-void TextBox::set_string(sf::String string)
-{
-    m_text.setString(string + (marked ? "|" : ""));
+    if(marked)
+    {
+        set_string(get_string());
+        marked = false;
+    }
 }
 
 void TextBox::enter_text(sf::Uint32 unicode)
 {
+    unmark();
+
     sf::String new_string(get_string());
 
     const sf::Uint32 BACKSPACE_CODE = 8;
@@ -85,12 +84,21 @@ void TextBox::enter_text(sf::Uint32 unicode)
         new_string += unicode;
 
     set_string(new_string);
+    
+    mark();
+}
+
+void TextBox::set_string(sf::String string)
+{
+    m_text.setString(string);
 }
 
 sf::String TextBox::get_string()
 {
     sf::String string_without_marker(m_text.getString());
-    string_without_marker.erase(string_without_marker.getSize() - 1);
+    
+    if (is_marked() && string_without_marker.getSize() > 0)
+        string_without_marker.erase(string_without_marker.getSize() - 1);
 
     return string_without_marker;
 }

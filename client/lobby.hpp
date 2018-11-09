@@ -1,17 +1,18 @@
-#ifndef MENU_HPP_INCLUDED
-#define MENU_HPP_INCLUDED
+#ifndef LOBBY_HPP_INCLUDED
+#define LOBBY_HPP_INCLUDED
 
 #include "SFML/Graphics.hpp"
 #include <deque>
 #include "button.hpp"
+#include "textbox.hpp"
 
-class Menu
+class Lobby
 {
-    //sort from largest to smallest!
     std::deque <Button> m_buttons;
+    std::deque <sf::Text> m_texts;
+    TextBox m_textbox;
     sf::Sprite background;
-    std::deque <sf::Text> m_texts;//80
-    sf::Uint8 m_state;//1
+    sf::RectangleShape m_chat_rect;
 
 public:
     void init(const sf::RenderWindow& window);
@@ -27,15 +28,10 @@ public:
 private:
     sf::Uint8 get_button_id_from_press(const sf::RenderWindow& window) const;
 
-    void main_menu(const sf::RenderWindow& window);
-    void connect_menu(const sf::RenderWindow& window);
-    void options_menu(const sf::RenderWindow& window);
-    void authors_menu(const sf::RenderWindow& window);
-    void lobby_menu(const sf::RenderWindow& window);
+    void create_gui(const sf::RenderWindow& window);
 
-    void add_author(const sf::RenderWindow& window, const sf::String& author);
     void add_lobby_message(const sf::String& message, sf::Color message_color = sf::Color::Black);
     void send_message(const sf::String& message);
 };
 
-#endif // MENU_HPP_INCLUDED
+#endif // LOBBY_HPP_INCLUDED

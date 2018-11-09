@@ -1,6 +1,7 @@
 #include "engine.hpp"
 #include "resources_manager.hpp"
 #include "menu.hpp"
+#include "lobby.hpp"
 #include "network_data.hpp"
 #include <iostream>
 
@@ -9,6 +10,7 @@ sf::RenderWindow window;//528
 Client_Engine engine;//344
 Resources_Manager resources_manager;//224
 Menu menu;//88
+Lobby lobby;
 Network_Data server;//24
 
 void debug_show_size()
@@ -18,6 +20,7 @@ void debug_show_size()
                << sizeof(engine) << L'\n'
                << sizeof(resources_manager) << L'\n'
                << sizeof(menu) << L'\n'
+               << sizeof(lobby) << L'\n'
                << sizeof(server) << L'\n';
 }
 

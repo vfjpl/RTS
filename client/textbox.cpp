@@ -12,21 +12,18 @@ TextBox::TextBox(const sf::Vector2f& pos, const sf::Vector2f& size, const sf::St
 {
     setFillColor(sf::Color::White);
     setOutlineColor(sf::Color::Black);
-    setPosition(pos);
 
     m_text.setString("|");  //Example high text for set origin
 
     const int TEXT_ORIGIN_X = 0;
     const int TEXT_ORIGIN_Y = m_text.getGlobalBounds().height / 2;
-    const int TEXT_MARGIN_LEFT = 4;
-    const int TEXT_POS_X = getPosition().x + TEXT_MARGIN_LEFT;
-    const int TEXT_POS_Y = getPosition().y + getSize().y / 2;
 
     m_text.setString(text);
 
     m_text.setFillColor(sf::Color::Black);
     m_text.setOrigin(TEXT_ORIGIN_X, TEXT_ORIGIN_Y);
-    m_text.setPosition(TEXT_POS_X, TEXT_POS_Y);
+
+    set_position(pos);
 }
 
 void TextBox::display(sf::RenderWindow& window) const
@@ -46,7 +43,7 @@ bool TextBox::is_pressed(const sf::RenderWindow& window) const
     return CLICKED;
 }
 
-bool TextBox::is_marked()
+bool TextBox::is_marked() const
 {
     return marked;
 }
@@ -96,7 +93,7 @@ void TextBox::set_string(sf::String string)
     m_text.setString(string);
 }
 
-sf::String TextBox::get_string()
+sf::String TextBox::get_string() const
 {
     sf::String string_without_marker(m_text.getString());
     
@@ -104,6 +101,21 @@ sf::String TextBox::get_string()
         string_without_marker.erase(string_without_marker.getSize() - 1);
 
     return string_without_marker;
+}
+
+sf::Vector2f TextBox::get_position() const
+{
+    return getPosition();
+}
+
+void TextBox::set_position(const sf::Vector2f& pos)
+{
+    const int TEXT_MARGIN_LEFT = 4;
+    const int TEXT_POS_X = getPosition().x + TEXT_MARGIN_LEFT;
+    const int TEXT_POS_Y = getPosition().y + getSize().y / 2;
+    
+    setPosition(pos);
+    m_text.setPosition(TEXT_POS_X, TEXT_POS_Y);
 }
 
 void TextBox::set_fill_color(const sf::Color& color)

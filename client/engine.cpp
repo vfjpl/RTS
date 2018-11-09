@@ -1,6 +1,7 @@
 #include "engine.hpp"
 #include "resources_manager.hpp"
 #include "menu.hpp"
+#include "lobby.hpp"
 #include "network_data.hpp"
 #include "../common/network_opcodes.hpp"
 #include <iostream>
@@ -8,6 +9,7 @@
 extern sf::RenderWindow window;
 extern Resources_Manager resources_manager;
 extern Menu menu;
+extern Lobby lobby;
 extern Network_Data server;
 
 void Client_Engine::init()
@@ -17,6 +19,7 @@ void Client_Engine::init()
     resources_manager.load_resources();
     setup_window(false);
     menu.init(window);
+    lobby.init(window);
 }
 
 void Client_Engine::setup_window(bool fullscreen)

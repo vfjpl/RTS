@@ -1,5 +1,13 @@
 #include "unit.hpp"
 
+Unit::Unit()
+{
+    m_strength_against.emplace(UNIT_INFANTRY, 0.0f);
+    m_strength_against.emplace(UNIT_TANK, 0.0f);
+
+    unset_target();
+}
+
 float Unit::get_strength(UnitType against) const
 {
     return m_strength_against.at(against);
@@ -86,26 +94,71 @@ void Unit::set_armor(float armor)
 
 float Unit::get_speed() const
 {
-    return m_actual_speed;
+    return m_speed;
 }
 
 void Unit::set_speed(float speed)
 {
-    m_actual_speed = speed;
-    if(m_actual_speed > m_base_speed)
-        m_actual_speed = m_base_speed;
+    m_speed = speed;
+    if(m_speed < 0.0f)
+        m_speed = 0.0f;
 }
 
-void Unit::set_max_speed(float speed)
+float Unit::get_shot_frequency() const
 {
-    m_base_speed = speed;
-    if(m_base_speed < 0.0f)
-        m_base_speed = 0.0f;
+    return m_shot_frequency;
 }
 
-void Unit::restore_speed()
+void Unit::set_shot_frequency(float speed)
 {
-    m_actual_speed = m_base_speed;
+    m_shot_frequency = speed;
+    if(m_shot_frequency < 0.0f)
+        m_shot_frequency = 0.0f;
+}
+
+float Unit::get_range() const
+{
+    return m_range;
+}
+
+void Unit::set_range(float range)
+{
+    m_range = range;
+    if(m_range < 0.0f)
+        m_range = 0.0f;
+}
+
+float Unit::get_target_x() const
+{
+    return m_target_x;
+}
+
+float Unit::get_target_y() const
+{
+    return m_target_y;
+}
+
+void Unit::set_target(float x, float y)
+{
+    m_target_x = x;
+    if(m_target_x < 0.0f)
+        m_target_x = 0.0f;
+
+    m_target_y = y;
+    if(m_target_y < 0.0f)
+        m_target_y = 0.0f;
+
+    m_has_target = true;
+}
+
+void Unit::unset_target()
+{
+    m_has_target = false;
+}
+
+bool Unit::has_target() const
+{
+    return m_has_target;
 }
 
 uint Unit::get_abilities() const

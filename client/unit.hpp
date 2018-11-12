@@ -19,11 +19,12 @@ enum UnitType
 enum Ability
 {
     ABILITY_SHOOTING = 1,
-    CAPTURE_BUILDING = 2,
-    CAPTURE_UNITS = 4,
-    CRUSHING_UNITS = 8,
-    DEFENSE_AGAINST_CRUSHING = 16,
-    HARVESTING = 32
+    AREA_DAMAGE = 2,
+    CAPTURE_BUILDING = 4,
+    CAPTURE_UNITS = 8,
+    CRUSHING_UNITS = 16,
+    DEFENSE_AGAINST_CRUSHING = 32,
+    HARVESTING = 64
 };
 
 class Unit
@@ -34,13 +35,21 @@ class Unit
     float m_base_hp;
     float m_actual_hp;
     float m_armor;//0.00 - 1.00 (how much damage absorbs)
-    float m_base_speed;;
-    float m_actual_speed;
+    float m_speed;//km/h
+    float m_shot_frequency;//shots per second
+    float m_range;//meters
+    float m_target_x;
+    float m_target_y;
     uint m_abilities;
     uint m_price;
     ushort m_team;
+    bool m_has_target;
 
 public:
+    Unit();
+
+    virtual void shot() = 0;
+    virtual void move() = 0;
 
     float get_strength(UnitType against) const;
     Nationality get_nationality() const;
@@ -51,8 +60,13 @@ public:
     float get_max_hp() const;
     float get_armor() const;
     float get_speed() const;
-    void set_speed(float speed);
-    void restore_speed();
+    float get_shot_frequency() const;
+    float get_range() const;
+    float get_target_x() const;
+    float get_target_y() const;
+    void set_target(float x, float y);
+    void unset_target();
+    bool has_target() const;
     uint get_abilities() const;
     uint get_price() const;
     ushort get_team() const;
@@ -66,7 +80,9 @@ protected:
     void set_hp(float hp);
     void set_max_hp(float hp);
     void set_armor(float armor);
-    void set_max_speed(float speed);
+    void set_speed(float speed);
+    void set_shot_frequency(float speed);
+    void set_range(float range);
     void set_abilities(uint abilities);
     void clear_abilities();
     void add_abilitiy(const Ability& ability);

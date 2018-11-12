@@ -25,7 +25,7 @@ void Menu::main_menu(const sf::RenderWindow& window)
 {
     clear();
     m_state = 1;
-    
+
     const int BUTTONS_POSITION_X = window.getSize().x / 2 - STANDARD_BUTTON_SIZE.x / 2;
 
     m_buttons.emplace_back(sf::Vector2f(BUTTONS_POSITION_X, 256.0f), L"CONNECT");

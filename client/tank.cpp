@@ -7,7 +7,8 @@ Tank::Tank(const TankType& type, ushort team, const sf::Vector2f& pos)
     : GraphicalUnit(get_texture(type), pos)
 {
     set_unit_type(UNIT_TANK);
-    set_parameters(type, team);
+    set_parameters(type);
+    set_team(team);
 
     set_hp(get_max_hp());
 }
@@ -16,7 +17,12 @@ Tank::Tank(const TankType& type, ushort team, float x, float y)
 
 void Tank::shot()
 {
-    ;
+    if(get_abilities() == (get_abilities() | ABILITY_SHOOTING))
+    {
+        /*
+        creates a bullet that must reach another unit
+        */
+    }
 }
 
 const sf::Texture& Tank::get_texture(const TankType& type)
@@ -29,7 +35,7 @@ const sf::Texture& Tank::get_texture(const TankType& type)
     }
 }
 
-void Tank::set_parameters(const TankType& type, ushort team)
+void Tank::set_parameters(const TankType& type)
 {
     switch(type)
     {
@@ -42,10 +48,9 @@ void Tank::set_parameters(const TankType& type, ushort team)
         set_armor(0.2f);
         set_speed(3.2f);
         set_shot_frequency(0.65f);
-        set_range(15.0f);
+        set_range(50.0f);
         set_abilities(ABILITY_SHOOTING | CRUSHING_UNITS | DEFENSE_AGAINST_CRUSHING);
         set_price(200u);
-        set_team(team);
     }
     case TANK_B:
     {
@@ -56,10 +61,9 @@ void Tank::set_parameters(const TankType& type, ushort team)
         set_armor(0.15f);
         set_speed(3.2f);
         set_shot_frequency(0.5f);
-        set_range(15.0f);
+        set_range(50.0f);
         set_abilities(ABILITY_SHOOTING | AREA_DAMAGE | CRUSHING_UNITS | DEFENSE_AGAINST_CRUSHING);
         set_price(150u);
-        set_team(team);
     }
     }
 }

@@ -20,7 +20,7 @@ public:
 
 protected:
     const sf::Texture& get_texture(const TankType& type);
-    void set_parameters(const TankType& type, ushort team);
+    void set_parameters(const TankType& type);
 };
 
 #endif // TANK_HPP_INCLUDED

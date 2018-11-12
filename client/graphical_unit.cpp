@@ -27,8 +27,8 @@ void GraphicalUnit::move()
         set_rotation_rad(UNIT_TARGET_RADIANS);
 
         //MOVE
-        const float GAME_SPEED = 10;//1sec in life == ? secs in game
-        const float METER_TO_PX = 3;//1meter == ? pixels
+        const float GAME_SPEED = 10;//1 sec in life == ? secs in game
+        const float METER_TO_PX = 3;//1 meter == ? pixels
         const float PX_PER_SEC = ((get_speed() * (1000 * METER_TO_PX)) / 3600.0f) * GAME_SPEED;
         const float FRAMERATE = 60.0f;
         const float PX_PER_FRAME = PX_PER_SEC / FRAMERATE;
@@ -41,7 +41,7 @@ void GraphicalUnit::move()
 
         m_sprite.move(MOVE);
 
-        //TODO: UNSET TARGET IF REACHED HIS DESTINATION
+        //TODO: UNSET TARGET IF THE UNIT REACHED HIS DESTINATION
     }
 }
 

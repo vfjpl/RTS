@@ -30,6 +30,7 @@ class Unit
 {
     std::map<UnitType, float> m_strength_against;
     Nationality m_nationality;//Which nationality can recruit it
+    UnitType m_unit_type;
     float m_base_hp;
     float m_actual_hp;
     float m_armor;//0.00 - 1.00 (how much damage absorbs)
@@ -42,6 +43,8 @@ class Unit
 public:
 
     float get_strength(UnitType against) const;
+    Nationality get_nationality() const;
+    UnitType get_unit_type() const;
     float get_hp() const;
     void add_hp(float hp);
     void subtract_hp(float hp);
@@ -57,7 +60,9 @@ public:
 
 protected:
 
-    void set_strength(UnitType against, float strength);
+    void set_strength(const UnitType& against, float strength);
+    void set_nationality(const Nationality& nationality);
+    void set_unit_type(const UnitType& unit_type);
     void set_hp(float hp);
     void set_max_hp(float hp);
     void set_armor(float armor);

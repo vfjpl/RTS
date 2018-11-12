@@ -5,11 +5,31 @@ float Unit::get_strength(UnitType against) const
     return m_strength_against.at(against);
 }
 
-void Unit::set_strength(UnitType against, float strength)
+void Unit::set_strength(const UnitType& against, float strength)
 {
     m_strength_against.at(against) = strength;
     if(m_strength_against.at(against) < 0.0f)
         m_strength_against.at(against) = 0.0f;
+}
+
+Nationality Unit::get_nationality() const
+{
+    return m_nationality;
+}
+
+void Unit::set_nationality(const Nationality& nationality)
+{
+    m_nationality = nationality;
+}
+
+UnitType Unit::get_unit_type() const
+{
+    return m_unit_type;
+}
+
+void Unit::set_unit_type(const UnitType& unit_type)
+{
+    m_unit_type = unit_type;
 }
 
 float Unit::get_hp() const

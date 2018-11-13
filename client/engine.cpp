@@ -24,13 +24,13 @@ void Client_Engine::setup_window(bool fullscreen)
     sf::VideoMode mode = sf::VideoMode::getDesktopMode();
     if(fullscreen)
     {
-        window.create(mode, L"Kelajno", sf::Style::Fullscreen);
+        window.create(mode, L"kelajno", sf::Style::Fullscreen);
     }
     else
     {
         mode.width = (mode.width*2)/3;
         mode.height = (mode.height*2)/3;
-        window.create(mode, L"Kelajno");
+        window.create(mode, L"kelajno");
     }
     window.setFramerateLimit(60);
 }

@@ -1,3 +1,7 @@
+Code Guidelines
+1. nazwy plików małymi literami
+2. w nazwach stosujemy podkreślniki by oddzielić wyrazy
+
 Instrukcja jak skonfigurować projekt pod Code::Blocks
 1. Sklonuj projekt
 2. Code::Blocks - Create a new project

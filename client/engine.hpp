@@ -23,8 +23,8 @@ public:
     void init();
 
     void setup_window(bool fullscreen);
-    void return_to_menu();
-    void connect_to_lobby();
+    void setup_menu();
+    void setup_lobby();
     void quit_engine();
 
     void menu_receive_inputs();

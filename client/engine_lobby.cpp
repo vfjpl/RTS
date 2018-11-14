@@ -36,7 +36,7 @@ void Client_Engine::lobby_logic()
 
     if(server.get_network_timeout() > sf::seconds(1))
     {
-        return_to_menu();
+        setup_menu();//back to menu
         return;
     }
     server.add_network_timeout(time);

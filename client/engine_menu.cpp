@@ -1,8 +1,8 @@
 #include "engine.hpp"
 #include "menu.hpp"
 
-extern sf::RenderWindow window;
 extern Menu menu;
+extern sf::RenderWindow window;
 
 void Client_Engine::menu_receive_inputs()
 {
@@ -52,6 +52,6 @@ void Client_Engine::menu_logic()
 void Client_Engine::menu_draw_frame()
 {
     window.clear();
-    menu.draw(window);
+    menu.draw();
     window.display();
 }

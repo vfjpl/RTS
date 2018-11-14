@@ -5,9 +5,9 @@
 #include "../common/network_opcodes.hpp"
 #include <iostream>
 
+extern Menu menu;
 extern sf::RenderWindow window;
 extern Resources_Manager resources_manager;
-extern Menu menu;
 extern Network_Data server;
 
 void Client_Engine::init()
@@ -15,8 +15,7 @@ void Client_Engine::init()
     socket.setBlocking(false);
     server.set_ip_port(sf::IpAddress::LocalHost, 7000);
     resources_manager.load_resources();
-    menu.init();
-    menu.main_menu();
+    menu.load_resources();
     setup_window(false);
 }
 
@@ -36,8 +35,9 @@ void Client_Engine::setup_window(bool fullscreen)
     window.setFramerateLimit(60);
 }
 
-void Client_Engine::return_to_menu()
+void Client_Engine::setup_menu()
 {
+    menu_loop = true;
     lobby_loop = false;
     game_loop = false;
     server.reset_network_timeout();
@@ -46,9 +46,11 @@ void Client_Engine::return_to_menu()
     menu.main_menu();
 }
 
-void Client_Engine::connect_to_lobby()
+void Client_Engine::setup_lobby()
 {
+    menu_loop = true;
     lobby_loop = true;
+    game_loop = false;
     menu.clear();
 }
 

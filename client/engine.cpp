@@ -17,6 +17,7 @@ void Client_Engine::init()
     resources_manager.load_resources();
     menu.load_resources();
     setup_window(false);
+    menu.main_menu();
 }
 
 void Client_Engine::setup_window(bool fullscreen)

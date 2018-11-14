@@ -107,6 +107,12 @@ void Server_Engine::set_all_players_ready_status(bool status)
     packet_to_send << (sf::Uint8)SERVER_SET_ALL_PLAYERS_READY_STATUS << status;
 }
 
+void Server_Engine::disconnect_player(sf::Uint8 id)
+{
+    players.erase(players.begin() + id);
+    packet_to_send << (sf::Uint8)SERVER_PLAYER_DISCONNECTED << id;
+}
+
 void Server_Engine::debug_show_size() const
 {
     //keep up to date!

@@ -35,6 +35,7 @@ public:
 private:
     sf::Uint8 get_player_id(sf::IpAddress ip, unsigned short port) const;
     void set_all_players_ready_status(bool status);
+    void disconnect_player(sf::Uint8 id);
 };
 
 #endif // ENGINE_HPP_INCLUDED

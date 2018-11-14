@@ -24,7 +24,6 @@ void debug_show_size()
 int main()
 {
     engine.init();
-    menu.main_menu();
 
     while( engine.get_menu_loop() )
     {

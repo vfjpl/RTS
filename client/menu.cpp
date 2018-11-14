@@ -234,13 +234,12 @@ sf::Uint8 Menu::get_button_id_from_press(const sf::Event& event) const
 
 void Menu::setup_buttons()
 {
-    sf::FloatRect rect;
     for(sf::Uint8 i = 0; i < m_buttons.size(); ++i)
     {
         m_buttons[i].setFillColor(sf::Color::Black);
-        rect = m_buttons[i].getGlobalBounds();
-        m_backgrounds.emplace_back(sf::Vector2f(rect.width, rect.height));
-        m_backgrounds[i].setPosition(rect.left, rect.top);
+        sf::FloatRect rect = m_buttons[i].getGlobalBounds();
+        m_backgrounds.emplace_back(sf::Vector2f(rect.width+2, rect.height+2));
+        m_backgrounds[i].setPosition(rect.left-1, rect.top-1);
     }
 }
 

@@ -16,6 +16,7 @@ void Client_Engine::init()
     server.set_ip_port(sf::IpAddress::LocalHost, 7000);
     resources_manager.load_resources();
     menu.init();
+    menu.main_menu();
     setup_window(false);
 }
 
@@ -30,7 +31,7 @@ void Client_Engine::setup_window(bool fullscreen)
     {
         mode.width = (mode.width*2)/3;
         mode.height = (mode.height*2)/3;
-        window.create(mode, L"kelajno");
+        window.create(mode, L"kelajno", sf::Style::Close);
     }
     window.setFramerateLimit(60);
 }
@@ -42,7 +43,7 @@ void Client_Engine::return_to_menu()
     server.reset_network_timeout();
     players.clear();
     units.clear();
-    menu.init();
+    menu.main_menu();
 }
 
 void Client_Engine::connect_to_lobby()

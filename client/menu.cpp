@@ -10,64 +10,74 @@ extern Network_Data server;
 
 void Menu::init()
 {
-    main_menu();
+    m_background.setTexture(resources_manager.get_texture(7));
 }
 
 void Menu::clear()
 {
     m_state = 0;
+    m_buttons.clear();
     m_texts.clear();
 }
 
 void Menu::main_menu()
 {
     m_state = 1;
+    m_buttons.clear();
     m_texts.clear();
-    m_texts.emplace_back(L"CONNECT", resources_manager.get_font());
-    m_texts.emplace_back(L"OPTIONS", resources_manager.get_font());
-    m_texts[1].move(0, 30);
-    m_texts.emplace_back(L"AUTHORS", resources_manager.get_font());
-    m_texts[2].move(0, 60);
-    m_texts.emplace_back(L"QUIT", resources_manager.get_font());
-    m_texts[3].move(0, 90);
+
+    m_buttons.emplace_back(L"CONNECT", resources_manager.get_font());
+    m_buttons.emplace_back(L"OPTIONS", resources_manager.get_font());
+    m_buttons[1].move(0, 30);
+    m_buttons.emplace_back(L"AUTHORS", resources_manager.get_font());
+    m_buttons[2].move(0, 60);
+    m_buttons.emplace_back(L"QUIT", resources_manager.get_font());
+    m_buttons[3].move(0, 90);
 }
 
 void Menu::connect_menu()
 {
     m_state = 2;
+    m_buttons.clear();
     m_texts.clear();
-    m_texts.emplace_back(server.get_ip().toString(), resources_manager.get_font());
-    m_texts.emplace_back(L"CONNECT", resources_manager.get_font());
-    m_texts[1].move(0, 30);
-    m_texts.emplace_back(L"BACK", resources_manager.get_font());
-    m_texts[2].move(0, 60);
+
+    m_buttons.emplace_back(server.get_ip().toString(), resources_manager.get_font());
+    m_buttons.emplace_back(L"CONNECT", resources_manager.get_font());
+    m_buttons[1].move(0, 30);
+    m_buttons.emplace_back(L"BACK", resources_manager.get_font());
+    m_buttons[2].move(0, 60);
 }
 
 void Menu::options_menu()
 {
     m_state = 3;
+    m_buttons.clear();
     m_texts.clear();
-    m_texts.emplace_back(L"FULLSCREEN", resources_manager.get_font());
-    m_texts.emplace_back(L"WINDOWED", resources_manager.get_font());
-    m_texts[1].move(0, 30);
-    m_texts.emplace_back(L"BACK", resources_manager.get_font());
-    m_texts[2].move(0, 60);
+
+    m_buttons.emplace_back(L"FULLSCREEN", resources_manager.get_font());
+    m_buttons.emplace_back(L"WINDOWED", resources_manager.get_font());
+    m_buttons[1].move(0, 30);
+    m_buttons.emplace_back(L"BACK", resources_manager.get_font());
+    m_buttons[2].move(0, 60);
 }
 
 void Menu::authors_menu()
 {
     m_state = 4;
+    m_buttons.clear();
     m_texts.clear();
+
     m_texts.emplace_back(L"Kacper Piwiński", resources_manager.get_font());
     m_texts.emplace_back(L"Radosław Wojdak", resources_manager.get_font());
     m_texts[1].move(0, 30);
-    m_texts.emplace_back(L"BACK", resources_manager.get_font());
-    m_texts[2].move(0, 60);
+
+    m_buttons.emplace_back(L"BACK", resources_manager.get_font());
+    m_buttons[0].move(0, 60);
 }
 
 void Menu::mouse_click(const sf::Event& event)
 {
-    sf::Uint8 button_id = get_text_id_from_press(event);
+    sf::Uint8 button_id = get_button_id_from_press(event);
     switch(m_state)
     {
     case 1://main menu
@@ -146,7 +156,7 @@ void Menu::mouse_click(const sf::Event& event)
     {
         switch(button_id)
         {
-        case 2://back
+        case 0://back
         {
             main_menu();
             break;
@@ -159,11 +169,11 @@ void Menu::mouse_click(const sf::Event& event)
 
 void Menu::mouse_move(const sf::Event& event)
 {
-    for(sf::Uint8 i = 0; i < m_texts.size(); ++i)
-        if(m_texts[i].getGlobalBounds().contains(event.mouseMove.x, event.mouseMove.y))
-            m_texts[i].setFillColor(sf::Color::Red);
+    for(sf::Uint8 i = 0; i < m_buttons.size(); ++i)
+        if(m_buttons[i].getGlobalBounds().contains(event.mouseMove.x, event.mouseMove.y))
+            m_buttons[i].setFillColor(sf::Color::Red);
         else
-            m_texts[i].setFillColor(sf::Color::White);
+            m_buttons[i].setFillColor(sf::Color::White);
 }
 
 void Menu::text_entered(const sf::Event& event)
@@ -178,31 +188,36 @@ void Menu::text_entered(const sf::Event& event)
 
 void Menu::logic(sf::Vector2i mouse_position)
 {
-    for(sf::Uint8 i = 0; i < m_texts.size(); ++i)
-        if(m_texts[i].getGlobalBounds().contains(mouse_position.x, mouse_position.y))
-            m_texts[i].setFillColor(sf::Color::Red);
+    for(sf::Uint8 i = 0; i < m_buttons.size(); ++i)
+        if(m_buttons[i].getGlobalBounds().contains(mouse_position.x, mouse_position.y))
+            m_buttons[i].setFillColor(sf::Color::Red);
         else
-            m_texts[i].setFillColor(sf::Color::White);
+            m_buttons[i].setFillColor(sf::Color::White);
 }
 
 void Menu::draw(sf::RenderWindow& window)
 {
+    window.draw(m_background);
+    for(sf::Uint8 i = 0; i < m_buttons.size(); ++i)
+        window.draw(m_buttons[i]);
     for(sf::Uint8 i = 0; i < m_texts.size(); ++i)
         window.draw(m_texts[i]);
 }
 
-sf::Uint8 Menu::get_text_id_from_press(const sf::Event& event) const
+sf::Uint8 Menu::get_button_id_from_press(const sf::Event& event) const
 {
-    for(sf::Uint8 i = 0; i < m_texts.size(); ++i)
-        if(m_texts[i].getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y))
+    for(sf::Uint8 i = 0; i < m_buttons.size(); ++i)
+        if(m_buttons[i].getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y))
             return i;
 
-    return m_texts.size();
+    return m_buttons.size();
 }
 
 void Menu::debug_show_size() const
 {
     //keep up to date!
-    std::wcout << sizeof(m_texts)<< L'\n'
+    std::wcout << sizeof(m_background) << L'\n'
+               << sizeof(m_buttons)<< L'\n'
+               << sizeof(m_texts)<< L'\n'
                << sizeof(m_state) << L'\n';
 }

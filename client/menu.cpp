@@ -1,17 +1,20 @@
 #include "menu.hpp"
-#include "engine.hpp"
 #include "resources_manager.hpp"
+#include "engine.hpp"
 #include "network_data.hpp"
 #include <iostream>
 
 extern sf::RenderWindow window;
-extern Client_Engine engine;
 extern Resources_Manager resources_manager;
+extern Client_Engine engine;
 extern Network_Data server;
 
-void Menu::load_resources()
+void Menu::setup()
 {
-    m_background.setTexture(resources_manager.get_texture(7));
+    m_middle = window.getSize();
+    m_middle.x /= 2;
+    m_middle.y /= 2;
+    main_menu();
 }
 
 void Menu::clear()
@@ -21,14 +24,6 @@ void Menu::clear()
     m_middle.y = 0;
     m_buttons.clear();
     m_texts.clear();
-}
-
-void Menu::setup()
-{
-    m_middle = window.getSize();
-    m_middle.x /= 2;
-    m_middle.y /= 2;
-    main_menu();
 }
 
 void Menu::main_menu()
@@ -228,7 +223,6 @@ void Menu::logic()
 
 void Menu::draw()
 {
-    window.draw(m_background);
     for(sf::Uint8 i = 0; i < m_buttons.size(); ++i)
     {
         window.draw(m_buttons[i].m_background);
@@ -250,8 +244,7 @@ sf::Uint8 Menu::get_button_id_from_press(const sf::Event& event) const
 void Menu::debug_show_size() const
 {
     //keep up to date!
-    std::wcout << sizeof(m_background) << L'\n'
-               << sizeof(m_buttons)<< L'\n'
+    std::wcout << sizeof(m_buttons)<< L'\n'
                << sizeof(m_texts)<< L'\n'
                << sizeof(m_middle)<< L'\n'
                << sizeof(m_state) << L'\n';

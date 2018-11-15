@@ -17,6 +17,12 @@ void Resources_Manager::load_resources()
     m_textures[9].loadFromFile("textures/trawa1.png");
     m_textures[10].loadFromFile("textures/trawa2.png");
     m_textures[11].loadFromFile("textures/trawa3.png");
+    m_background.setTexture(m_textures[7]);
+}
+
+const sf::Sprite& Resources_Manager::get_background() const
+{
+    return m_background;
 }
 
 const sf::Font& Resources_Manager::get_font() const
@@ -32,6 +38,7 @@ const sf::Texture& Resources_Manager::get_texture(sf::Uint8 id) const
 void Resources_Manager::debug_show_size() const
 {
     //keep up to date!
-    std::wcout << sizeof(m_font)<< L'\n'
+    std::wcout << sizeof(m_background)<< L'\n'
+               << sizeof(m_font)<< L'\n'
                << sizeof(m_textures) << L'\n';
 }

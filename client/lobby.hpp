@@ -1,16 +1,15 @@
-#ifndef MENU_HPP_INCLUDED
-#define MENU_HPP_INCLUDED
+#ifndef LOBBY_HPP_INCLUDED
+#define LOBBY_HPP_INCLUDED
 
 #include "button.hpp"
+#include "../common/network_player.hpp"
 #include <deque>
 
-class Menu
+class Lobby
 {
     //sort from largest to smallest!
     std::deque <Button> m_buttons;//80
-    std::deque <sf::Text> m_texts;//80
-    sf::Vector2u m_middle;//8
-    sf::Uint8 m_state;//1
+    std::deque <sf::Text> m_players;//80
 
 public:
     void setup();
@@ -20,18 +19,15 @@ public:
     void mouse_move(const sf::Event& event);
     void text_entered(const sf::Event& event);
 
-    void logic();
+    void add_player(sf::Uint8 id);
+    void remove_player(sf::Uint8 id);
+    void refresh_player(sf::Uint8 id, const Network_Player& player);
     void draw();
 
     void debug_show_size() const;
 
 private:
     sf::Uint8 get_button_id_from_press(const sf::Event& event) const;
-
-    void main_menu();
-    void connect_menu();
-    void options_menu();
-    void authors_menu();
 };
 
-#endif // MENU_HPP_INCLUDED
+#endif // LOBBY_HPP_INCLUDED

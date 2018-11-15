@@ -25,11 +25,11 @@ public:
     void setup_window(bool fullscreen);
     void setup_menu();
     void setup_lobby();
+    void setup_game();
     void quit_engine();
 
-    void menu_receive_inputs();
-    void lobby_receive_inputs();
-    void game_receive_inputs();
+    void lobby_receive_packets();
+    void game_receive_packets();
 
     void menu_logic();
     void lobby_logic();
@@ -39,7 +39,10 @@ public:
     void lobby_draw_frame();
     void game_draw_frame();
 
-    void receive_packets();
+    void menu_receive_inputs();
+    void lobby_receive_inputs();
+    void game_receive_inputs();
+
     void send_packets();
 
     bool get_menu_loop() const;

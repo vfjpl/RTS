@@ -1,8 +1,26 @@
 #include "engine.hpp"
+#include "resources_manager.hpp"
+
 #include "menu.hpp"
 
 extern sf::RenderWindow window;
+extern Resources_Manager resources_manager;
+
+//work in progress
 extern Menu menu;
+
+void Client_Engine::menu_logic()
+{
+    time = clock.restart();
+}
+
+void Client_Engine::menu_draw_frame()
+{
+    window.clear();
+    window.draw(resources_manager.get_background());
+    menu.draw();
+    window.display();
+}
 
 void Client_Engine::menu_receive_inputs()
 {
@@ -42,16 +60,4 @@ void Client_Engine::menu_receive_inputs()
         }
         }//end switch
     }
-}
-
-void Client_Engine::menu_logic()
-{
-    time = clock.restart();
-}
-
-void Client_Engine::menu_draw_frame()
-{
-    window.clear();
-    menu.draw();
-    window.display();
 }

@@ -5,6 +5,29 @@
 extern sf::RenderWindow window;
 extern Network_Data server;
 
+void Client_Engine::game_receive_packets()
+{
+
+}
+
+void Client_Engine::game_logic()
+{
+    time = clock.restart();
+
+    if(server.get_network_timeout() > sf::seconds(1))
+    {
+        //setup_menu();//back to menu
+        return;
+    }
+    server.add_network_timeout(time);
+}
+
+void Client_Engine::game_draw_frame()
+{
+    window.clear();
+    window.display();
+}
+
 void Client_Engine::game_receive_inputs()
 {
     sf::Event event;
@@ -28,21 +51,4 @@ void Client_Engine::game_receive_inputs()
         }
         }//end switch
     }
-}
-
-void Client_Engine::game_logic()
-{
-    time = clock.restart();
-
-    if(server.get_network_timeout() > sf::seconds(1))
-    {
-        setup_menu();//back to menu
-        return;
-    }
-    server.add_network_timeout(time);
-}
-
-void Client_Engine::game_draw_frame()
-{
-    window.display();
 }

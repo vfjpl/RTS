@@ -40,7 +40,7 @@ void Menu::main_menu()
 
     //texts
     m_texts.emplace_back(L"kelajno", resources_manager.get_font());
-    m_texts.back().setPosition(m_middle.x, m_middle.y + 0);
+    m_texts.back().setPosition(m_middle.x, m_middle.y);
 }
 
 void Menu::connect_menu()
@@ -55,7 +55,7 @@ void Menu::connect_menu()
 
     //texts
     m_texts.emplace_back(server.get_ip().toString(), resources_manager.get_font());
-    m_texts.back().setPosition(m_middle.x, m_middle.y + 0);
+    m_texts.back().setPosition(m_middle.x, m_middle.y);
 }
 
 void Menu::options_menu()
@@ -65,7 +65,7 @@ void Menu::options_menu()
     m_texts.clear();
 
     //buttons
-    m_buttons.emplace_back(L"FULLSCREEN", m_middle.x, m_middle.y + 0);
+    m_buttons.emplace_back(L"FULLSCREEN", m_middle.x, m_middle.y);
     m_buttons.emplace_back(L"WINDOWED", m_middle.x, m_middle.y + 30);
     m_buttons.emplace_back(L"BACK", m_middle.x, m_middle.y + 60);
 }
@@ -81,7 +81,7 @@ void Menu::authors_menu()
 
     //texts
     m_texts.emplace_back(L"Kacper Piwiński", resources_manager.get_font());
-    m_texts.back().setPosition(m_middle.x, m_middle.y + 0);
+    m_texts.back().setPosition(m_middle.x, m_middle.y);
     m_texts.emplace_back(L"Radosław Wojdak", resources_manager.get_font());
     m_texts.back().setPosition(m_middle.x, m_middle.y + 30);
     m_texts.emplace_back(L"Robert Kamiński", resources_manager.get_font());
@@ -177,15 +177,6 @@ void Menu::mouse_click(const sf::Event& event)
     }//end switch
 }
 
-void Menu::mouse_move(const sf::Event& event)
-{
-    for(sf::Uint8 i = 0; i < m_buttons.size(); ++i)
-        if(m_buttons[i].m_background.getGlobalBounds().contains(event.mouseMove.x, event.mouseMove.y))
-            m_buttons[i].mark();
-        else
-            m_buttons[i].unmark();
-}
-
 void Menu::text_entered(const sf::Event& event)
 {
     if(m_state != 2)//not in connecting state
@@ -200,6 +191,10 @@ void Menu::text_entered(const sf::Event& event)
             str.pop_back();
         break;
     }
+    case 13://enter
+    {
+        break;
+    }
     default:
     {
         str.push_back(event.text.unicode);
@@ -207,6 +202,15 @@ void Menu::text_entered(const sf::Event& event)
     }
     }//end switch
     m_texts[0].setString(str);
+}
+
+void Menu::mouse_move(const sf::Event& event)
+{
+    for(sf::Uint8 i = 0; i < m_buttons.size(); ++i)
+        if(m_buttons[i].m_background.getGlobalBounds().contains(event.mouseMove.x, event.mouseMove.y))
+            m_buttons[i].mark();
+        else
+            m_buttons[i].unmark();
 }
 
 void Menu::logic()

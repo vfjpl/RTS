@@ -1,12 +1,9 @@
 #include "engine.hpp"
 #include "resources_manager.hpp"
-
 #include "menu.hpp"
 
 extern sf::RenderWindow window;
 extern Resources_Manager resources_manager;
-
-//work in progress
 extern Menu menu;
 
 void Client_Engine::menu_logic()

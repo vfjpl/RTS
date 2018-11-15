@@ -1,14 +1,15 @@
 #include "engine.hpp"
 #include "resources_manager.hpp"
-#include "menu.hpp"
 #include "lobby.hpp"
+#include "menu.hpp"
 #include "network_data.hpp"
+#include "../common/network_opcodes.hpp"
 #include <iostream>
 
 extern sf::RenderWindow window;
 extern Resources_Manager resources_manager;
-extern Menu menu;
 extern Lobby lobby;
+extern Menu menu;
 extern Network_Data server;
 
 void Client_Engine::init()
@@ -71,6 +72,11 @@ void Client_Engine::setup_game()
     game_loop = true;
     menu.clear();
     lobby.clear();
+}
+
+void Client_Engine::send_ready_status(bool status)
+{
+    packet_to_send << (sf::Uint8)CLIENT_SET_READY_STATUS << status;
 }
 
 void Client_Engine::send_packets()

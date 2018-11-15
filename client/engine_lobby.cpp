@@ -1,16 +1,13 @@
 #include "engine.hpp"
 #include "resources_manager.hpp"
+#include "lobby.hpp"
 #include "network_data.hpp"
 #include "../common/network_opcodes.hpp"
 
-#include "lobby.hpp"
-
 extern sf::RenderWindow window;
 extern Resources_Manager resources_manager;
-extern Network_Data server;
-
-//work in progress
 extern Lobby lobby;
+extern Network_Data server;
 
 void Client_Engine::lobby_receive_packets()
 {
@@ -164,9 +161,4 @@ void Client_Engine::lobby_receive_inputs()
         }
         }//end switch
     }
-}
-
-void Client_Engine::lobby_ready()
-{
-    packet_to_send << (sf::Uint8)CLIENT_SET_READY_STATUS << true;
 }

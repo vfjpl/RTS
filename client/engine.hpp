@@ -36,13 +36,13 @@ public:
     void lobby_logic();
     void lobby_draw_frame();
     void lobby_receive_inputs();
-    void lobby_ready();
 
     void game_receive_packets();
     void game_logic();
     void game_draw_frame();
     void game_receive_inputs();
 
+    void send_ready_status(bool status);
     void send_packets();
 
     bool get_menu_loop() const;

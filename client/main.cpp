@@ -1,27 +1,26 @@
-#include "engine.hpp"
 #include "resources_manager.hpp"
+#include "engine.hpp"
+#include "lobby.hpp"
+#include "menu.hpp"
 #include "network_data.hpp"
 #include <iostream>
-
-#include "menu.hpp"
-#include "lobby.hpp"
 
 //sort from largest to smallest!
 sf::RenderWindow window;//528
 Resources_Manager resources_manager;//512
 Client_Engine engine;//344
+Lobby lobby;//248
+Menu menu;//176
 Network_Data server;//24
-
-//work in progress
-Menu menu;
-Lobby lobby;
 
 void debug_show_size()
 {
     //keep up to date!
     std::wcout << sizeof(window) << L'\n'
-               << sizeof(engine) << L'\n'
                << sizeof(resources_manager) << L'\n'
+               << sizeof(engine) << L'\n'
+               << sizeof(lobby) << L'\n'
+               << sizeof(menu) << L'\n'
                << sizeof(server) << L'\n';
 }
 

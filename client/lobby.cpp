@@ -37,10 +37,15 @@ void Lobby::mouse_click(const sf::Event& event)
     }
     case 1://ready
     {
-        engine.lobby_ready();
+        engine.send_ready_status(true);
         break;
     }
     }//end switch
+}
+
+void Lobby::text_entered(const sf::Event& event)
+{
+
 }
 
 void Lobby::mouse_move(const sf::Event& event)
@@ -50,11 +55,6 @@ void Lobby::mouse_move(const sf::Event& event)
             m_buttons[i].mark();
         else
             m_buttons[i].unmark();
-}
-
-void Lobby::text_entered(const sf::Event& event)
-{
-
 }
 
 void Lobby::add_player(sf::Uint8 id)
@@ -81,6 +81,7 @@ void Lobby::refresh_player(sf::Uint8 id, const Network_Player& player)
     std::wstring str(std::to_wstring(id));
     str.append(L" ");
     str.append(player.get_nickname());
+    str.append(L" ");
     if(player.get_ready_status())
         str.append(L"READY");
     else
@@ -121,5 +122,6 @@ void Lobby::debug_show_size() const
     //keep up to date!
     std::wcout << sizeof(m_buttons)<< L'\n'
                << sizeof(m_players)<< L'\n'
-               << sizeof(m_chat)<< L'\n';
+               << sizeof(m_chat)<< L'\n'
+               << sizeof(m_middle)<< L'\n';
 }

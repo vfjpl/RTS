@@ -18,8 +18,8 @@ public:
     void clear();
 
     void mouse_click(const sf::Event& event);
-    void mouse_move(const sf::Event& event);
     void text_entered(const sf::Event& event);
+    void mouse_move(const sf::Event& event);
 
     void add_player(sf::Uint8 id);
     void remove_player(sf::Uint8 id);

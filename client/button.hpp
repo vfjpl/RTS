@@ -11,7 +11,7 @@ public:
     sf::RectangleShape m_background;//344
 
 
-    Button(const wchar_t* text, float x, float y);
+    Button(const wchar_t* text, unsigned int x, unsigned int y);
 
     void mark();
     void unmark();

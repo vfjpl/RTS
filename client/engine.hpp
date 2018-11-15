@@ -21,26 +21,26 @@ class Client_Engine
 
 public:
     void init();
+    void quit_engine();
 
     void setup_window(bool fullscreen);
     void setup_menu();
     void setup_lobby();
     void setup_game();
-    void quit_engine();
-
-    void lobby_receive_packets();
-    void game_receive_packets();
 
     void menu_logic();
-    void lobby_logic();
-    void game_logic();
-
     void menu_draw_frame();
-    void lobby_draw_frame();
-    void game_draw_frame();
-
     void menu_receive_inputs();
+
+    void lobby_receive_packets();
+    void lobby_logic();
+    void lobby_draw_frame();
     void lobby_receive_inputs();
+    void lobby_ready();
+
+    void game_receive_packets();
+    void game_logic();
+    void game_draw_frame();
     void game_receive_inputs();
 
     void send_packets();

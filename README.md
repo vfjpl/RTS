@@ -1,7 +1,8 @@
 Code Guidelines
-1. nazwy plików małymi literami
-2. w nazwach stosujemy podkreślniki by oddzielić wyrazy
-3. używamy raczej typów występujących w sfml
+1. generalnie stosuj się do stylu kodu który jest już napisany
+2. nazwy plików małymi literami
+3. w nazwach stosujemy podkreślniki by oddzielić wyrazy
+4. używamy raczej typów występujących w sfml
 
 Instrukcja jak skonfigurować projekt pod Code::Blocks
 1. Sklonuj projekt

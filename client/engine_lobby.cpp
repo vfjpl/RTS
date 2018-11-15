@@ -31,7 +31,10 @@ void Client_Engine::lobby_receive_packets()
                 {
                     bool game_status;
                     received_packet >> game_status;
-                    game_loop = game_status;
+                    if(game_status)
+                        setup_game();
+                    else
+                        setup_lobby();
                     break;
                 }
                 case SERVER_SET_ALL_PLAYERS_READY_STATUS:
@@ -161,4 +164,9 @@ void Client_Engine::lobby_receive_inputs()
         }
         }//end switch
     }
+}
+
+void Client_Engine::lobby_ready()
+{
+    packet_to_send << (sf::Uint8)CLIENT_SET_READY_STATUS << true;
 }

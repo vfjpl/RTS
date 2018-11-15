@@ -1,13 +1,45 @@
 #include <SFML/Graphics.hpp>
 #include "engine.hpp"
 #include "network_data.hpp"
+#include "../common/network_opcodes.hpp"
 
 extern sf::RenderWindow window;
 extern Network_Data server;
 
 void Client_Engine::game_receive_packets()
 {
-
+    sf::IpAddress incomming_ip;
+    unsigned short incomming_port;
+    sf::Uint8 opcode;
+    while ( !socket.receive(received_packet, incomming_ip, incomming_port) )
+    {
+        if(server.compare(incomming_ip, incomming_port))
+        {
+            server.reset_network_timeout();
+            while( !received_packet.endOfPacket() )
+            {
+                received_packet >> opcode;
+                switch(opcode)
+                {
+                case SERVER_GAME_STATUS:
+                {
+                    bool game_status;
+                    received_packet >> game_status;
+                    if(game_status)
+                        setup_game();
+                    else
+                        setup_lobby();
+                    break;
+                }
+                default:
+                {
+                    received_packet.clear();
+                    break;
+                }
+                }//end switch
+            }//end while
+        }//end if
+    }//end while
 }
 
 void Client_Engine::game_logic()

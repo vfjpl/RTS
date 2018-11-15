@@ -20,6 +20,13 @@ void Client_Engine::init()
     menu.setup();
 }
 
+void Client_Engine::quit_engine()
+{
+    menu_loop = false;
+    lobby_loop = false;
+    game_loop = false;
+}
+
 void Client_Engine::setup_window(bool fullscreen)
 {
     sf::VideoMode mode = sf::VideoMode::getDesktopMode();
@@ -64,13 +71,6 @@ void Client_Engine::setup_game()
     game_loop = true;
     menu.clear();
     lobby.clear();
-}
-
-void Client_Engine::quit_engine()
-{
-    menu_loop = false;
-    lobby_loop = false;
-    game_loop = false;
 }
 
 void Client_Engine::send_packets()

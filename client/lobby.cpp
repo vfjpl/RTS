@@ -11,6 +11,7 @@ void Lobby::setup()
 {
     m_middle = window.getSize();
     m_buttons.emplace_back(L"DISCONNECT", 15, m_middle.y - 45);
+    m_buttons.emplace_back(L"READY", m_buttons.back().m_text.getLocalBounds().width + 30, m_middle.y - 45);
     m_middle.x /= 2;
     m_middle.y /= 2;
 }
@@ -32,6 +33,11 @@ void Lobby::mouse_click(const sf::Event& event)
     case 0://disconnect
     {
         engine.setup_menu();
+        break;
+    }
+    case 1://ready
+    {
+        engine.lobby_ready();
         break;
     }
     }//end switch
@@ -75,7 +81,10 @@ void Lobby::refresh_player(sf::Uint8 id, const Network_Player& player)
     std::wstring str(std::to_wstring(id));
     str.append(L" ");
     str.append(player.get_nickname());
-    str.append(std::to_wstring(player.get_ready_status()));
+    if(player.get_ready_status())
+        str.append(L"READY");
+    else
+        str.append(L"NOT READY");
     m_players[id].setString(str);
 }
 

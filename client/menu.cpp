@@ -40,7 +40,7 @@ void Menu::main_menu()
 
     //texts
     m_texts.emplace_back(L"kelajno", resources_manager.get_font());
-    m_texts[0].setPosition(m_middle.x, m_middle.y + 0);
+    m_texts.back().setPosition(m_middle.x, m_middle.y + 0);
 }
 
 void Menu::connect_menu()
@@ -55,7 +55,7 @@ void Menu::connect_menu()
 
     //texts
     m_texts.emplace_back(server.get_ip().toString(), resources_manager.get_font());
-    m_texts[0].setPosition(m_middle.x, m_middle.y + 0);
+    m_texts.back().setPosition(m_middle.x, m_middle.y + 0);
 }
 
 void Menu::options_menu()
@@ -81,11 +81,11 @@ void Menu::authors_menu()
 
     //texts
     m_texts.emplace_back(L"Kacper Piwiński", resources_manager.get_font());
-    m_texts[0].setPosition(m_middle.x, m_middle.y + 0);
+    m_texts.back().setPosition(m_middle.x, m_middle.y + 0);
     m_texts.emplace_back(L"Radosław Wojdak", resources_manager.get_font());
-    m_texts[1].setPosition(m_middle.x, m_middle.y + 30);
+    m_texts.back().setPosition(m_middle.x, m_middle.y + 30);
     m_texts.emplace_back(L"Robert Kamiński", resources_manager.get_font());
-    m_texts[2].setPosition(m_middle.x, m_middle.y + 60);
+    m_texts.back().setPosition(m_middle.x, m_middle.y + 60);
 }
 
 void Menu::mouse_click(const sf::Event& event)
@@ -191,24 +191,22 @@ void Menu::text_entered(const sf::Event& event)
     if(m_state != 2)//not in connecting state
         return;
 
+    std::wstring str(m_texts[0].getString());
     switch(event.text.unicode)
     {
     case 8://backspace
     {
-        std::wstring str(m_texts[0].getString());
         if(!str.empty())
             str.pop_back();
-        m_texts[0].setString(str);
         break;
     }
     default:
     {
-        std::wstring str(m_texts[0].getString());
         str.push_back(event.text.unicode);
-        m_texts[0].setString(str);
         break;
     }
     }//end switch
+    m_texts[0].setString(str);
 }
 
 void Menu::logic()

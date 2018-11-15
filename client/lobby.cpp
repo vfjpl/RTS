@@ -9,13 +9,19 @@ extern Client_Engine engine;
 
 void Lobby::setup()
 {
-    m_buttons.emplace_back(L"DISCONNECT", 0, 0);
+    m_middle = window.getSize();
+    m_buttons.emplace_back(L"DISCONNECT", 15, m_middle.y - 45);
+    m_middle.x /= 2;
+    m_middle.y /= 2;
 }
 
 void Lobby::clear()
 {
+    m_middle.x = 0;
+    m_middle.y = 0;
     m_buttons.clear();
     m_players.clear();
+    m_chat.clear();
 }
 
 void Lobby::mouse_click(const sf::Event& event)
@@ -23,7 +29,7 @@ void Lobby::mouse_click(const sf::Event& event)
     sf::Uint8 button_id = get_button_id_from_press(event);
     switch(button_id)
     {
-    case 0://connect
+    case 0://disconnect
     {
         engine.setup_menu();
         break;
@@ -57,6 +63,11 @@ void Lobby::add_player(sf::Uint8 id)
 void Lobby::remove_player(sf::Uint8 id)
 {
     m_players.erase(m_players.begin() + id);
+    for(sf::Uint8 i = id; i < m_players.size(); ++i)
+    {
+        m_players[i].setString(std::to_wstring(i));
+        m_players[i].setPosition(0, i*30);
+    }
 }
 
 void Lobby::refresh_player(sf::Uint8 id, const Network_Player& player)
@@ -64,11 +75,14 @@ void Lobby::refresh_player(sf::Uint8 id, const Network_Player& player)
     std::wstring str(std::to_wstring(id));
     str.append(L" ");
     str.append(player.get_nickname());
-    if(player.get_ready_status())
-        str.append(L"READY");
-    else
-        str.append(L"NOT READY");
+    str.append(std::to_wstring(player.get_ready_status()));
     m_players[id].setString(str);
+}
+
+void Lobby::add_chat_message(const std::wstring& message)
+{
+    m_chat.emplace_back(message, resources_manager.get_font());
+    m_chat.back().setPosition(m_middle.x, m_chat.size()*30);
 }
 
 void Lobby::draw()
@@ -80,6 +94,8 @@ void Lobby::draw()
     }
     for(sf::Uint8 i = 0; i < m_players.size(); ++i)
         window.draw(m_players[i]);
+    for(sf::Uint8 i = 0; i < m_chat.size(); ++i)
+        window.draw(m_chat[i]);
 }
 
 sf::Uint8 Lobby::get_button_id_from_press(const sf::Event& event) const
@@ -95,5 +111,6 @@ void Lobby::debug_show_size() const
 {
     //keep up to date!
     std::wcout << sizeof(m_buttons)<< L'\n'
-               << sizeof(m_players)<< L'\n';
+               << sizeof(m_players)<< L'\n'
+               << sizeof(m_chat)<< L'\n';
 }

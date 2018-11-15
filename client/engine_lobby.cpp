@@ -63,6 +63,7 @@ void Client_Engine::lobby_receive_packets()
                     bool ready_status;
                     received_packet >> id >> ready_status;
                     players[id].set_ready_status(ready_status);
+                    lobby.refresh_player(id, players[id]);
                     break;
                 }
                 case SERVER_PLAYER_MESSAGE:
@@ -70,7 +71,7 @@ void Client_Engine::lobby_receive_packets()
                     sf::Uint8 id;
                     std::wstring str;
                     received_packet >> id >> str;
-
+                    lobby.add_chat_message(str);
                     break;
                 }
                 case SERVER_PLAYER_NICKNAME:
@@ -79,6 +80,7 @@ void Client_Engine::lobby_receive_packets()
                     std::wstring str;
                     received_packet >> id >> str;
                     players[id].set_nickname(str);
+                    lobby.refresh_player(id, players[id]);
                     break;
                 }
                 case SERVER_PLAYER_TEAM:
@@ -87,6 +89,7 @@ void Client_Engine::lobby_receive_packets()
                     sf::Uint8 team;
                     received_packet >> id >> team;
                     players[id].set_team(team);
+                    lobby.refresh_player(id, players[id]);
                     break;
                 }
                 default:

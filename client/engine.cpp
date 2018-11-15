@@ -17,7 +17,7 @@ void Client_Engine::init()
     resources_manager.load_resources();
     menu.load_resources();
     setup_window(false);
-    menu.main_menu();
+    menu.setup();
 }
 
 void Client_Engine::setup_window(bool fullscreen)
@@ -44,7 +44,7 @@ void Client_Engine::setup_menu()
     server.reset_network_timeout();
     players.clear();
     units.clear();
-    menu.main_menu();
+    menu.setup();
 }
 
 void Client_Engine::setup_lobby()

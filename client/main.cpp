@@ -6,7 +6,7 @@
 
 //sort from largest to smallest!
 sf::RenderWindow window;//528
-Menu menu;//456
+Menu menu;//464
 Client_Engine engine;//344
 Resources_Manager resources_manager;//224
 Network_Data server;//24

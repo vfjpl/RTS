@@ -17,8 +17,18 @@ void Menu::load_resources()
 void Menu::clear()
 {
     m_state = 0;
+    m_middle.x = 0;
+    m_middle.y = 0;
     m_buttons.clear();
     m_texts.clear();
+}
+
+void Menu::setup()
+{
+    m_middle = window.getSize();
+    m_middle.x /= 2;
+    m_middle.y /= 2;
+    main_menu();
 }
 
 void Menu::main_menu()
@@ -28,10 +38,14 @@ void Menu::main_menu()
     m_texts.clear();
 
     //buttons
-    m_buttons.emplace_back(L"CONNECT", 0, 0);
-    m_buttons.emplace_back(L"OPTIONS", 0, 30);
-    m_buttons.emplace_back(L"AUTHORS", 0, 60);
-    m_buttons.emplace_back(L"QUIT", 0, 90);
+    m_buttons.emplace_back(L"CONNECT", m_middle.x, m_middle.y + 30);
+    m_buttons.emplace_back(L"OPTIONS", m_middle.x, m_middle.y + 60);
+    m_buttons.emplace_back(L"AUTHORS", m_middle.x, m_middle.y + 90);
+    m_buttons.emplace_back(L"QUIT", m_middle.x, m_middle.y + 120);
+
+    //texts
+    m_texts.emplace_back(L"kelajno", resources_manager.get_font());
+    m_texts[0].setPosition(m_middle.x, m_middle.y + 0);
 }
 
 void Menu::connect_menu()
@@ -41,12 +55,12 @@ void Menu::connect_menu()
     m_texts.clear();
 
     //buttons
-    m_buttons.emplace_back(L"CONNECT", 0, 30);
-    m_buttons.emplace_back(L"BACK", 0, 60);
+    m_buttons.emplace_back(L"CONNECT", m_middle.x, m_middle.y + 30);
+    m_buttons.emplace_back(L"BACK", m_middle.x, m_middle.y + 60);
 
     //texts
     m_texts.emplace_back(server.get_ip().toString(), resources_manager.get_font());
-    m_texts[0].setPosition(0, 0);
+    m_texts[0].setPosition(m_middle.x, m_middle.y + 0);
 }
 
 void Menu::options_menu()
@@ -56,9 +70,9 @@ void Menu::options_menu()
     m_texts.clear();
 
     //buttons
-    m_buttons.emplace_back(L"FULLSCREEN", 0, 0);
-    m_buttons.emplace_back(L"WINDOWED", 0, 30);
-    m_buttons.emplace_back(L"BACK", 0, 60);
+    m_buttons.emplace_back(L"FULLSCREEN", m_middle.x, m_middle.y + 0);
+    m_buttons.emplace_back(L"WINDOWED", m_middle.x, m_middle.y + 30);
+    m_buttons.emplace_back(L"BACK", m_middle.x, m_middle.y + 60);
 }
 
 void Menu::authors_menu()
@@ -68,13 +82,15 @@ void Menu::authors_menu()
     m_texts.clear();
 
     //buttons
-    m_buttons.emplace_back(L"BACK", 0, 60);
+    m_buttons.emplace_back(L"BACK", m_middle.x, m_middle.y + 90);
 
     //texts
     m_texts.emplace_back(L"Kacper Piwiński", resources_manager.get_font());
-    m_texts[0].setPosition(0, 0);
+    m_texts[0].setPosition(m_middle.x, m_middle.y + 0);
     m_texts.emplace_back(L"Radosław Wojdak", resources_manager.get_font());
-    m_texts[1].setPosition(0, 30);
+    m_texts[1].setPosition(m_middle.x, m_middle.y + 30);
+    m_texts.emplace_back(L"Robert Kamiński", resources_manager.get_font());
+    m_texts[2].setPosition(m_middle.x, m_middle.y + 60);
 }
 
 void Menu::mouse_click(const sf::Event& event)
@@ -134,11 +150,13 @@ void Menu::mouse_click(const sf::Event& event)
         case 0://fullscreen
         {
             engine.setup_window(true);
+            setup();
             break;
         }
         case 1://windowed
         {
             engine.setup_window(false);
+            setup();
             break;
         }
         case 2://back
@@ -235,5 +253,6 @@ void Menu::debug_show_size() const
     std::wcout << sizeof(m_background) << L'\n'
                << sizeof(m_buttons)<< L'\n'
                << sizeof(m_texts)<< L'\n'
+               << sizeof(m_middle)<< L'\n'
                << sizeof(m_state) << L'\n';
 }

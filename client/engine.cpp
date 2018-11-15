@@ -5,8 +5,8 @@
 #include "../common/network_opcodes.hpp"
 #include <iostream>
 
-extern Menu menu;
 extern sf::RenderWindow window;
+extern Menu menu;
 extern Resources_Manager resources_manager;
 extern Network_Data server;
 

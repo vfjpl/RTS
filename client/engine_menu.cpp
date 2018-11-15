@@ -1,8 +1,8 @@
 #include "engine.hpp"
 #include "menu.hpp"
 
-extern Menu menu;
 extern sf::RenderWindow window;
+extern Menu menu;
 
 void Client_Engine::menu_receive_inputs()
 {

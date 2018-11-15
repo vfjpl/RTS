@@ -5,8 +5,8 @@
 #include <iostream>
 
 //sort from largest to smallest!
-Menu menu;//536
 sf::RenderWindow window;//528
+Menu menu;//456
 Client_Engine engine;//344
 Resources_Manager resources_manager;//224
 Network_Data server;//24
@@ -14,8 +14,8 @@ Network_Data server;//24
 void debug_show_size()
 {
     //keep up to date!
-    std::wcout << sizeof(menu) << L'\n'
-               << sizeof(window) << L'\n'
+    std::wcout << sizeof(window) << L'\n'
+               << sizeof(menu) << L'\n'
                << sizeof(engine) << L'\n'
                << sizeof(resources_manager) << L'\n'
                << sizeof(server) << L'\n';

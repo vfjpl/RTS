@@ -17,7 +17,6 @@ void Menu::load_resources()
 void Menu::clear()
 {
     m_state = 0;
-    m_backgrounds.clear();
     m_buttons.clear();
     m_texts.clear();
 }
@@ -25,35 +24,25 @@ void Menu::clear()
 void Menu::main_menu()
 {
     m_state = 1;
-    m_backgrounds.clear();
     m_buttons.clear();
     m_texts.clear();
 
     //buttons
-    m_buttons.emplace_back(L"CONNECT", resources_manager.get_font());
-    m_buttons[0].setPosition(0, 0);
-    m_buttons.emplace_back(L"OPTIONS", resources_manager.get_font());
-    m_buttons[1].setPosition(0, 30);
-    m_buttons.emplace_back(L"AUTHORS", resources_manager.get_font());
-    m_buttons[2].setPosition(0, 60);
-    m_buttons.emplace_back(L"QUIT", resources_manager.get_font());
-    m_buttons[3].setPosition(0, 90);
-    setup_buttons();
+    m_buttons.emplace_back(L"CONNECT", 0, 0);
+    m_buttons.emplace_back(L"OPTIONS", 0, 30);
+    m_buttons.emplace_back(L"AUTHORS", 0, 60);
+    m_buttons.emplace_back(L"QUIT", 0, 90);
 }
 
 void Menu::connect_menu()
 {
     m_state = 2;
-    m_backgrounds.clear();
     m_buttons.clear();
     m_texts.clear();
 
     //buttons
-    m_buttons.emplace_back(L"CONNECT", resources_manager.get_font());
-    m_buttons[0].setPosition(0, 30);
-    m_buttons.emplace_back(L"BACK", resources_manager.get_font());
-    m_buttons[1].setPosition(0, 60);
-    setup_buttons();
+    m_buttons.emplace_back(L"CONNECT", 0, 30);
+    m_buttons.emplace_back(L"BACK", 0, 60);
 
     //texts
     m_texts.emplace_back(server.get_ip().toString(), resources_manager.get_font());
@@ -63,31 +52,23 @@ void Menu::connect_menu()
 void Menu::options_menu()
 {
     m_state = 3;
-    m_backgrounds.clear();
     m_buttons.clear();
     m_texts.clear();
 
     //buttons
-    m_buttons.emplace_back(L"FULLSCREEN", resources_manager.get_font());
-    m_buttons[0].setPosition(0, 0);
-    m_buttons.emplace_back(L"WINDOWED", resources_manager.get_font());
-    m_buttons[1].setPosition(0, 30);
-    m_buttons.emplace_back(L"BACK", resources_manager.get_font());
-    m_buttons[2].setPosition(0, 60);
-    setup_buttons();
+    m_buttons.emplace_back(L"FULLSCREEN", 0, 0);
+    m_buttons.emplace_back(L"WINDOWED", 0, 30);
+    m_buttons.emplace_back(L"BACK", 0, 60);
 }
 
 void Menu::authors_menu()
 {
     m_state = 4;
-    m_backgrounds.clear();
     m_buttons.clear();
     m_texts.clear();
 
     //buttons
-    m_buttons.emplace_back(L"BACK", resources_manager.get_font());
-    m_buttons[0].setPosition(0, 60);
-    setup_buttons();
+    m_buttons.emplace_back(L"BACK", 0, 60);
 
     //texts
     m_texts.emplace_back(L"Kacper Piwiński", resources_manager.get_font());
@@ -186,39 +167,55 @@ void Menu::mouse_click(const sf::Event& event)
 void Menu::mouse_move(const sf::Event& event)
 {
     for(sf::Uint8 i = 0; i < m_buttons.size(); ++i)
-        if(m_buttons[i].getGlobalBounds().contains(event.mouseMove.x, event.mouseMove.y))
-            m_buttons[i].setFillColor(sf::Color::Green);
+        if(m_buttons[i].m_background.getGlobalBounds().contains(event.mouseMove.x, event.mouseMove.y))
+            m_buttons[i].mark();
         else
-            m_buttons[i].setFillColor(sf::Color::Black);
+            m_buttons[i].unmark();
 }
 
 void Menu::text_entered(const sf::Event& event)
 {
-    if(m_state == 2)
+    if(m_state != 2)//not in connecting state
+        return;
+
+    switch(event.text.unicode)
+    {
+    case 8://backspace
+    {
+        std::wstring str(m_texts[0].getString());
+        if(!str.empty())
+            str.pop_back();
+        m_texts[0].setString(str);
+        break;
+    }
+    default:
     {
         std::wstring str(m_texts[0].getString());
         str.push_back(event.text.unicode);
         m_texts[0].setString(str);
+        break;
     }
+    }//end switch
 }
 
 void Menu::logic()
 {
     sf::Vector2i mouse_position = sf::Mouse::getPosition(window);
     for(sf::Uint8 i = 0; i < m_buttons.size(); ++i)
-        if(m_buttons[i].getGlobalBounds().contains(mouse_position.x, mouse_position.y))
-            m_buttons[i].setFillColor(sf::Color::Green);
+        if(m_buttons[i].m_background.getGlobalBounds().contains(mouse_position.x, mouse_position.y))
+            m_buttons[i].mark();
         else
-            m_buttons[i].setFillColor(sf::Color::Black);
+            m_buttons[i].unmark();
 }
 
 void Menu::draw()
 {
     window.draw(m_background);
-    for(sf::Uint8 i = 0; i < m_backgrounds.size(); ++i)
-        window.draw(m_backgrounds[i]);
     for(sf::Uint8 i = 0; i < m_buttons.size(); ++i)
-        window.draw(m_buttons[i]);
+    {
+        window.draw(m_buttons[i].m_background);
+        window.draw(m_buttons[i].m_text);
+    }
     for(sf::Uint8 i = 0; i < m_texts.size(); ++i)
         window.draw(m_texts[i]);
 }
@@ -226,28 +223,16 @@ void Menu::draw()
 sf::Uint8 Menu::get_button_id_from_press(const sf::Event& event) const
 {
     for(sf::Uint8 i = 0; i < m_buttons.size(); ++i)
-        if(m_buttons[i].getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y))
+        if(m_buttons[i].m_background.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y))
             return i;
 
     return m_buttons.size();
-}
-
-void Menu::setup_buttons()
-{
-    for(sf::Uint8 i = 0; i < m_buttons.size(); ++i)
-    {
-        m_buttons[i].setFillColor(sf::Color::Black);
-        sf::FloatRect rect = m_buttons[i].getGlobalBounds();
-        m_backgrounds.emplace_back(sf::Vector2f(rect.width+2, rect.height+2));
-        m_backgrounds[i].setPosition(rect.left-1, rect.top-1);
-    }
 }
 
 void Menu::debug_show_size() const
 {
     //keep up to date!
     std::wcout << sizeof(m_background) << L'\n'
-               << sizeof(m_backgrounds)<< L'\n'
                << sizeof(m_buttons)<< L'\n'
                << sizeof(m_texts)<< L'\n'
                << sizeof(m_state) << L'\n';

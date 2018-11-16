@@ -11,7 +11,7 @@ void Lobby::setup()
 {
     m_middle = window.getSize();
     m_buttons.emplace_back(L"DISCONNECT", 15, m_middle.y - 45);
-    m_buttons.emplace_back(L"READY", m_buttons.back().m_text.getLocalBounds().width + 30, m_middle.y - 45);
+    m_buttons.emplace_back(L"READY", (unsigned int)m_buttons.back().m_text.getLocalBounds().width + 30, m_middle.y - 45);
     m_middle.x /= 2;
     m_middle.y /= 2;
 }
@@ -79,19 +79,14 @@ void Lobby::remove_player(sf::Uint8 id)
 void Lobby::refresh_player(sf::Uint8 id, const Network_Player& player)
 {
     std::wstring str(std::to_wstring(id));
-    str.append(L" ");
+    str.push_back(L' ');
     str.append(player.get_nickname());
-    str.append(L" ");
-    if(player.get_ready_status())
-        str.append(L"READY");
-    else
-        str.append(L"NOT READY");
     m_players[id].setString(str);
 }
 
-void Lobby::add_chat_message(const std::wstring& message)
+void Lobby::add_chat_message(sf::Uint8 id, const std::wstring& message)
 {
-    m_chat.emplace_back(message, resources_manager.get_font());
+    m_chat.emplace_back(m_players[id].getString() + L": " + message, resources_manager.get_font());
     m_chat.back().setPosition(m_middle.x, m_chat.size()*30);
 }
 

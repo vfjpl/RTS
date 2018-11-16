@@ -71,7 +71,7 @@ void Client_Engine::lobby_receive_packets()
                     sf::Uint8 id;
                     std::wstring str;
                     received_packet >> id >> str;
-                    lobby.add_chat_message(str);
+                    lobby.add_chat_message(id, str);
                     break;
                 }
                 case SERVER_PLAYER_NICKNAME:

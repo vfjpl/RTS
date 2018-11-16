@@ -24,7 +24,7 @@ public:
     void add_player(sf::Uint8 id);
     void remove_player(sf::Uint8 id);
     void refresh_player(sf::Uint8 id, const Network_Player& player);
-    void add_chat_message(const std::wstring& message);
+    void add_chat_message(sf::Uint8 id, const std::wstring& message);
 
     void draw();
 

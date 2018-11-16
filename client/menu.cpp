@@ -194,6 +194,7 @@ void Menu::text_entered(const sf::Event& event)
     case L'\t'://Tab (9)
     case L'\r'://Enter (13)
     case L'\e'://Esc (27)
+    case L'\177'://Del (127) (L'\x7F') (L'\u007F') (L'\U0000007F')
         break;
     default:
     {

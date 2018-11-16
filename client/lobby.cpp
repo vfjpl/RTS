@@ -11,7 +11,7 @@ void Lobby::setup()
 {
     m_middle = window.getSize();
     m_buttons.emplace_back(L"DISCONNECT", 15, m_middle.y - 45);
-    m_buttons.emplace_back(L"READY", (unsigned int)m_buttons.back().m_text.getLocalBounds().width + 30, m_middle.y - 45);
+    m_buttons.emplace_back(L"READY", m_buttons.back().m_text.getLocalBounds().width + 30, m_middle.y - 45);
     m_middle.x /= 2;
     m_middle.y /= 2;
 }
@@ -79,7 +79,7 @@ void Lobby::remove_player(sf::Uint8 id)
 void Lobby::refresh_player(sf::Uint8 id, const Network_Player& player)
 {
     std::wstring str(std::to_wstring(id));
-    str.push_back(L' ');
+    str.push_back(L'\40');//space
     str.append(player.get_nickname());
     m_players[id].setString(str);
 }

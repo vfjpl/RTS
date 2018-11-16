@@ -43,6 +43,7 @@ public:
     void game_receive_inputs();
 
     void send_ready_status(bool status);
+    void send_message(const std::wstring& msg);
     void send_packets();
 
     bool get_menu_loop() const;

@@ -13,7 +13,9 @@ void Lobby::setup()
     m_buttons.emplace_back(L"DISCONNECT", 15, m_middle.y - 45);
     m_buttons.emplace_back(L"READY", m_buttons.back().m_text.getLocalBounds().width + 30, m_middle.y - 45);
     m_middle.x /= 2;
+    m_inputboxes.emplace_back(m_middle.x, m_middle.y - 45);
     m_middle.y /= 2;
+    m_marked_inputbox = m_inputboxes.size();
 }
 
 void Lobby::clear()
@@ -21,12 +23,14 @@ void Lobby::clear()
     m_middle.x = 0;
     m_middle.y = 0;
     m_buttons.clear();
+    m_inputboxes.clear();
     m_players.clear();
     m_chat.clear();
 }
 
 void Lobby::mouse_click(const sf::Event& event)
 {
+    m_marked_inputbox = get_inputbox_id_from_press(event);
     sf::Uint8 button_id = get_button_id_from_press(event);
     switch(button_id)
     {
@@ -45,7 +49,31 @@ void Lobby::mouse_click(const sf::Event& event)
 
 void Lobby::text_entered(const sf::Event& event)
 {
+    if(m_marked_inputbox == m_inputboxes.size())
+        return;
 
+    std::wstring str(m_inputboxes[m_marked_inputbox].m_text.getString());
+    switch(event.text.unicode)
+    {
+    case L'\b'://BackSpace (8)
+    {
+        if(!str.empty())
+            str.pop_back();
+        break;
+    }
+    case L'\r'://Enter (13)
+    {
+        engine.send_message(str);
+        m_inputboxes[m_marked_inputbox].m_text.setString(std::wstring());
+        break;
+    }
+    default:
+    {
+        str.push_back(event.text.unicode);
+        m_inputboxes[m_marked_inputbox].m_text.setString(str);
+        break;
+    }
+    }//end switch
 }
 
 void Lobby::mouse_move(const sf::Event& event)
@@ -97,6 +125,11 @@ void Lobby::draw()
         window.draw(m_buttons[i].m_background);
         window.draw(m_buttons[i].m_text);
     }
+    for(sf::Uint8 i = 0; i < m_inputboxes.size(); ++i)
+    {
+        window.draw(m_inputboxes[i].m_background);
+        window.draw(m_inputboxes[i].m_text);
+    }
     for(sf::Uint8 i = 0; i < m_players.size(); ++i)
         window.draw(m_players[i]);
     for(sf::Uint8 i = 0; i < m_chat.size(); ++i)
@@ -110,6 +143,15 @@ sf::Uint8 Lobby::get_button_id_from_press(const sf::Event& event) const
             return i;
 
     return m_buttons.size();
+}
+
+sf::Uint8 Lobby::get_inputbox_id_from_press(const sf::Event& event) const
+{
+    for(sf::Uint8 i = 0; i < m_inputboxes.size(); ++i)
+        if(m_inputboxes[i].m_background.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y))
+            return i;
+
+    return m_inputboxes.size();
 }
 
 void Lobby::debug_show_size() const

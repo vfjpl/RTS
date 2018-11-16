@@ -79,6 +79,11 @@ void Client_Engine::send_ready_status(bool status)
     packet_to_send << (sf::Uint8)CLIENT_SET_READY_STATUS << status;
 }
 
+void Client_Engine::send_message(const std::wstring& msg)
+{
+    packet_to_send << (sf::Uint8)CLIENT_SEND_MESSAGE << msg;
+}
+
 void Client_Engine::send_packets()
 {
     socket.send(packet_to_send, server.get_ip(), server.get_port());

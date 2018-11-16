@@ -2,6 +2,7 @@
 #define LOBBY_HPP_INCLUDED
 
 #include "button.hpp"
+#include "inputbox.hpp"
 #include "../common/network_player.hpp"
 #include <deque>
 
@@ -9,9 +10,11 @@ class Lobby
 {
     //sort from largest to smallest!
     std::deque <Button> m_buttons;//80
+    std::deque <InputBox> m_inputboxes;//80
     std::deque <sf::Text> m_players;//80
     std::deque <sf::Text> m_chat;//80
     sf::Vector2u m_middle;//8
+    sf::Uint8 m_marked_inputbox;//
 
 public:
     void setup();
@@ -32,6 +35,7 @@ public:
 
 private:
     sf::Uint8 get_button_id_from_press(const sf::Event& event) const;
+    sf::Uint8 get_inputbox_id_from_press(const sf::Event& event) const;
 };
 
 #endif // LOBBY_HPP_INCLUDED

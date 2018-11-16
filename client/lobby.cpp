@@ -13,7 +13,7 @@ void Lobby::setup()
     m_buttons.emplace_back(L"DISCONNECT", 15, m_middle.y - 45);
     m_buttons.emplace_back(L"READY", m_buttons.back().m_text.getLocalBounds().width + 30, m_middle.y - 45);
     m_middle.x /= 2;
-    m_inputboxes.emplace_back(m_middle.x, m_middle.y - 45);
+    m_inputboxes.emplace_back(m_middle.x, m_middle.y - 45, 255);
     m_middle.y /= 2;
     m_marked_inputbox = m_inputboxes.size();
 }
@@ -30,7 +30,8 @@ void Lobby::clear()
 
 void Lobby::mouse_click(const sf::Event& event)
 {
-    m_marked_inputbox = get_inputbox_id_from_press(event);
+    mark_inputbox(event);
+
     sf::Uint8 button_id = get_button_id_from_press(event);
     switch(button_id)
     {
@@ -57,19 +58,27 @@ void Lobby::text_entered(const sf::Event& event)
     {
     case L'\b'://BackSpace (8)
     {
-        if(!str.empty())
+        if(str.size() > 1)
+        {
             str.pop_back();
+            str.pop_back();
+            str.push_back(L'|');
+            m_inputboxes[m_marked_inputbox].m_text.setString(str);
+        }
         break;
     }
     case L'\r'://Enter (13)
     {
+        str.pop_back();
         engine.send_message(str);
-        m_inputboxes[m_marked_inputbox].m_text.setString(std::wstring());
+        m_inputboxes[m_marked_inputbox].m_text.setString(L'|');
         break;
     }
     default:
     {
+        str.pop_back();
         str.push_back(event.text.unicode);
+        str.push_back(L'|');
         m_inputboxes[m_marked_inputbox].m_text.setString(str);
         break;
     }
@@ -145,13 +154,19 @@ sf::Uint8 Lobby::get_button_id_from_press(const sf::Event& event) const
     return m_buttons.size();
 }
 
-sf::Uint8 Lobby::get_inputbox_id_from_press(const sf::Event& event) const
+void Lobby::mark_inputbox(const sf::Event& event)
 {
     for(sf::Uint8 i = 0; i < m_inputboxes.size(); ++i)
         if(m_inputboxes[i].m_background.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y))
-            return i;
-
-    return m_inputboxes.size();
+        {
+            m_marked_inputbox = i;
+            m_inputboxes[i].mark();
+            return;
+        }
+        else
+        {
+            m_inputboxes[i].unmark();
+        }
 }
 
 void Lobby::debug_show_size() const

@@ -185,16 +185,16 @@ void Menu::text_entered(const sf::Event& event)
     std::wstring str(m_texts[0].getString());
     switch(event.text.unicode)
     {
-    case 8://backspace
+    case L'\b'://BackSpace (8)
     {
         if(!str.empty())
             str.pop_back();
         break;
     }
-    case 13://enter
-    {
+    case L'\t'://Tab (9)
+    case L'\r'://Enter (13)
+    case L'\e'://Esc (27)
         break;
-    }
     default:
     {
         str.push_back(event.text.unicode);

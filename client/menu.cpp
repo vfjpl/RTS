@@ -4,7 +4,7 @@
 #include "../common/network_data.hpp"
 #include <iostream>
 
-#define TEXT_GAP 37
+#define TEXT_GAP (36+10)
 
 extern sf::RenderWindow window;
 extern Resources_Manager resources_manager;
@@ -212,16 +212,6 @@ void Menu::mouse_move(const sf::Event& event)
 {
     for(sf::Uint8 i = 0; i < m_buttons.size(); ++i)
         if(m_buttons[i].m_background.getGlobalBounds().contains(event.mouseMove.x, event.mouseMove.y))
-            m_buttons[i].mark();
-        else
-            m_buttons[i].unmark();
-}
-
-void Menu::logic()
-{
-    sf::Vector2i mouse_position = sf::Mouse::getPosition(window);
-    for(sf::Uint8 i = 0; i < m_buttons.size(); ++i)
-        if(m_buttons[i].m_background.getGlobalBounds().contains(mouse_position.x, mouse_position.y))
             m_buttons[i].mark();
         else
             m_buttons[i].unmark();

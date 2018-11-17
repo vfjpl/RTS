@@ -16,7 +16,6 @@ void Client_Engine::init()
 {
     socket.setBlocking(false);
     server.set_ip_port(sf::IpAddress::LocalHost, 7000);
-    server.set_nickname(L"player");
     resources_manager.load_resources();
     setup_window(false);
     menu.setup();
@@ -108,14 +107,17 @@ bool Client_Engine::get_game_loop() const
 
 void Client_Engine::set_all_players_ready_status(bool status)
 {
+    server.set_ready_status(status);
     for(sf::Uint8 i = 0; i < players.size(); ++i)
         players[i].set_ready_status(status);
 }
 
 void Client_Engine::send_player_info()
 {
-    packet_to_send << (sf::Uint8)CLIENT_SET_READY_STATUS << server.get_ready_status()
-                   << (sf::Uint8)CLIENT_SET_NICKNAME << server.get_nickname();
+    if(server.get_ready_status())
+        packet_to_send << (sf::Uint8)CLIENT_SET_READY_STATUS << true;
+    if(!server.get_nickname().empty())
+        packet_to_send << (sf::Uint8)CLIENT_SET_NICKNAME << server.get_nickname();
 }
 
 void Client_Engine::debug_show_size() const

@@ -11,7 +11,8 @@ public:
     sf::RectangleShape m_background;//344
 
 
-    Button(const wchar_t* text, unsigned int x, unsigned int y);
+    Button(const wchar_t* text, unsigned int x, unsigned int y);//variable size button
+    Button(const std::wstring& text, unsigned int x, unsigned int y, unsigned int width);//const size button
 
     void mark();
     void unmark();

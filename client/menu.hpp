@@ -20,7 +20,6 @@ public:
     void text_entered(const sf::Event& event);
     void mouse_move(const sf::Event& event);
 
-    void logic();
     void draw();
 
     void debug_show_size() const;

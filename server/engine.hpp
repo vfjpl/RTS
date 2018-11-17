@@ -1,8 +1,8 @@
 #ifndef ENGINE_HPP_INCLUDED
 #define ENGINE_HPP_INCLUDED
 
-#include "../common/network_data.hpp"
 #include "../common/game_unit.hpp"
+#include "../common/network_data.hpp"
 #include <deque>
 
 class Server_Engine

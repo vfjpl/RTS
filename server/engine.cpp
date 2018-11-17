@@ -20,7 +20,7 @@ void Server_Engine::receive_packets()
 
         if(local_id == players.size())//check if we got new player
         {
-            if(local_id == 6)//max 254
+            if(local_id == 8)//max 254
                 continue;//don't add new player
 
             players.emplace_back(incomming_ip, incomming_port);

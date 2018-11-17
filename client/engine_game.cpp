@@ -1,6 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include "engine.hpp"
-#include "network_data.hpp"
+#include "../common/network_data.hpp"
 #include "../common/network_opcodes.hpp"
 
 extern sf::RenderWindow window;

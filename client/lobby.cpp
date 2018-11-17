@@ -45,7 +45,7 @@ void Lobby::mouse_click(const sf::Event& event)
     }
     case 1://ready
     {
-        engine.send_ready_status(true);
+        engine.send_ready_status();
         break;
     }
     }//end switch
@@ -116,7 +116,7 @@ void Lobby::remove_player(sf::Uint8 id)
     }
 }
 
-void Lobby::refresh_player(sf::Uint8 id, const Network_Player& player)
+void Lobby::refresh_player(sf::Uint8 id, const Network_Data& player)
 {
     std::wstring str(std::to_wstring(id));
     str.push_back(L'\40');//space

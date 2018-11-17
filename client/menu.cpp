@@ -1,7 +1,7 @@
 #include "menu.hpp"
 #include "resources_manager.hpp"
 #include "engine.hpp"
-#include "network_data.hpp"
+#include "../common/network_data.hpp"
 #include <iostream>
 
 #define TEXT_GAP 37

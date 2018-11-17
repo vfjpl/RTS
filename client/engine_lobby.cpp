@@ -1,7 +1,7 @@
 #include "engine.hpp"
 #include "resources_manager.hpp"
 #include "lobby.hpp"
-#include "network_data.hpp"
+#include "../common/network_data.hpp"
 #include "../common/network_opcodes.hpp"
 
 extern sf::RenderWindow window;
@@ -47,6 +47,7 @@ void Client_Engine::lobby_receive_packets()
                     received_packet >> id;
                     players.resize(id + 1);
                     lobby.add_player(id + 1);
+                    send_player_info();
                     break;
                 }
                 case SERVER_PLAYER_DISCONNECTED:

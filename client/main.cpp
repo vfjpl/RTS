@@ -2,7 +2,7 @@
 #include "engine.hpp"
 #include "lobby.hpp"
 #include "menu.hpp"
-#include "network_data.hpp"
+#include "../common/network_data.hpp"
 #include <iostream>
 
 //sort from largest to smallest!
@@ -11,7 +11,7 @@ Resources_Manager resources_manager;//512
 Client_Engine engine;//344
 Lobby lobby;//336
 Menu menu;//176
-Network_Data server;//24
+Network_Data server;//56
 
 void debug_show_size()
 {

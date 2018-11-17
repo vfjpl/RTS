@@ -2,7 +2,7 @@
 #include "resources_manager.hpp"
 #include "lobby.hpp"
 #include "menu.hpp"
-#include "network_data.hpp"
+#include "../common/network_data.hpp"
 #include "../common/network_opcodes.hpp"
 #include <iostream>
 
@@ -16,6 +16,7 @@ void Client_Engine::init()
 {
     socket.setBlocking(false);
     server.set_ip_port(sf::IpAddress::LocalHost, 7000);
+    server.set_nickname(L"player");
     resources_manager.load_resources();
     setup_window(false);
     menu.setup();
@@ -74,14 +75,14 @@ void Client_Engine::setup_game()
     lobby.clear();
 }
 
-void Client_Engine::send_ready_status(bool status)
-{
-    packet_to_send << (sf::Uint8)CLIENT_SET_READY_STATUS << status;
-}
-
 void Client_Engine::send_message(const std::wstring& msg)
 {
     packet_to_send << (sf::Uint8)CLIENT_SEND_MESSAGE << msg;
+}
+
+void Client_Engine::send_ready_status()
+{
+    packet_to_send << (sf::Uint8)CLIENT_SET_READY_STATUS << !server.get_ready_status();
 }
 
 void Client_Engine::send_packets()
@@ -109,6 +110,12 @@ void Client_Engine::set_all_players_ready_status(bool status)
 {
     for(sf::Uint8 i = 0; i < players.size(); ++i)
         players[i].set_ready_status(status);
+}
+
+void Client_Engine::send_player_info()
+{
+    packet_to_send << (sf::Uint8)CLIENT_SET_READY_STATUS << server.get_ready_status()
+                   << (sf::Uint8)CLIENT_SET_NICKNAME << server.get_nickname();
 }
 
 void Client_Engine::debug_show_size() const

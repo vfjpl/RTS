@@ -3,7 +3,7 @@
 
 #include "button.hpp"
 #include "inputbox.hpp"
-#include "../common/network_player.hpp"
+#include "../common/network_data.hpp"
 #include <deque>
 
 class Lobby
@@ -26,7 +26,7 @@ public:
 
     void add_player(sf::Uint8 id);
     void remove_player(sf::Uint8 id);
-    void refresh_player(sf::Uint8 id, const Network_Player& player);
+    void refresh_player(sf::Uint8 id, const Network_Data& player);
     void add_chat_message(sf::Uint8 id, const std::wstring& message);
 
     void draw();

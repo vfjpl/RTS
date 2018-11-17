@@ -27,6 +27,7 @@ void debug_show_size()
 int main()
 {
     engine.init();
+    engine.setup_game();//temp for development
 
     while( engine.get_menu_loop() )
     {

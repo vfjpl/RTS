@@ -3,6 +3,9 @@
 #include "engine.hpp"
 #include <iostream>
 
+#define TEXT_GAP 37
+#define TEXT_SIZE 24
+
 extern sf::RenderWindow window;
 extern Resources_Manager resources_manager;
 extern Client_Engine engine;
@@ -98,8 +101,8 @@ void Lobby::add_player(sf::Uint8 id)
 {
     for(sf::Uint8 i = m_players.size(); i < id; ++i)
     {
-        m_players.emplace_back(std::to_wstring(i), resources_manager.get_font());
-        m_players[i].setPosition(0, i*30);
+        m_players.emplace_back(std::to_wstring(i), resources_manager.get_font(), TEXT_SIZE);
+        m_players[i].setPosition(0, TEXT_GAP*i);
     }
 }
 
@@ -109,7 +112,7 @@ void Lobby::remove_player(sf::Uint8 id)
     for(sf::Uint8 i = id; i < m_players.size(); ++i)
     {
         m_players[i].setString(std::to_wstring(i));
-        m_players[i].setPosition(0, i*30);
+        m_players[i].setPosition(0, TEXT_GAP*i);
     }
 }
 
@@ -123,8 +126,8 @@ void Lobby::refresh_player(sf::Uint8 id, const Network_Player& player)
 
 void Lobby::add_chat_message(sf::Uint8 id, const std::wstring& message)
 {
-    m_chat.emplace_back(m_players[id].getString() + L": " + message, resources_manager.get_font());
-    m_chat.back().setPosition(m_middle.x, m_chat.size()*30);
+    m_chat.emplace_back(m_players[id].getString() + L": " + message, resources_manager.get_font(), TEXT_SIZE);
+    m_chat.back().setPosition(m_middle.x, TEXT_GAP*m_chat.size());
 }
 
 void Lobby::draw()
@@ -167,6 +170,8 @@ void Lobby::mark_inputbox(const sf::Event& event)
         {
             m_inputboxes[i].unmark();
         }
+
+    m_marked_inputbox = m_inputboxes.size();
 }
 
 void Lobby::debug_show_size() const

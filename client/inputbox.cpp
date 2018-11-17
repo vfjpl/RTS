@@ -6,13 +6,13 @@ extern Resources_Manager resources_manager;
 
 InputBox::InputBox(unsigned int x, unsigned int y, unsigned int width)
 {
-    m_text.setCharacterSize(14);
     m_text.setFont(resources_manager.get_font());
-    m_text.setPosition(x, y);
+    m_text.setCharacterSize(14);
     m_text.setFillColor(sf::Color::Black);
+    m_text.setPosition(x, y);
 
-    m_background.setSize(sf::Vector2f(width, 20));
     m_background.setFillColor(sf::Color(255, 255, 255, 191));
+    m_background.setSize(sf::Vector2f(width, 20));
     m_background.setPosition(x, y);
 }
 

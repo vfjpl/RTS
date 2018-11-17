@@ -8,12 +8,12 @@ Button::Button(const wchar_t* text, unsigned int x, unsigned int y)
 {
     m_text.setString(text);
     m_text.setFont(resources_manager.get_font());
-    m_text.setPosition(x, y);
     m_text.setFillColor(sf::Color::Black);
+    m_text.setPosition(x, y);
 
-    sf::FloatRect rect = m_text.getGlobalBounds();
-    m_background.setSize(sf::Vector2f(rect.width+6, rect.height+6));
-    m_background.setPosition(rect.left-3, rect.top-3);
+    sf::FloatRect rect = m_text.getLocalBounds();
+    m_background.setSize(sf::Vector2f(rect.width, rect.height+14));
+    m_background.setPosition(x, y);
 }
 
 void Button::mark()

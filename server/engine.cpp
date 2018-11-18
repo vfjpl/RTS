@@ -38,6 +38,7 @@ void Server_Engine::receive_packets()
             if(local_id == 8)//max 254
                 continue;//don't add new player
 
+            //add new player
             players.emplace_back(incomming_ip, incomming_port);
             packet_to_send << (sf::Uint8)SERVER_PLAYER_CONNECTED << local_id;
         }
@@ -53,10 +54,10 @@ void Server_Engine::receive_packets()
                 bool ready_status;
                 received_packet >> ready_status;
                 players[local_id].set_ready_status(ready_status);
-                if(get_ready_status_of_players())
-                    setup_game();
-                else
-                    packet_to_send << (sf::Uint8)SERVER_PLAYER_READY_STATUS << local_id << ready_status;
+                packet_to_send << (sf::Uint8)SERVER_PLAYER_READY_STATUS << local_id << ready_status;
+
+                if(get_ready_status_of_players())//check if all players are ready
+                    setup_game();//start new game
                 break;
             }
             case CLIENT_SEND_MESSAGE:

@@ -7,6 +7,21 @@ void Server_Engine::init()
     socket.bind(7000);
 }
 
+void Server_Engine::setup_lobby()
+{
+    lobby_loop = true;
+    game_loop = false;
+    packet_to_send << (sf::Uint8)SERVER_GAME_STATUS << false;
+}
+
+void Server_Engine::setup_game()
+{
+    lobby_loop = true;
+    game_loop = true;
+    set_all_players_ready_status(false);
+    packet_to_send << (sf::Uint8)SERVER_GAME_STATUS << true;
+}
+
 void Server_Engine::receive_packets()
 {
     sf::IpAddress incomming_ip;
@@ -38,7 +53,10 @@ void Server_Engine::receive_packets()
                 bool ready_status;
                 received_packet >> ready_status;
                 players[local_id].set_ready_status(ready_status);
-                packet_to_send << (sf::Uint8)SERVER_PLAYER_READY_STATUS << local_id << ready_status;
+                if(get_ready_status_of_players())
+                    setup_game();
+                else
+                    packet_to_send << (sf::Uint8)SERVER_PLAYER_READY_STATUS << local_id << ready_status;
                 break;
             }
             case CLIENT_SEND_MESSAGE:
@@ -98,6 +116,15 @@ sf::Uint8 Server_Engine::get_player_id(sf::IpAddress ip, unsigned short port) co
             return i;
 
     return players.size();
+}
+
+bool Server_Engine::get_ready_status_of_players() const
+{
+    bool ready = true;
+    for(sf::Uint8 i = 0; i < players.size(); ++i)
+        ready &= players[i].get_ready_status();
+
+    return ready;
 }
 
 void Server_Engine::set_all_players_ready_status(bool status)

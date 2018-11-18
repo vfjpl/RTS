@@ -13,32 +13,30 @@ void Client_Engine::game_receive_packets()
     sf::Uint8 opcode;
     while ( !socket.receive(received_packet, incomming_ip, incomming_port) )
     {
-        if(server.compare(incomming_ip, incomming_port))
+        if(!server.compare(incomming_ip, incomming_port))//check if packet was send by server
+            continue;//do nothing if not
+
+        server.reset_network_timeout();
+        while( !received_packet.endOfPacket() )
         {
-            server.reset_network_timeout();
-            while( !received_packet.endOfPacket() )
+            received_packet >> opcode;
+            switch(opcode)
             {
-                received_packet >> opcode;
-                switch(opcode)
-                {
-                case SERVER_GAME_STATUS:
-                {
-                    bool game_status;
-                    received_packet >> game_status;
-                    if(game_status)
-                        setup_game();
-                    else
-                        setup_lobby();
-                    break;
-                }
-                default:
-                {
-                    received_packet.clear();
-                    break;
-                }
-                }//end switch
-            }//end while
-        }//end if
+            case SERVER_GAME_STATUS:
+            {
+                bool game_status;
+                received_packet >> game_status;
+                if(!game_status)
+                    setup_lobby();
+                break;
+            }
+            default:
+            {
+                received_packet.clear();
+                break;
+            }
+            }//end switch
+        }//end while
     }//end while
 }
 

@@ -16,91 +16,87 @@ void Client_Engine::lobby_receive_packets()
     sf::Uint8 opcode;
     while ( !socket.receive(received_packet, incomming_ip, incomming_port) )
     {
-        if(server.compare(incomming_ip, incomming_port))
+        if(!server.compare(incomming_ip, incomming_port))//check if packet was send by server
+            continue;//do nothing if not
+
+        server.reset_network_timeout();
+        while( !received_packet.endOfPacket() )
         {
-            server.reset_network_timeout();
-            while( !received_packet.endOfPacket() )
+            received_packet >> opcode;
+            switch(opcode)
             {
-                received_packet >> opcode;
-                switch(opcode)
-                {
-                case SERVER_GAME_STATUS:
-                {
-                    bool game_status;
-                    received_packet >> game_status;
-                    if(game_status)
-                        setup_game();
-                    else
-                        setup_lobby();
-                    break;
-                }
-                case SERVER_SET_ALL_PLAYERS_READY_STATUS:
-                {
-                    bool ready_status;
-                    received_packet >> ready_status;
-                    set_all_players_ready_status(ready_status);
-                    break;
-                }
-                case SERVER_PLAYER_CONNECTED:
-                {
-                    sf::Uint8 id;
-                    received_packet >> id;
-                    players.resize(id + 1);
-                    lobby.add_player(id + 1);
-                    send_player_info();
-                    break;
-                }
-                case SERVER_PLAYER_DISCONNECTED:
-                {
-                    sf::Uint8 id;
-                    received_packet >> id;
-                    players.erase(players.begin() + id);
-                    lobby.remove_player(id);
-                    break;
-                }
-                case SERVER_PLAYER_READY_STATUS:
-                {
-                    sf::Uint8 id;
-                    bool ready_status;
-                    received_packet >> id >> ready_status;
-                    players[id].set_ready_status(ready_status);
-                    lobby.refresh_player(id, players[id]);
-                    break;
-                }
-                case SERVER_PLAYER_MESSAGE:
-                {
-                    sf::Uint8 id;
-                    std::wstring str;
-                    received_packet >> id >> str;
-                    lobby.add_chat_message(id, str);
-                    break;
-                }
-                case SERVER_PLAYER_NICKNAME:
-                {
-                    sf::Uint8 id;
-                    std::wstring str;
-                    received_packet >> id >> str;
-                    players[id].set_nickname(str);
-                    lobby.refresh_player(id, players[id]);
-                    break;
-                }
-                case SERVER_PLAYER_TEAM:
-                {
-                    sf::Uint8 id;
-                    sf::Uint8 team;
-                    received_packet >> id >> team;
-                    players[id].set_team(team);
-                    lobby.refresh_player(id, players[id]);
-                    break;
-                }
-                default:
-                {
-                    received_packet.clear();
-                    break;
-                }
-                }//end switch
-            }//end while
-        }//end if
+            case SERVER_GAME_STATUS:
+            {
+                bool game_status;
+                received_packet >> game_status;
+                if(game_status)
+                    setup_game();
+                break;
+            }
+            case SERVER_SET_ALL_PLAYERS_READY_STATUS:
+            {
+                bool ready_status;
+                received_packet >> ready_status;
+                set_all_players_ready_status(ready_status);
+                break;
+            }
+            case SERVER_PLAYER_CONNECTED:
+            {
+                sf::Uint8 id;
+                received_packet >> id;
+                players.resize(id + 1);
+                lobby.add_player(id + 1);
+                send_player_info();
+                break;
+            }
+            case SERVER_PLAYER_DISCONNECTED:
+            {
+                sf::Uint8 id;
+                received_packet >> id;
+                players.erase(players.begin() + id);
+                lobby.remove_player(id);
+                break;
+            }
+            case SERVER_PLAYER_READY_STATUS:
+            {
+                sf::Uint8 id;
+                bool ready_status;
+                received_packet >> id >> ready_status;
+                players[id].set_ready_status(ready_status);
+                break;
+            }
+            case SERVER_PLAYER_MESSAGE:
+            {
+                sf::Uint8 id;
+                std::wstring str;
+                received_packet >> id >> str;
+                lobby.add_chat_message(id, str);
+                break;
+            }
+            case SERVER_PLAYER_NICKNAME:
+            {
+                sf::Uint8 id;
+                std::wstring str;
+                received_packet >> id >> str;
+                players[id].set_nickname(str);
+                lobby.refresh_player(id, players[id]);
+                break;
+            }
+            case SERVER_PLAYER_TEAM:
+            {
+                sf::Uint8 id;
+                sf::Uint8 team;
+                received_packet >> id >> team;
+                players[id].set_team(team);
+                break;
+            }
+            default:
+            {
+                received_packet.clear();
+                break;
+            }
+            }//end switch
+        }//end while
     }//end while
 }
 

@@ -21,10 +21,12 @@ class Server_Engine
 public:
     void init();
 
+    void lobby_receive_packets();
     void lobby_logic();
+
+    void game_receive_packets();
     void game_logic();
 
-    void receive_packets();
     void send_packets();
 
     bool get_lobby_loop() const;
@@ -39,6 +41,7 @@ private:
     sf::Uint8 get_player_id(sf::IpAddress ip, unsigned short port) const;
     bool get_ready_status_of_players() const;
     void set_all_players_ready_status(bool status);
+    void connect_player(sf::IpAddress ip, unsigned short port);
     void disconnect_player(sf::Uint8 id);
 };
 

@@ -3,6 +3,7 @@ Code Guidelines
 2. nazwy plików małymi literami
 3. w nazwach stosujemy podkreślniki by oddzielić wyrazy
 4. używamy raczej typów występujących w sfml
+5. nazwy zmiennych w klasach piszemy w stylu m_nazwa_zmiennej
 
 Instrukcja jak skonfigurować projekt pod Code::Blocks
 1. Sklonuj projekt

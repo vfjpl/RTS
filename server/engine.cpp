@@ -22,77 +22,6 @@ void Server_Engine::setup_game()
     packet_to_send << (sf::Uint8)SERVER_GAME_STATUS << true;
 }
 
-void Server_Engine::receive_packets()
-{
-    sf::IpAddress incomming_ip;
-    unsigned short incomming_port;
-    sf::Uint8 local_id;
-    sf::Uint8 opcode;
-    for(sf::Uint8 i = 0; i <= players.size(); ++i)// <= because we are waiting for more players
-    {
-        socket.receive(received_packet, incomming_ip, incomming_port);
-        local_id = get_player_id(incomming_ip, incomming_port);
-
-        if(local_id == players.size())//check if we got new player
-        {
-            if(local_id == 8)//max 254
-                continue;//don't add new player
-
-            //add new player
-            players.emplace_back(incomming_ip, incomming_port);
-            packet_to_send << (sf::Uint8)SERVER_PLAYER_CONNECTED << local_id;
-        }
-
-        players[local_id].reset_network_timeout();
-        while( !received_packet.endOfPacket() )
-        {
-            received_packet >> opcode;
-            switch(opcode)
-            {
-            case CLIENT_SET_READY_STATUS:
-            {
-                bool ready_status;
-                received_packet >> ready_status;
-                players[local_id].set_ready_status(ready_status);
-                packet_to_send << (sf::Uint8)SERVER_PLAYER_READY_STATUS << local_id << ready_status;
-
-                if(get_ready_status_of_players())//check if all players are ready
-                    setup_game();//start new game
-                break;
-            }
-            case CLIENT_SEND_MESSAGE:
-            {
-                std::wstring str;
-                received_packet >> str;
-                packet_to_send << (sf::Uint8)SERVER_PLAYER_MESSAGE << local_id << str;
-                break;
-            }
-            case CLIENT_SET_NICKNAME:
-            {
-                std::wstring str;
-                received_packet >> str;
-                players[local_id].set_nickname(str);
-                packet_to_send << (sf::Uint8)SERVER_PLAYER_NICKNAME << local_id << str;
-                break;
-            }
-            case CLIENT_SET_TEAM:
-            {
-                sf::Uint8 team;
-                received_packet >> team;
-                players[local_id].set_team(team);
-                packet_to_send << (sf::Uint8)SERVER_PLAYER_TEAM << local_id << team;
-                break;
-            }
-            default:
-            {
-                received_packet.clear();
-                break;
-            }
-            }//end switch
-        }//end while
-    }//end for
-}
-
 void Server_Engine::send_packets()
 {
     for(sf::Uint8 i = 0; i < players.size(); ++i)
@@ -121,11 +50,11 @@ sf::Uint8 Server_Engine::get_player_id(sf::IpAddress ip, unsigned short port) co
 
 bool Server_Engine::get_ready_status_of_players() const
 {
-    bool ready = true;
     for(sf::Uint8 i = 0; i < players.size(); ++i)
-        ready &= players[i].get_ready_status();
+        if(!players[i].get_ready_status())
+            return false;
 
-    return ready;
+    return true;
 }
 
 void Server_Engine::set_all_players_ready_status(bool status)
@@ -133,6 +62,13 @@ void Server_Engine::set_all_players_ready_status(bool status)
     for(sf::Uint8 i = 0; i < players.size(); ++i)
         players[i].set_ready_status(status);
     packet_to_send << (sf::Uint8)SERVER_SET_ALL_PLAYERS_READY_STATUS << status;
+}
+
+void Server_Engine::connect_player(sf::IpAddress ip, unsigned short port)
+{
+    sf::Uint8 id = players.size();
+    players.emplace_back(ip, port);
+    packet_to_send << (sf::Uint8)SERVER_PLAYER_CONNECTED << id;
 }
 
 void Server_Engine::disconnect_player(sf::Uint8 id)

@@ -29,7 +29,7 @@ public:
 
 private:
     sf::Uint8 get_button_id_from_press(const sf::Event& event) const;
-    sf::Uint8 get_marked_inputbox() const;
+    sf::Uint8 get_marked_inputbox_id() const;
 
     void main_menu();
     void connect_menu();

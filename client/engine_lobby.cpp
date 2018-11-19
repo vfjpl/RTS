@@ -30,7 +30,8 @@ void Client_Engine::lobby_receive_packets()
                 bool game_status;
                 received_packet >> game_status;
 
-                setup_game();
+                if(game_status)
+                    setup_game();
                 break;
             }
             case SERVER_SET_ALL_PLAYERS_READY_STATUS:
@@ -47,7 +48,7 @@ void Client_Engine::lobby_receive_packets()
                 players.resize(id + 1);
 
                 lobby.add_player(id + 1);
-                send_player_informations();
+                send_local_player_informations();
                 break;
             }
             case SERVER_PLAYER_DISCONNECTED:
@@ -65,6 +66,8 @@ void Client_Engine::lobby_receive_packets()
                 bool ready_status;
                 received_packet >> id >> ready_status;
                 players[id].set_ready_status(ready_status);
+
+                lobby.refresh_player(id);
                 break;
             }
             case SERVER_PLAYER_MESSAGE:

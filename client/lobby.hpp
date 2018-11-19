@@ -4,7 +4,6 @@
 #include "button.hpp"
 #include "inputbox.hpp"
 #include "text.hpp"
-#include "../common/network_data.hpp"
 #include <deque>
 
 class Lobby
@@ -35,7 +34,7 @@ public:
 
 private:
     sf::Uint8 get_button_id_from_press(const sf::Event& event) const;
-    sf::Uint8 get_marked_inputbox() const;
+    sf::Uint8 get_marked_inputbox_id() const;
 };
 
 #endif // LOBBY_HPP_INCLUDED

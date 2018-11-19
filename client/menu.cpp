@@ -183,7 +183,7 @@ void Menu::mouse_click(const sf::Event& event)
 
 void Menu::text_entered(const sf::Event& event)
 {
-    sf::Uint8 marked_inputbox = get_marked_inputbox();
+    sf::Uint8 marked_inputbox = get_marked_inputbox_id();
     if(marked_inputbox == m_inputboxes.size())
         return;//none inputbox is marked
 
@@ -260,7 +260,7 @@ sf::Uint8 Menu::get_button_id_from_press(const sf::Event& event) const
     return m_buttons.size();
 }
 
-sf::Uint8 Menu::get_marked_inputbox() const
+sf::Uint8 Menu::get_marked_inputbox_id() const
 {
     for(sf::Uint8 i = 0; i < m_inputboxes.size(); ++i)
         if(m_inputboxes[i].is_marked())

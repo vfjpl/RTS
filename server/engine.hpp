@@ -40,6 +40,7 @@ private:
 
     sf::Uint8 get_player_id(sf::IpAddress ip, unsigned short port) const;
     bool get_ready_status_of_players() const;
+
     void set_all_players_ready_status(bool status);
     void connect_player(sf::IpAddress ip, unsigned short port);
     void disconnect_player(sf::Uint8 id);

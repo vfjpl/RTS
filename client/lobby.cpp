@@ -24,6 +24,7 @@ void Lobby::setup()
     m_inputboxes.emplace_back(m_middle.x, m_middle.y - MARGIN - TEXT_GAP, m_middle.x - TEXT_GAP);
     m_middle.y /= 2;
 
+    //setup players after game
     add_player(engine.get_number_of_players());
 }
 
@@ -67,7 +68,7 @@ void Lobby::mouse_click(const sf::Event& event)
 
 void Lobby::text_entered(const sf::Event& event)
 {
-    sf::Uint8 marked_inputbox = get_marked_inputbox();
+    sf::Uint8 marked_inputbox = get_marked_inputbox_id();
     if(marked_inputbox == m_inputboxes.size())
         return;//none inputbox is marked
 
@@ -150,7 +151,6 @@ void Lobby::add_chat_message(sf::Uint8 id, const std::wstring& message)
                         m_middle.x,
                         TEXT_GAP*m_chat.size(),
                         TEXT_SIZE);
-
 }
 
 void Lobby::draw()
@@ -180,7 +180,7 @@ sf::Uint8 Lobby::get_button_id_from_press(const sf::Event& event) const
     return m_buttons.size();
 }
 
-sf::Uint8 Lobby::get_marked_inputbox() const
+sf::Uint8 Lobby::get_marked_inputbox_id() const
 {
     for(sf::Uint8 i = 0; i < m_inputboxes.size(); ++i)
         if(m_inputboxes[i].is_marked())

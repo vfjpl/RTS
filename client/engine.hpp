@@ -57,7 +57,7 @@ public:
 
 private:
     void set_all_players_ready_status(bool status);
-    void send_player_informations();
+    void send_local_player_informations();
 };
 
 #endif // ENGINE_HPP_INCLUDED

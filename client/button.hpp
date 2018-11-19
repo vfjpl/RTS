@@ -12,7 +12,7 @@ public:
 
 
     Button(const wchar_t* text, unsigned int x, unsigned int y);//variable width button
-    Button(const wchar_t* text, unsigned int x, unsigned int y, unsigned int width);//const width button
+    Button(const wchar_t* text, unsigned int x, unsigned int y, unsigned int width);
 
     void mark();
     void unmark();

@@ -4,13 +4,6 @@
 
 extern Resources_Manager resources_manager;
 
-Text::Text(unsigned int x, unsigned int y, unsigned int characterSize)
-{
-    m_text.setFont(resources_manager.get_font());
-    m_text.setCharacterSize(characterSize);
-    m_text.setPosition(x, y);
-}
-
 Text::Text(const wchar_t* text, unsigned int x, unsigned int y)
 {
     m_text.setString(text);
@@ -18,10 +11,26 @@ Text::Text(const wchar_t* text, unsigned int x, unsigned int y)
     m_text.setPosition(x, y);
 }
 
+Text::Text(const wchar_t* text, unsigned int x, unsigned int y, unsigned int characterSize)
+{
+    m_text.setString(text);
+    m_text.setFont(resources_manager.get_font());
+    m_text.setCharacterSize(characterSize);
+    m_text.setPosition(x, y);
+}
+
 Text::Text(const std::wstring& text, unsigned int x, unsigned int y)
 {
     m_text.setString(text);
     m_text.setFont(resources_manager.get_font());
+    m_text.setPosition(x, y);
+}
+
+Text::Text(const std::wstring& text, unsigned int x, unsigned int y, unsigned int characterSize)
+{
+    m_text.setString(text);
+    m_text.setFont(resources_manager.get_font());
+    m_text.setCharacterSize(characterSize);
     m_text.setPosition(x, y);
 }
 

@@ -13,6 +13,7 @@ public:
 
 
     InputBox(unsigned int x, unsigned int y, unsigned int width);
+    InputBox(const wchar_t* text, unsigned int x, unsigned int y, unsigned int width);
     InputBox(const std::wstring& text, unsigned int x, unsigned int y, unsigned int width);
     InputBox(const std::string& text, unsigned int x, unsigned int y, unsigned int width);
 

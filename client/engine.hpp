@@ -43,12 +43,15 @@ public:
     void game_receive_inputs();
 
     void send_message(const std::wstring& msg);
-    void send_ready_status();
+    void send_ready_status(bool status);
     void send_packets();
 
     bool get_menu_loop() const;
     bool get_lobby_loop() const;
     bool get_game_loop() const;
+
+    sf::Uint8 get_number_of_players() const;
+    const Network_Data& get_player_informations(sf::Uint8 id) const;
 
     void debug_show_size() const;
 

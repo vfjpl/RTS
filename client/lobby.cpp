@@ -1,6 +1,7 @@
 #include "lobby.hpp"
 #include "resources_manager.hpp"
 #include "engine.hpp"
+#include "../common/network_data.hpp"
 #include <iostream>
 
 #define TEXT_SIZE 15
@@ -10,6 +11,7 @@
 extern sf::RenderWindow window;
 extern Resources_Manager resources_manager;
 extern Client_Engine engine;
+extern Network_Data server;
 
 void Lobby::setup()
 {
@@ -21,6 +23,8 @@ void Lobby::setup()
     m_middle.x /= 2;
     m_inputboxes.emplace_back(m_middle.x, m_middle.y - MARGIN - TEXT_GAP, m_middle.x - TEXT_GAP);
     m_middle.y /= 2;
+
+    add_player(engine.get_number_of_players());
 }
 
 void Lobby::clear()
@@ -55,7 +59,7 @@ void Lobby::mouse_click(const sf::Event& event)
     }
     case 1://ready
     {
-        engine.send_ready_status();
+        engine.send_ready_status(!server.get_ready_status());
         break;
     }
     }//end switch
@@ -113,19 +117,22 @@ void Lobby::mouse_move(const sf::Event& event)
 void Lobby::add_player(sf::Uint8 id)
 {
     for(sf::Uint8 i = m_players.size(); i < id; ++i)
-        m_players.emplace_back(0, TEXT_GAP*i, TEXT_SIZE);
+        m_players.emplace_back(std::to_wstring(i) + L": " + engine.get_player_informations(i).get_nickname(), 0, TEXT_GAP*i, TEXT_SIZE);
 }
 
 void Lobby::remove_player(sf::Uint8 id)
 {
     m_players.erase(m_players.begin() + id);
     for(sf::Uint8 i = id; i < m_players.size(); ++i)
+    {
+        m_players[i].m_text.setString(std::to_wstring(i) + L": " + engine.get_player_informations(i).get_nickname());
         m_players[i].m_text.setPosition(0, TEXT_GAP*i);
+    }
 }
 
-void Lobby::refresh_player(sf::Uint8 id, const Network_Data& player)
+void Lobby::refresh_player(sf::Uint8 id)
 {
-    m_players[id].m_text.setString(std::to_wstring(id) + L": " + player.get_nickname());
+    m_players[id].m_text.setString(std::to_wstring(id) + L": " + engine.get_player_informations(id).get_nickname());
 }
 
 void Lobby::add_chat_message(sf::Uint8 id, const std::wstring& message)
@@ -136,8 +143,8 @@ void Lobby::add_chat_message(sf::Uint8 id, const std::wstring& message)
         for(sf::Uint8 i = 0; i < m_chat.size(); ++i)
             m_chat[i].m_text.setPosition(m_middle.x, TEXT_GAP*i);
     }
-    m_chat.emplace_back(m_players[id].m_text.getString() + L": " + message, m_middle.x, TEXT_GAP*m_chat.size());
-    m_chat.back().m_text.setCharacterSize(TEXT_SIZE);
+    m_chat.emplace_back(m_players[id].m_text.getString() + L": " + message, m_middle.x, TEXT_GAP*m_chat.size(), TEXT_SIZE);
+
 }
 
 void Lobby::draw()

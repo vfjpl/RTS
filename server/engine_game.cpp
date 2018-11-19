@@ -1,4 +1,5 @@
 #include "engine.hpp"
+#include "../common/network_opcodes.hpp"
 
 void Server_Engine::game_receive_packets()
 {
@@ -12,7 +13,10 @@ void Server_Engine::game_receive_packets()
         local_id = get_player_id(incomming_ip, incomming_port);
 
         if(local_id == players.size())//check if we got new player
+        {
             connect_player(incomming_ip, incomming_port);
+            packet_to_send << (sf::Uint8)SERVER_GAME_STATUS << true;
+        }
 
         players[local_id].reset_network_timeout();
         while( !received_packet.endOfPacket() )

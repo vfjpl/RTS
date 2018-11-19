@@ -29,8 +29,8 @@ void Client_Engine::lobby_receive_packets()
             {
                 bool game_status;
                 received_packet >> game_status;
-                if(game_status)
-                    setup_game();
+
+                setup_game();
                 break;
             }
             case SERVER_SET_ALL_PLAYERS_READY_STATUS:
@@ -45,6 +45,7 @@ void Client_Engine::lobby_receive_packets()
                 sf::Uint8 id;
                 received_packet >> id;
                 players.resize(id + 1);
+
                 lobby.add_player(id + 1);
                 send_player_informations();
                 break;
@@ -54,6 +55,7 @@ void Client_Engine::lobby_receive_packets()
                 sf::Uint8 id;
                 received_packet >> id;
                 players.erase(players.begin() + id);
+
                 lobby.remove_player(id);
                 break;
             }
@@ -70,6 +72,7 @@ void Client_Engine::lobby_receive_packets()
                 sf::Uint8 id;
                 std::wstring str;
                 received_packet >> id >> str;
+
                 lobby.add_chat_message(id, str);
                 break;
             }
@@ -79,7 +82,8 @@ void Client_Engine::lobby_receive_packets()
                 std::wstring str;
                 received_packet >> id >> str;
                 players[id].set_nickname(str);
-                lobby.refresh_player(id, players[id]);
+
+                lobby.refresh_player(id);
                 break;
             }
             case SERVER_PLAYER_TEAM:
@@ -88,6 +92,8 @@ void Client_Engine::lobby_receive_packets()
                 sf::Uint8 team;
                 received_packet >> id >> team;
                 players[id].set_team(team);
+
+                lobby.refresh_player(id);
                 break;
             }
             default:

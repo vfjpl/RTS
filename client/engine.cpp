@@ -79,9 +79,10 @@ void Client_Engine::send_message(const std::wstring& msg)
     packet_to_send << (sf::Uint8)CLIENT_SEND_MESSAGE << msg;
 }
 
-void Client_Engine::send_ready_status()
+void Client_Engine::send_ready_status(bool status)
 {
-    packet_to_send << (sf::Uint8)CLIENT_SET_READY_STATUS << !server.get_ready_status();
+    server.set_ready_status(status);
+    packet_to_send << (sf::Uint8)CLIENT_SET_READY_STATUS << status;
 }
 
 void Client_Engine::send_packets()
@@ -105,6 +106,16 @@ bool Client_Engine::get_game_loop() const
     return game_loop;
 }
 
+sf::Uint8 Client_Engine::get_number_of_players() const
+{
+    return players.size();
+}
+
+const Network_Data& Client_Engine::get_player_informations(sf::Uint8 id) const
+{
+    return players[id];
+}
+
 void Client_Engine::set_all_players_ready_status(bool status)
 {
     server.set_ready_status(status);
@@ -114,6 +125,8 @@ void Client_Engine::set_all_players_ready_status(bool status)
 
 void Client_Engine::send_player_informations()
 {
+    if(server.get_team() != 0)
+        packet_to_send << (sf::Uint8)CLIENT_SET_TEAM << server.get_team();
     if(server.get_ready_status())
         packet_to_send << (sf::Uint8)CLIENT_SET_READY_STATUS << true;
     if(!server.get_nickname().empty())

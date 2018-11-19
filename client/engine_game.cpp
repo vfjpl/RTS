@@ -26,6 +26,7 @@ void Client_Engine::game_receive_packets()
             {
                 bool game_status;
                 received_packet >> game_status;
+
                 if(!game_status)
                     setup_lobby();
                 break;

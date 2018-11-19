@@ -3,6 +3,7 @@
 
 #include "button.hpp"
 #include "inputbox.hpp"
+#include "text.hpp"
 #include "../common/network_data.hpp"
 #include <deque>
 
@@ -11,8 +12,8 @@ class Lobby
     //sort from largest to smallest!
     std::deque <Button> m_buttons;//80
     std::deque <InputBox> m_inputboxes;//80
-    std::deque <sf::Text> m_players;//80
-    std::deque <sf::Text> m_chat;//80
+    std::deque <Text> m_players;//80
+    std::deque <Text> m_chat;//80
     sf::Vector2u m_middle;//8
     sf::Uint8 m_marked_inputbox;//1
 

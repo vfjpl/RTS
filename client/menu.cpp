@@ -4,7 +4,7 @@
 #include "../common/network_data.hpp"
 #include <iostream>
 
-#define TEXT_GAP (36+10)
+#define TEXT_GAP 50
 
 extern sf::RenderWindow window;
 extern Resources_Manager resources_manager;
@@ -21,10 +21,12 @@ void Menu::setup()
 
 void Menu::clear()
 {
+    m_marked_inputbox = 0;
     m_state = 0;
     m_middle.x = 0;
     m_middle.y = 0;
     m_buttons.clear();
+    m_inputboxes.clear();
     m_texts.clear();
 }
 
@@ -32,66 +34,62 @@ void Menu::main_menu()
 {
     m_state = 1;
     m_buttons.clear();
+    m_inputboxes.clear();
     m_texts.clear();
 
-    //buttons
+    m_texts.emplace_back(L"kelajno", m_middle.x, m_middle.y);
     m_buttons.emplace_back(L"CONNECT", m_middle.x, m_middle.y + TEXT_GAP);
-    m_buttons.emplace_back(L"OPTIONS", m_middle.x, m_middle.y + (TEXT_GAP*2));
-    m_buttons.emplace_back(L"AUTHORS", m_middle.x, m_middle.y + (TEXT_GAP*3));
-    m_buttons.emplace_back(L"QUIT", m_middle.x, m_middle.y + (TEXT_GAP*4));
-
-    //texts
-    m_texts.emplace_back(L"kelajno", resources_manager.get_font());
-    m_texts.back().setPosition(m_middle.x, m_middle.y);
+    m_buttons.emplace_back(L"OPTIONS", m_middle.x, m_middle.y + TEXT_GAP*2);
+    m_buttons.emplace_back(L"AUTHORS", m_middle.x, m_middle.y + TEXT_GAP*3);
+    m_buttons.emplace_back(L"QUIT", m_middle.x, m_middle.y + TEXT_GAP*4);
+    m_marked_inputbox = m_inputboxes.size();
 }
 
 void Menu::connect_menu()
 {
     m_state = 2;
     m_buttons.clear();
+    m_inputboxes.clear();
     m_texts.clear();
 
-    //buttons
-    m_buttons.emplace_back(L"CONNECT", m_middle.x, m_middle.y + TEXT_GAP);
-    m_buttons.emplace_back(L"BACK", m_middle.x, m_middle.y + (TEXT_GAP*2));
-
-    //texts
-    m_texts.emplace_back(server.get_ip().toString(), resources_manager.get_font());
-    m_texts.back().setPosition(m_middle.x, m_middle.y);
+    m_inputboxes.emplace_back(server.get_ip().toString(), m_middle.x, m_middle.y);
+    m_inputboxes.emplace_back(m_middle.x, m_middle.y + TEXT_GAP, 255);
+    m_buttons.emplace_back(L"CONNECT", m_middle.x, m_middle.y + TEXT_GAP*2);
+    m_buttons.emplace_back(L"BACK", m_middle.x, m_middle.y + TEXT_GAP*3);
+    m_marked_inputbox = m_inputboxes.size();
 }
 
 void Menu::options_menu()
 {
     m_state = 3;
     m_buttons.clear();
+    m_inputboxes.clear();
     m_texts.clear();
 
-    //buttons
     m_buttons.emplace_back(L"FULLSCREEN", m_middle.x, m_middle.y);
     m_buttons.emplace_back(L"WINDOWED", m_middle.x, m_middle.y + TEXT_GAP);
-    m_buttons.emplace_back(L"BACK", m_middle.x, m_middle.y + (TEXT_GAP*2));
+    m_buttons.emplace_back(L"BACK", m_middle.x, m_middle.y + TEXT_GAP*2);
+    m_marked_inputbox = m_inputboxes.size();
 }
 
 void Menu::authors_menu()
 {
     m_state = 4;
     m_buttons.clear();
+    m_inputboxes.clear();
     m_texts.clear();
 
-    //buttons
-    m_buttons.emplace_back(L"BACK", m_middle.x, m_middle.y + (TEXT_GAP*3));
-
-    //texts
-    m_texts.emplace_back(L"Kacper Piwiński", resources_manager.get_font());
-    m_texts.back().setPosition(m_middle.x, m_middle.y);
-    m_texts.emplace_back(L"Radosław Wojdak", resources_manager.get_font());
-    m_texts.back().setPosition(m_middle.x, m_middle.y + TEXT_GAP);
-    m_texts.emplace_back(L"Robert Kamiński", resources_manager.get_font());
-    m_texts.back().setPosition(m_middle.x, m_middle.y + (TEXT_GAP*2));
+    m_texts.emplace_back(L"Kacper Piwiński", m_middle.x, m_middle.y);
+    m_texts.emplace_back(L"Radosław Wojdak", m_middle.x, m_middle.y + TEXT_GAP);
+    m_texts.emplace_back(L"Robert Kamiński", m_middle.x, m_middle.y + TEXT_GAP*2);
+    m_buttons.emplace_back(L"BACK", m_middle.x, m_middle.y + TEXT_GAP*3);
+    m_marked_inputbox = m_inputboxes.size();
 }
 
 void Menu::mouse_click(const sf::Event& event)
 {
+    mark_inputbox(event);
+
     sf::Uint8 button_id = get_button_id_from_press(event);
     switch(m_state)
     {
@@ -128,7 +126,8 @@ void Menu::mouse_click(const sf::Event& event)
         {
         case 0://connect
         {
-            server.set_ip(sf::IpAddress(m_texts[0].getString()));
+            server.set_ip(sf::IpAddress(m_inputboxes[0].m_text.getString()));
+            server.set_nickname(m_inputboxes[1].m_text.getString());
             engine.setup_lobby();
             break;
         }
@@ -181,10 +180,11 @@ void Menu::mouse_click(const sf::Event& event)
 
 void Menu::text_entered(const sf::Event& event)
 {
-    if(m_state != 2)//not in connecting state
+    if(m_marked_inputbox == m_inputboxes.size())
         return;
 
-    std::wstring str(m_texts[0].getString());
+    std::wstring str(m_inputboxes[m_marked_inputbox].m_text.getString());
+    str.pop_back();
     switch(event.text.unicode)
     {
     case L'\b'://BackSpace (8)
@@ -193,9 +193,14 @@ void Menu::text_entered(const sf::Event& event)
             str.pop_back();
         break;
     }
+    case L'\t'://Tab (9)
+    {
+        break;
+    }
     case L'\r'://Enter (13)
     {
-        server.set_ip(sf::IpAddress(m_texts[0].getString()));
+        server.set_ip(sf::IpAddress(m_inputboxes[0].m_text.getString()));
+        server.set_nickname(m_inputboxes[1].m_text.getString());
         engine.setup_lobby();
         break;
     }
@@ -205,7 +210,7 @@ void Menu::text_entered(const sf::Event& event)
         break;
     }
     }//end switch
-    m_texts[0].setString(str);
+    m_inputboxes[m_marked_inputbox].m_text.setString(str + L'|');
 }
 
 void Menu::mouse_move(const sf::Event& event)
@@ -224,8 +229,13 @@ void Menu::draw()
         window.draw(m_buttons[i].m_background);
         window.draw(m_buttons[i].m_text);
     }
+    for(sf::Uint8 i = 0; i < m_inputboxes.size(); ++i)
+    {
+        window.draw(m_inputboxes[i].m_background);
+        window.draw(m_inputboxes[i].m_text);
+    }
     for(sf::Uint8 i = 0; i < m_texts.size(); ++i)
-        window.draw(m_texts[i]);
+        window.draw(m_texts[i].m_text);
 }
 
 sf::Uint8 Menu::get_button_id_from_press(const sf::Event& event) const
@@ -237,11 +247,34 @@ sf::Uint8 Menu::get_button_id_from_press(const sf::Event& event) const
     return m_buttons.size();
 }
 
+void Menu::mark_inputbox(const sf::Event& event)
+{
+    for(sf::Uint8 i = 0; i < m_inputboxes.size(); ++i)
+        if(m_inputboxes[i].m_background.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y))
+        {
+            if(m_marked_inputbox != i)
+            {
+                if(m_marked_inputbox != m_inputboxes.size())
+                    m_inputboxes[m_marked_inputbox].unmark();
+                m_inputboxes[i].mark();
+                m_marked_inputbox = i;
+            }
+            return;
+        }
+
+    if(m_marked_inputbox != m_inputboxes.size())
+    {
+        m_inputboxes[m_marked_inputbox].unmark();
+        m_marked_inputbox = m_inputboxes.size();
+    }
+}
+
 void Menu::debug_show_size() const
 {
     //keep up to date!
-    std::wcout << sizeof(m_buttons)<< L'\n'
-               << sizeof(m_texts)<< L'\n'
+    std::wcout << sizeof(m_buttons) << L'\n'
+               << sizeof(m_texts) << L'\n'
                << sizeof(m_middle)<< L'\n'
-               << sizeof(m_state) << L'\n';
+               << sizeof(m_state) << L'\n'
+               << sizeof(m_marked_inputbox) << L'\n';
 }

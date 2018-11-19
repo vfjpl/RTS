@@ -46,7 +46,7 @@ void Client_Engine::lobby_receive_packets()
                 received_packet >> id;
                 players.resize(id + 1);
                 lobby.add_player(id + 1);
-                send_player_info();
+                send_player_informations();
                 break;
             }
             case SERVER_PLAYER_DISCONNECTED:

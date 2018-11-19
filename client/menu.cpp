@@ -183,31 +183,43 @@ void Menu::text_entered(const sf::Event& event)
     if(m_marked_inputbox == m_inputboxes.size())
         return;
 
-    std::wstring str(m_inputboxes[m_marked_inputbox].m_text.getString());
-    str.pop_back();
     switch(event.text.unicode)
     {
     case L'\b'://BackSpace (8)
     {
+        std::wstring str(m_inputboxes[m_marked_inputbox].m_text.getString());
+        str.pop_back();
         if(!str.empty())
             str.pop_back();
+        str.push_back(L'|');
+        m_inputboxes[m_marked_inputbox].m_text.setString(str);
         break;
     }
     case L'\t'://Tab (9)
     {
+        m_inputboxes[m_marked_inputbox++].unmark();
+        m_marked_inputbox %= m_inputboxes.size();
+        m_inputboxes[m_marked_inputbox].mark();
         break;
     }
     case L'\r'://Enter (13)
     {
+        m_inputboxes[m_marked_inputbox].unmark();
+        server.set_ip(sf::IpAddress(m_inputboxes[0].m_text.getString()));
+        server.set_nickname(m_inputboxes[1].m_text.getString());
+        engine.setup_lobby();
         break;
     }
     default:
     {
+        std::wstring str(m_inputboxes[m_marked_inputbox].m_text.getString());
+        str.pop_back();
         str.push_back(event.text.unicode);
+        str.push_back(L'|');
+        m_inputboxes[m_marked_inputbox].m_text.setString(str);
         break;
     }
     }//end switch
-    m_inputboxes[m_marked_inputbox].m_text.setString(str + L'|');
 }
 
 void Menu::mouse_move(const sf::Event& event)

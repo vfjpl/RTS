@@ -112,7 +112,7 @@ void Client_Engine::set_all_players_ready_status(bool status)
         players[i].set_ready_status(status);
 }
 
-void Client_Engine::send_player_info()
+void Client_Engine::send_player_informations()
 {
     if(server.get_ready_status())
         packet_to_send << (sf::Uint8)CLIENT_SET_READY_STATUS << true;

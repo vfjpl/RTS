@@ -60,29 +60,38 @@ void Lobby::text_entered(const sf::Event& event)
     if(m_marked_inputbox == m_inputboxes.size())
         return;
 
-    std::wstring str(m_inputboxes[m_marked_inputbox].m_text.getString());
-    str.pop_back();
     switch(event.text.unicode)
     {
     case L'\b'://BackSpace (8)
     {
+        std::wstring str(m_inputboxes[m_marked_inputbox].m_text.getString());
+        str.pop_back();
         if(!str.empty())
             str.pop_back();
+        str.push_back(L'|');
+        m_inputboxes[m_marked_inputbox].m_text.setString(str);
         break;
     }
     case L'\r'://Enter (13)
     {
+        std::wstring str(m_inputboxes[m_marked_inputbox].m_text.getString());
+        str.pop_back();
         engine.send_message(str);
         str.clear();
+        str.push_back(L'|');
+        m_inputboxes[m_marked_inputbox].m_text.setString(str);
         break;
     }
     default:
     {
+        std::wstring str(m_inputboxes[m_marked_inputbox].m_text.getString());
+        str.pop_back();
         str.push_back(event.text.unicode);
+        str.push_back(L'|');
+        m_inputboxes[m_marked_inputbox].m_text.setString(str);
         break;
     }
     }//end switch
-    m_inputboxes[m_marked_inputbox].m_text.setString(str + L'|');
 }
 
 void Lobby::mouse_move(const sf::Event& event)

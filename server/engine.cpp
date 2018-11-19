@@ -69,8 +69,6 @@ void Server_Engine::connect_player(sf::IpAddress ip, unsigned short port)
     sf::Uint8 id = players.size();
     players.emplace_back(ip, port);
     packet_to_send << (sf::Uint8)SERVER_PLAYER_CONNECTED << id;
-    //send game status so player can join while the game is started
-    packet_to_send << (sf::Uint8)SERVER_GAME_STATUS << lobby_loop;
 }
 
 void Server_Engine::disconnect_player(sf::Uint8 id)

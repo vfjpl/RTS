@@ -83,6 +83,7 @@ void Menu::authors_menu()
 
 void Menu::mouse_click(const sf::Event& event)
 {
+    //mark pressed inputbox
     for(sf::Uint8 i = 0; i < m_inputboxes.size(); ++i)
         if(m_inputboxes[i].m_background.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y))
             m_inputboxes[i].mark();
@@ -90,6 +91,9 @@ void Menu::mouse_click(const sf::Event& event)
             m_inputboxes[i].unmark();
 
     sf::Uint8 button_id = get_button_id_from_press(event);
+    if(button_id == m_buttons.size())
+        return;//none button is pressed
+
     switch(m_state)
     {
     case 1://main menu
@@ -181,7 +185,7 @@ void Menu::text_entered(const sf::Event& event)
 {
     sf::Uint8 marked_inputbox = get_marked_inputbox();
     if(marked_inputbox == m_inputboxes.size())
-        return;
+        return;//none inputbox is marked
 
     switch(event.text.unicode)
     {

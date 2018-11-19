@@ -21,7 +21,6 @@ void Menu::setup()
 
 void Menu::clear()
 {
-    m_marked_inputbox = 0;
     m_state = 0;
     m_middle.x = 0;
     m_middle.y = 0;
@@ -42,7 +41,6 @@ void Menu::main_menu()
     m_buttons.emplace_back(L"OPTIONS", m_middle.x, m_middle.y + TEXT_GAP*2);
     m_buttons.emplace_back(L"AUTHORS", m_middle.x, m_middle.y + TEXT_GAP*3);
     m_buttons.emplace_back(L"QUIT", m_middle.x, m_middle.y + TEXT_GAP*4);
-    m_marked_inputbox = m_inputboxes.size();
 }
 
 void Menu::connect_menu()
@@ -52,11 +50,10 @@ void Menu::connect_menu()
     m_inputboxes.clear();
     m_texts.clear();
 
-    m_inputboxes.emplace_back(server.get_ip().toString(), m_middle.x, m_middle.y);
-    m_inputboxes.emplace_back(m_middle.x, m_middle.y + TEXT_GAP, 255);
+    m_inputboxes.emplace_back(server.get_ip().toString(), m_middle.x, m_middle.y, 256);
+    m_inputboxes.emplace_back(server.get_nickname(), m_middle.x, m_middle.y + TEXT_GAP, 256);
     m_buttons.emplace_back(L"CONNECT", m_middle.x, m_middle.y + TEXT_GAP*2);
     m_buttons.emplace_back(L"BACK", m_middle.x, m_middle.y + TEXT_GAP*3);
-    m_marked_inputbox = m_inputboxes.size();
 }
 
 void Menu::options_menu()
@@ -69,7 +66,6 @@ void Menu::options_menu()
     m_buttons.emplace_back(L"FULLSCREEN", m_middle.x, m_middle.y);
     m_buttons.emplace_back(L"WINDOWED", m_middle.x, m_middle.y + TEXT_GAP);
     m_buttons.emplace_back(L"BACK", m_middle.x, m_middle.y + TEXT_GAP*2);
-    m_marked_inputbox = m_inputboxes.size();
 }
 
 void Menu::authors_menu()
@@ -83,12 +79,15 @@ void Menu::authors_menu()
     m_texts.emplace_back(L"Radosław Wojdak", m_middle.x, m_middle.y + TEXT_GAP);
     m_texts.emplace_back(L"Robert Kamiński", m_middle.x, m_middle.y + TEXT_GAP*2);
     m_buttons.emplace_back(L"BACK", m_middle.x, m_middle.y + TEXT_GAP*3);
-    m_marked_inputbox = m_inputboxes.size();
 }
 
 void Menu::mouse_click(const sf::Event& event)
 {
-    mark_inputbox(event);
+    for(sf::Uint8 i = 0; i < m_inputboxes.size(); ++i)
+        if(m_inputboxes[i].m_background.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y))
+            m_inputboxes[i].mark();
+        else
+            m_inputboxes[i].unmark();
 
     sf::Uint8 button_id = get_button_id_from_press(event);
     switch(m_state)
@@ -180,31 +179,32 @@ void Menu::mouse_click(const sf::Event& event)
 
 void Menu::text_entered(const sf::Event& event)
 {
-    if(m_marked_inputbox == m_inputboxes.size())
+    sf::Uint8 marked_inputbox = get_marked_inputbox();
+    if(marked_inputbox == m_inputboxes.size())
         return;
 
     switch(event.text.unicode)
     {
     case L'\b'://BackSpace (8)
     {
-        std::wstring str(m_inputboxes[m_marked_inputbox].m_text.getString());
+        std::wstring str(m_inputboxes[marked_inputbox].m_text.getString());
         str.pop_back();
         if(!str.empty())
             str.pop_back();
         str.push_back(L'|');
-        m_inputboxes[m_marked_inputbox].m_text.setString(str);
+        m_inputboxes[marked_inputbox].m_text.setString(str);
         break;
     }
     case L'\t'://Tab (9)
     {
-        m_inputboxes[m_marked_inputbox++].unmark();
-        m_marked_inputbox %= m_inputboxes.size();
-        m_inputboxes[m_marked_inputbox].mark();
+        m_inputboxes[marked_inputbox++].unmark();
+        marked_inputbox %= m_inputboxes.size();
+        m_inputboxes[marked_inputbox].mark();
         break;
     }
     case L'\r'://Enter (13)
     {
-        m_inputboxes[m_marked_inputbox].unmark();
+        m_inputboxes[marked_inputbox].unmark();
         server.set_ip(sf::IpAddress(m_inputboxes[0].m_text.getString()));
         server.set_nickname(m_inputboxes[1].m_text.getString());
         engine.setup_lobby();
@@ -212,11 +212,11 @@ void Menu::text_entered(const sf::Event& event)
     }
     default:
     {
-        std::wstring str(m_inputboxes[m_marked_inputbox].m_text.getString());
+        std::wstring str(m_inputboxes[marked_inputbox].m_text.getString());
         str.pop_back();
         str.push_back(event.text.unicode);
         str.push_back(L'|');
-        m_inputboxes[m_marked_inputbox].m_text.setString(str);
+        m_inputboxes[marked_inputbox].m_text.setString(str);
         break;
     }
     }//end switch
@@ -256,26 +256,13 @@ sf::Uint8 Menu::get_button_id_from_press(const sf::Event& event) const
     return m_buttons.size();
 }
 
-void Menu::mark_inputbox(const sf::Event& event)
+sf::Uint8 Menu::get_marked_inputbox() const
 {
     for(sf::Uint8 i = 0; i < m_inputboxes.size(); ++i)
-        if(m_inputboxes[i].m_background.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y))
-        {
-            if(m_marked_inputbox != i)
-            {
-                if(m_marked_inputbox != m_inputboxes.size())
-                    m_inputboxes[m_marked_inputbox].unmark();
-                m_inputboxes[i].mark();
-                m_marked_inputbox = i;
-            }
-            return;
-        }
+        if(m_inputboxes[i].is_marked())
+            return i;
 
-    if(m_marked_inputbox != m_inputboxes.size())
-    {
-        m_inputboxes[m_marked_inputbox].unmark();
-        m_marked_inputbox = m_inputboxes.size();
-    }
+    return m_inputboxes.size();
 }
 
 void Menu::debug_show_size() const
@@ -284,6 +271,5 @@ void Menu::debug_show_size() const
     std::wcout << sizeof(m_buttons) << L'\n'
                << sizeof(m_texts) << L'\n'
                << sizeof(m_middle)<< L'\n'
-               << sizeof(m_marked_inputbox) << L'\n'
                << sizeof(m_state) << L'\n';
 }

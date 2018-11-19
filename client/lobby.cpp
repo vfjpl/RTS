@@ -21,12 +21,10 @@ void Lobby::setup()
     m_middle.x /= 2;
     m_inputboxes.emplace_back(m_middle.x, m_middle.y - MARGIN - TEXT_GAP, m_middle.x - TEXT_GAP);
     m_middle.y /= 2;
-    m_marked_inputbox = m_inputboxes.size();
 }
 
 void Lobby::clear()
 {
-    m_marked_inputbox = 0;
     m_middle.x = 0;
     m_middle.y = 0;
     m_buttons.clear();
@@ -37,7 +35,11 @@ void Lobby::clear()
 
 void Lobby::mouse_click(const sf::Event& event)
 {
-    mark_inputbox(event);
+    for(sf::Uint8 i = 0; i < m_inputboxes.size(); ++i)
+        if(m_inputboxes[i].m_background.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y))
+            m_inputboxes[i].mark();
+        else
+            m_inputboxes[i].unmark();
 
     sf::Uint8 button_id = get_button_id_from_press(event);
     switch(button_id)
@@ -57,38 +59,39 @@ void Lobby::mouse_click(const sf::Event& event)
 
 void Lobby::text_entered(const sf::Event& event)
 {
-    if(m_marked_inputbox == m_inputboxes.size())
+    sf::Uint8 marked_inputbox = get_marked_inputbox();
+    if(marked_inputbox == m_inputboxes.size())
         return;
 
     switch(event.text.unicode)
     {
     case L'\b'://BackSpace (8)
     {
-        std::wstring str(m_inputboxes[m_marked_inputbox].m_text.getString());
+        std::wstring str(m_inputboxes[marked_inputbox].m_text.getString());
         str.pop_back();
         if(!str.empty())
             str.pop_back();
         str.push_back(L'|');
-        m_inputboxes[m_marked_inputbox].m_text.setString(str);
+        m_inputboxes[marked_inputbox].m_text.setString(str);
         break;
     }
     case L'\r'://Enter (13)
     {
-        std::wstring str(m_inputboxes[m_marked_inputbox].m_text.getString());
+        std::wstring str(m_inputboxes[marked_inputbox].m_text.getString());
         str.pop_back();
         engine.send_message(str);
         str.clear();
         str.push_back(L'|');
-        m_inputboxes[m_marked_inputbox].m_text.setString(str);
+        m_inputboxes[marked_inputbox].m_text.setString(str);
         break;
     }
     default:
     {
-        std::wstring str(m_inputboxes[m_marked_inputbox].m_text.getString());
+        std::wstring str(m_inputboxes[marked_inputbox].m_text.getString());
         str.pop_back();
         str.push_back(event.text.unicode);
         str.push_back(L'|');
-        m_inputboxes[m_marked_inputbox].m_text.setString(str);
+        m_inputboxes[marked_inputbox].m_text.setString(str);
         break;
     }
     }//end switch
@@ -160,26 +163,13 @@ sf::Uint8 Lobby::get_button_id_from_press(const sf::Event& event) const
     return m_buttons.size();
 }
 
-void Lobby::mark_inputbox(const sf::Event& event)
+sf::Uint8 Lobby::get_marked_inputbox() const
 {
     for(sf::Uint8 i = 0; i < m_inputboxes.size(); ++i)
-        if(m_inputboxes[i].m_background.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y))
-        {
-            if(m_marked_inputbox != i)
-            {
-                if(m_marked_inputbox != m_inputboxes.size())
-                    m_inputboxes[m_marked_inputbox].unmark();
-                m_inputboxes[i].mark();
-                m_marked_inputbox = i;
-            }
-            return;
-        }
+        if(m_inputboxes[i].is_marked())
+            return i;
 
-    if(m_marked_inputbox != m_inputboxes.size())
-    {
-        m_inputboxes[m_marked_inputbox].unmark();
-        m_marked_inputbox = m_inputboxes.size();
-    }
+    return m_inputboxes.size();
 }
 
 void Lobby::debug_show_size() const
@@ -188,6 +178,5 @@ void Lobby::debug_show_size() const
     std::wcout << sizeof(m_buttons) << L'\n'
                << sizeof(m_players) << L'\n'
                << sizeof(m_chat) << L'\n'
-               << sizeof(m_middle) << L'\n'
-               << sizeof(m_marked_inputbox) << L'\n';
+               << sizeof(m_middle) << L'\n';
 }

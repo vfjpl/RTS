@@ -13,7 +13,7 @@ public:
 
 
     InputBox(unsigned int x, unsigned int y, unsigned int width);
-    InputBox(const std::string& text, unsigned int x, unsigned int y);//variable width inputbox
+    InputBox(const std::wstring& text, unsigned int x, unsigned int y, unsigned int width);
     InputBox(const std::string& text, unsigned int x, unsigned int y, unsigned int width);
 
     void mark();

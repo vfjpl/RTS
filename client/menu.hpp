@@ -13,7 +13,6 @@ class Menu
     std::deque <InputBox> m_inputboxes;//80
     std::deque <Text> m_texts;//80
     sf::Vector2u m_middle;//8
-    sf::Uint8 m_marked_inputbox;//1
     sf::Uint8 m_state;//1
 
 public:
@@ -30,7 +29,7 @@ public:
 
 private:
     sf::Uint8 get_button_id_from_press(const sf::Event& event) const;
-    void mark_inputbox(const sf::Event& event);
+    sf::Uint8 get_marked_inputbox() const;
 
     void main_menu();
     void connect_menu();

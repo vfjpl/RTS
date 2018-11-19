@@ -15,7 +15,6 @@ class Lobby
     std::deque <Text> m_players;//80
     std::deque <Text> m_chat;//80
     sf::Vector2u m_middle;//8
-    sf::Uint8 m_marked_inputbox;//1
 
 public:
     void setup();
@@ -36,7 +35,7 @@ public:
 
 private:
     sf::Uint8 get_button_id_from_press(const sf::Event& event) const;
-    void mark_inputbox(const sf::Event& event);
+    sf::Uint8 get_marked_inputbox() const;
 };
 
 #endif // LOBBY_HPP_INCLUDED

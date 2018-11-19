@@ -117,7 +117,10 @@ void Lobby::mouse_move(const sf::Event& event)
 void Lobby::add_player(sf::Uint8 id)
 {
     for(sf::Uint8 i = m_players.size(); i < id; ++i)
-        m_players.emplace_back(std::to_wstring(i) + L": " + engine.get_player_informations(i).get_nickname(), 0, TEXT_GAP*i, TEXT_SIZE);
+        m_players.emplace_back(std::to_wstring(i) + L": " + engine.get_player_informations(i).get_nickname(),
+                               0,
+                               TEXT_GAP*i,
+                               TEXT_SIZE);
 }
 
 void Lobby::remove_player(sf::Uint8 id)
@@ -143,7 +146,10 @@ void Lobby::add_chat_message(sf::Uint8 id, const std::wstring& message)
         for(sf::Uint8 i = 0; i < m_chat.size(); ++i)
             m_chat[i].m_text.setPosition(m_middle.x, TEXT_GAP*i);
     }
-    m_chat.emplace_back(m_players[id].m_text.getString() + L": " + message, m_middle.x, TEXT_GAP*m_chat.size(), TEXT_SIZE);
+    m_chat.emplace_back(m_players[id].m_text.getString() + L": " + message,
+                        m_middle.x,
+                        TEXT_GAP*m_chat.size(),
+                        TEXT_SIZE);
 
 }
 

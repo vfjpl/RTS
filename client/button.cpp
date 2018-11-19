@@ -41,5 +41,5 @@ void Button::debug_show_size() const
 {
     //keep up to date!
     std::wcout << sizeof(m_text) << L'\n'
-               << sizeof(m_background)<< L'\n';
+               << sizeof(m_background) << L'\n';
 }

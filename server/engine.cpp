@@ -68,6 +68,7 @@ void Server_Engine::connect_player(sf::IpAddress ip, unsigned short port)
 {
     sf::Uint8 id = players.size();
     players.emplace_back(ip, port);
+    packet_to_send << (sf::Uint8)SERVER_GAME_STATUS << game_loop;
     packet_to_send << (sf::Uint8)SERVER_PLAYER_CONNECTED << id;
 }
 

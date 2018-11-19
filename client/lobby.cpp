@@ -3,7 +3,9 @@
 #include "engine.hpp"
 #include <iostream>
 
-#define TEXT_GAP 30
+#define TEXT_SIZE 14
+#define TEXT_GAP 14
+#define MARGIN 40
 
 extern sf::RenderWindow window;
 extern Resources_Manager resources_manager;
@@ -12,10 +14,12 @@ extern Client_Engine engine;
 void Lobby::setup()
 {
     m_middle = window.getSize();
-    m_buttons.emplace_back(L"DISCONNECT", 15, m_middle.y - 45);
-    m_buttons.emplace_back(L"READY", m_buttons.back().m_text.getLocalBounds().width + 30, m_middle.y - 45);
+    m_buttons.emplace_back(L"DISCONNECT", TEXT_GAP, m_middle.y - MARGIN - TEXT_GAP);
+    m_buttons.emplace_back(L"READY",
+                           m_buttons.back().m_background.getLocalBounds().width + TEXT_GAP*2,
+                           m_middle.y - MARGIN - TEXT_GAP);
     m_middle.x /= 2;
-    m_inputboxes.emplace_back(m_middle.x, m_middle.y - 45, 255);
+    m_inputboxes.emplace_back(m_middle.x, m_middle.y - MARGIN - TEXT_GAP, m_middle.x - TEXT_GAP);
     m_middle.y /= 2;
     m_marked_inputbox = m_inputboxes.size();
 }
@@ -93,7 +97,10 @@ void Lobby::mouse_move(const sf::Event& event)
 void Lobby::add_player(sf::Uint8 id)
 {
     for(sf::Uint8 i = m_players.size(); i < id; ++i)
+    {
         m_players.emplace_back(std::to_wstring(i), 0, TEXT_GAP*i);
+        m_players[i].m_text.setCharacterSize(TEXT_SIZE);
+    }
 }
 
 void Lobby::remove_player(sf::Uint8 id)
@@ -114,6 +121,7 @@ void Lobby::refresh_player(sf::Uint8 id, const Network_Data& player)
 void Lobby::add_chat_message(sf::Uint8 id, const std::wstring& message)
 {
     m_chat.emplace_back(m_players[id].m_text.getString() + L": " + message, m_middle.x, TEXT_GAP*m_chat.size());
+    m_chat.back().m_text.setCharacterSize(TEXT_SIZE);
 }
 
 void Lobby::draw()

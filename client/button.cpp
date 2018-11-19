@@ -12,7 +12,7 @@ Button::Button(const wchar_t* text, unsigned int x, unsigned int y)
     m_text.setPosition(x, y);
 
     sf::FloatRect rect = m_text.getLocalBounds();
-    m_background.setSize(sf::Vector2f(rect.width, rect.height*2));
+    m_background.setSize(sf::Vector2f(rect.width, 40));// 4/3
     m_background.setPosition(x, y);
 }
 
@@ -23,8 +23,7 @@ Button::Button(const wchar_t* text, unsigned int x, unsigned int y, unsigned int
     m_text.setFillColor(sf::Color::Black);
     m_text.setPosition(x, y);
 
-    sf::FloatRect rect = m_text.getLocalBounds();
-    m_background.setSize(sf::Vector2f(width, rect.height*2));
+    m_background.setSize(sf::Vector2f(width, 40));// 4/3
     m_background.setPosition(x, y);
 }
 

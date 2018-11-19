@@ -10,7 +10,7 @@ sf::RenderWindow window;//528
 Resources_Manager resources_manager;//512
 Client_Engine engine;//344
 Lobby lobby;//336
-Menu menu;//176
+Menu menu;//256
 Network_Data server;//56
 
 void debug_show_size()

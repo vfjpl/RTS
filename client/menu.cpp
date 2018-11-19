@@ -4,7 +4,7 @@
 #include "../common/network_data.hpp"
 #include <iostream>
 
-#define TEXT_GAP 50
+#define TEXT_GAP 41
 
 extern sf::RenderWindow window;
 extern Resources_Manager resources_manager;
@@ -199,9 +199,6 @@ void Menu::text_entered(const sf::Event& event)
     }
     case L'\r'://Enter (13)
     {
-        server.set_ip(sf::IpAddress(m_inputboxes[0].m_text.getString()));
-        server.set_nickname(m_inputboxes[1].m_text.getString());
-        engine.setup_lobby();
         break;
     }
     default:

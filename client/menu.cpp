@@ -275,6 +275,6 @@ void Menu::debug_show_size() const
     std::wcout << sizeof(m_buttons) << L'\n'
                << sizeof(m_texts) << L'\n'
                << sizeof(m_middle)<< L'\n'
-               << sizeof(m_state) << L'\n'
-               << sizeof(m_marked_inputbox) << L'\n';
+               << sizeof(m_marked_inputbox) << L'\n'
+               << sizeof(m_state) << L'\n';
 }

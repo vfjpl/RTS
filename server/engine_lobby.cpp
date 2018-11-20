@@ -28,10 +28,11 @@ void Server_Engine::lobby_receive_packets()
                 bool ready_status;
                 received_packet >> ready_status;
                 players[local_id].set_ready_status(ready_status);
-                packet_to_send << (sf::Uint8)SERVER_PLAYER_READY_STATUS << local_id << ready_status;
 
                 if(get_ready_status_of_players())//check if all players are ready
                     setup_game();//start new game
+                else
+                    packet_to_send << (sf::Uint8)SERVER_PLAYER_READY_STATUS << local_id << ready_status;
                 break;
             }
             case CLIENT_SEND_MESSAGE:
